@@ -67,10 +67,42 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
 
     // Use jsonrepair to fix common LLM JSON issues (unescaped newlines, trailing commas, etc.)
     const data = JSON.parse(jsonrepair(jsonMatch[0]));
+
+    // Sanitize keyConcepts — guard against null entries, missing fields, wrong types
+    const keyConcepts = (Array.isArray(data.keyConcepts) ? data.keyConcepts : [])
+      .filter((c: any) => c && typeof c === "object")
+      .map((c: any) => ({
+        term: String(c.term ?? "").trim(),
+        definition: String(c.definition ?? "").trim(),
+      }))
+      .filter((c: { term: string; definition: string }) => c.term && c.definition);
+
+    // Sanitize quizQuestions — coerce correctIndex to number, enforce 4 options, remove incomplete items
+    const quizQuestions = (Array.isArray(data.quizQuestions) ? data.quizQuestions : [])
+      .filter((q: any) => q && typeof q === "object")
+      .map((q: any) => {
+        const options: string[] = Array.isArray(q.options)
+          ? q.options.slice(0, 4).map(String)
+          : [];
+        // LLMs sometimes return correctIndex as a string ("1") — always coerce to number
+        const correctIndex = Math.min(3, Math.max(0, parseInt(String(q.correctIndex ?? 0), 10)));
+        return {
+          question: String(q.question ?? "").trim(),
+          options,
+          correctIndex,
+          explanation: String(q.explanation ?? "").trim(),
+        };
+      })
+      // Drop any question that ended up with wrong option count or missing required text
+      .filter(
+        (q: { question: string; options: string[]; explanation: string }) =>
+          q.question && q.options.length === 4 && q.explanation
+      );
+
     res.json({
-      summary: data.summary ?? "",
-      keyConcepts: data.keyConcepts ?? [],
-      quizQuestions: data.quizQuestions ?? [],
+      summary: String(data.summary ?? "").trim(),
+      keyConcepts,
+      quizQuestions,
     });
   } catch (err: any) {
     res.status(502).json({ error: err.message || "AI provider error" });

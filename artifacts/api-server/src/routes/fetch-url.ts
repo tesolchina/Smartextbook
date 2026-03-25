@@ -40,6 +40,13 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
       return;
     }
 
+    // Bail early on very large responses (> 5 MB) to avoid memory exhaustion
+    const contentLength = parseInt(response.headers.get("content-length") ?? "0", 10);
+    if (contentLength > 5_000_000) {
+      res.status(422).json({ error: "Page is too large to fetch (> 5 MB). Try copying the text manually." });
+      return;
+    }
+
     const contentType = response.headers.get("content-type") ?? "";
     if (!contentType.includes("text/html") && !contentType.includes("application/xhtml")) {
       if (contentType.includes("text/plain")) {

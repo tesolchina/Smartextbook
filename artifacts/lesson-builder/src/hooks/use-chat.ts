@@ -24,7 +24,8 @@ export function useChat(lesson: StoredLesson) {
 
     setError(null);
     const userMsg: ChatMessage = { role: "user", content };
-    const historyToSend = [...messages];
+    // Trim to last 20 messages to avoid hitting token limits on long sessions
+    const historyToSend = messages.slice(-20);
 
     setMessages((prev) => [...prev, userMsg]);
     setIsStreaming(true);
@@ -117,6 +118,14 @@ export function useChat(lesson: StoredLesson) {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       setIsStreaming(false);
+      // Remove the placeholder assistant message if the stream was stopped before any content arrived
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === "assistant" && !last.content.trim()) {
+          return prev.slice(0, -1);
+        }
+        return prev;
+      });
     }
   }, []);
 
