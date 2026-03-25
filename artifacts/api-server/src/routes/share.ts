@@ -92,6 +92,7 @@ router.get("/shared/:id/comments", async (req, res): Promise<void> => {
       comments: rows.map((r) => ({
         id: r.id,
         authorName: r.authorName,
+        contactInfo: r.contactInfo ?? null,
         body: r.body,
         createdAt: r.createdAt.toISOString(),
       })),
@@ -104,6 +105,8 @@ router.get("/shared/:id/comments", async (req, res): Promise<void> => {
 router.post("/shared/:id/comments", async (req, res): Promise<void> => {
   const { id } = req.params;
   const { authorName, body } = req.body ?? {};
+
+  const { contactInfo } = req.body ?? {};
 
   if (
     typeof authorName !== "string" ||
@@ -119,6 +122,10 @@ router.post("/shared/:id/comments", async (req, res): Promise<void> => {
     body.trim().length > 2000
   ) {
     res.status(400).json({ error: "body must be 1–2000 characters" });
+    return;
+  }
+  if (contactInfo !== undefined && (typeof contactInfo !== "string" || contactInfo.trim().length > 200)) {
+    res.status(400).json({ error: "contactInfo must be at most 200 characters" });
     return;
   }
 
@@ -143,6 +150,7 @@ router.post("/shared/:id/comments", async (req, res): Promise<void> => {
       .values({
         lessonId: id,
         authorName: authorName.trim(),
+        contactInfo: typeof contactInfo === "string" && contactInfo.trim() ? contactInfo.trim() : null,
         body: body.trim(),
       })
       .returning();
@@ -151,6 +159,7 @@ router.post("/shared/:id/comments", async (req, res): Promise<void> => {
       comment: {
         id: inserted.id,
         authorName: inserted.authorName,
+        contactInfo: inserted.contactInfo ?? null,
         body: inserted.body,
         createdAt: inserted.createdAt.toISOString(),
       },

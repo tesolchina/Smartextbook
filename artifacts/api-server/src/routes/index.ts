@@ -6,6 +6,7 @@ import chatRouter from "./chat";
 import fetchUrlRouter from "./fetch-url";
 import testConnectionRouter from "./test-connection";
 import shareRouter from "./share";
+import checkLessonRouter from "./check-lesson";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(chatRouter);
 router.use(fetchUrlRouter);
 router.use(testConnectionRouter);
 router.use(shareRouter);
+router.use(checkLessonRouter);
 
 export default router;

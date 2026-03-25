@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { MessageSquare, Send, Loader2, User } from "lucide-react";
+import { MessageSquare, Send, Loader2, User, Mail } from "lucide-react";
 
 interface Comment {
   id: number;
   authorName: string;
+  contactInfo: string | null;
   body: string;
   createdAt: string;
 }
@@ -16,6 +17,7 @@ export function CommentsSection({ shareId }: CommentsSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadState, setLoadState] = useState<"loading" | "done" | "error">("loading");
   const [authorName, setAuthorName] = useState("");
+  const [contactInfo, setContactInfo] = useState("");
   const [body, setBody] = useState("");
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState<string | null>(null);
@@ -46,12 +48,18 @@ export function CommentsSection({ shareId }: CommentsSectionProps) {
       const res = await fetch(`/api/shared/${shareId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ authorName: authorName.trim(), body: body.trim() }),
+        body: JSON.stringify({
+          authorName: authorName.trim(),
+          body: body.trim(),
+          contactInfo: contactInfo.trim() || undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       setComments((prev) => [...prev, data.comment]);
+      setAuthorName("");
       setBody("");
+      setContactInfo("");
     } catch (err: any) {
       setPostError(err.message || "Failed to post comment. Please try again.");
     }
@@ -101,8 +109,15 @@ export function CommentsSection({ shareId }: CommentsSectionProps) {
               <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
                 <User className="w-3.5 h-3.5" />
               </div>
-              <span className="text-sm font-semibold text-foreground">{c.authorName}</span>
-              <span className="text-xs text-muted-foreground ml-auto">{formatDate(c.createdAt)}</span>
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-semibold text-foreground">{c.authorName}</span>
+                {c.contactInfo && (
+                  <span className="ml-2 text-xs text-muted-foreground font-normal inline-flex items-center gap-0.5">
+                    <Mail className="w-3 h-3" /> {c.contactInfo}
+                  </span>
+                )}
+              </div>
+              <span className="text-xs text-muted-foreground shrink-0">{formatDate(c.createdAt)}</span>
             </div>
             <p className="text-sm text-foreground leading-relaxed pl-9">{c.body}</p>
           </div>
@@ -113,15 +128,25 @@ export function CommentsSection({ shareId }: CommentsSectionProps) {
       <div className="bg-muted/30 rounded-2xl p-5 border border-border">
         <h3 className="text-sm font-semibold text-foreground mb-4">Leave a Comment</h3>
         <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            type="text"
-            placeholder="Your name"
-            value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
-            maxLength={80}
-            className="w-full border border-border rounded-xl px-3 py-2.5 text-sm bg-background outline-none focus:border-primary/60 transition-colors"
-            required
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input
+              type="text"
+              placeholder="Your name *"
+              value={authorName}
+              onChange={(e) => setAuthorName(e.target.value)}
+              maxLength={80}
+              className="border border-border rounded-xl px-3 py-2.5 text-sm bg-background outline-none focus:border-primary/60 transition-colors"
+              required
+            />
+            <input
+              type="text"
+              placeholder="Email or contact (optional)"
+              value={contactInfo}
+              onChange={(e) => setContactInfo(e.target.value)}
+              maxLength={200}
+              className="border border-border rounded-xl px-3 py-2.5 text-sm bg-background outline-none focus:border-primary/60 transition-colors"
+            />
+          </div>
           <textarea
             placeholder="Share your thoughts, questions, or what you learned…"
             value={body}

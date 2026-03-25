@@ -6,6 +6,7 @@ export const commentsTable = pgTable(
     id: serial("id").primaryKey(),
     lessonId: text("lesson_id").notNull(),
     authorName: text("author_name").notNull(),
+    contactInfo: text("contact_info"),
     body: text("body").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
