@@ -8,3 +8,61 @@
 export interface HealthStatus {
   status: string;
 }
+
+export type LessonStatus = (typeof LessonStatus)[keyof typeof LessonStatus];
+
+export const LessonStatus = {
+  processing: "processing",
+  ready: "ready",
+  error: "error",
+} as const;
+
+export interface KeyConcept {
+  term: string;
+  definition: string;
+}
+
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}
+
+export interface Lesson {
+  id: number;
+  title: string;
+  chapterText: string;
+  summary: string;
+  keyConcepts: KeyConcept[];
+  quizQuestions: QuizQuestion[];
+  status: LessonStatus;
+  createdAt: string;
+}
+
+export interface CreateLessonBody {
+  title: string;
+  chapterText: string;
+}
+
+export type ChatHistoryMessageRole =
+  (typeof ChatHistoryMessageRole)[keyof typeof ChatHistoryMessageRole];
+
+export const ChatHistoryMessageRole = {
+  user: "user",
+  assistant: "assistant",
+} as const;
+
+export interface ChatHistoryMessage {
+  role: ChatHistoryMessageRole;
+  content: string;
+}
+
+export interface ChatMessage {
+  message: string;
+  history: ChatHistoryMessage[];
+}
+
+export interface ErrorResponse {
+  error: string;
+}

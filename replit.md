@@ -2,7 +2,9 @@
 
 ## Overview
 
-pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+Chapter-to-Lesson Builder — an interactive tool that converts book chapters into structured lessons with an embedded AI tutor. Paste in a chapter, and the app uses AI to generate a summary, key concepts glossary, and a comprehension quiz. A persistent AI tutor chatbot lets students ask questions about the material in real time.
+
+Built as an open-source project for Replit and GitHub collaboration.
 
 ## Stack
 
@@ -15,82 +17,99 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Validation**: Zod (`zod/v4`), `drizzle-zod`
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
+- **AI Provider**: Replit AI Integrations (OpenAI-compatible, model: gpt-5.2)
+- **Frontend**: React + Vite, Tailwind CSS, Shadcn UI
 
 ## Structure
 
 ```text
 artifacts-monorepo/
-├── artifacts/              # Deployable applications
-│   └── api-server/         # Express API server
-├── lib/                    # Shared libraries
+├── artifacts/
+│   ├── api-server/         # Express API server (AI processing, CRUD)
+│   └── lesson-builder/     # React + Vite frontend
+├── lib/
 │   ├── api-spec/           # OpenAPI spec + Orval codegen config
 │   ├── api-client-react/   # Generated React Query hooks
 │   ├── api-zod/            # Generated Zod schemas from OpenAPI
-│   └── db/                 # Drizzle ORM schema + DB connection
-├── scripts/                # Utility scripts (single workspace package)
-│   └── src/                # Individual .ts scripts, run via `pnpm --filter @workspace/scripts run <script>`
-├── pnpm-workspace.yaml     # pnpm workspace (artifacts/*, lib/*, lib/integrations/*, scripts)
-├── tsconfig.base.json      # Shared TS options (composite, bundler resolution, es2022)
-├── tsconfig.json           # Root TS project references
-└── package.json            # Root package with hoisted devDeps
+│   ├── db/                 # Drizzle ORM schema + DB connection
+│   └── integrations-openai-ai-server/  # OpenAI AI integration (server)
+├── scripts/                # Utility scripts
+├── pnpm-workspace.yaml
+├── tsconfig.base.json
+├── tsconfig.json
+└── package.json
+```
+
+## Features
+
+### Core User Flows
+1. **Create a Lesson** — Paste chapter text + give it a title → AI processes in background → Lesson card shows status
+2. **View a Lesson** — Three tabs: Summary (AI-generated) + Key Concepts glossary, Quiz (multiple-choice), Original Chapter text
+3. **AI Tutor Chat** — Sidebar chat in lesson view; tutor knows the full chapter + summary; streams responses
+
+### API Endpoints
+- `GET /api/lessons` — List all lessons
+- `POST /api/lessons` — Create lesson (triggers async AI processing)
+- `GET /api/lessons/:id` — Get lesson with full content
+- `DELETE /api/lessons/:id` — Delete a lesson
+- `POST /api/lessons/:id/chat` — SSE streaming chat with AI tutor
+- `GET /api/lessons/:id/chat-history` — (reserved, returns empty)
+
+### AI Processing
+- Uses `gpt-5.2` model via Replit AI Integrations
+- Lesson creation: immediately returns `{status: "processing"}`, then async AI call populates summary, key concepts, and quiz questions
+- Chat: SSE streaming responses, tutor has full lesson context
+- Frontend polls `GET /api/lessons/:id` every 3 seconds until `status === "ready"`
+
+## Database Schema
+
+### `lessons` table
+| Column | Type | Notes |
+|---|---|---|
+| id | serial | PK |
+| title | text | User-provided lesson title |
+| chapter_text | text | Full input chapter |
+| summary | text | AI-generated summary |
+| key_concepts | jsonb | Array of {term, definition} |
+| quiz_questions | jsonb | Array of {question, options[], correctIndex, explanation} |
+| status | text | "processing" | "ready" | "error" |
+| created_at | timestamptz | Auto |
+
+## Development Commands
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run codegen (after editing openapi.yaml)
+pnpm --filter @workspace/api-spec run codegen
+
+# Push DB schema
+pnpm --filter @workspace/db run push
+
+# Start API server
+pnpm --filter @workspace/api-server run dev
+
+# Start frontend
+pnpm --filter @workspace/lesson-builder run dev
+
+# Typecheck everything
+pnpm run typecheck
 ```
 
 ## TypeScript & Composite Projects
 
-Every package extends `tsconfig.base.json` which sets `composite: true`. The root `tsconfig.json` lists all packages as project references. This means:
+Every package extends `tsconfig.base.json` which sets `composite: true`. The root `tsconfig.json` lists all lib packages as project references.
 
-- **Always typecheck from the root** — run `pnpm run typecheck` (which runs `tsc --build --emitDeclarationOnly`). This builds the full dependency graph so that cross-package imports resolve correctly. Running `tsc` inside a single package will fail if its dependencies haven't been built yet.
-- **`emitDeclarationOnly`** — we only emit `.d.ts` files during typecheck; actual JS bundling is handled by esbuild/tsx/vite...etc, not `tsc`.
-- **Project references** — when package A depends on package B, A's `tsconfig.json` must list B in its `references` array. `tsc --build` uses this to determine build order and skip up-to-date packages.
+- **Always typecheck from the root** — run `pnpm run typecheck`
+- **`emitDeclarationOnly`** — only `.d.ts` files during typecheck; JS bundling by esbuild/vite
+- **Project references** — when package A depends on package B, A's `tsconfig.json` must list B in `references`
 
-## Root Scripts
+## Collaborative Workflow Notes
 
-- `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
-- `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
-
-## Packages
-
-### `artifacts/api-server` (`@workspace/api-server`)
-
-Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` for request and response validation and `@workspace/db` for persistence.
-
-- Entry: `src/index.ts` — reads `PORT`, starts Express
-- App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
-- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health` (full path: `/api/health`)
-- Depends on: `@workspace/db`, `@workspace/api-zod`
-- `pnpm --filter @workspace/api-server run dev` — run the dev server
-- `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)
-- Build bundles an allowlist of deps (express, cors, pg, drizzle-orm, zod, etc.) and externalizes the rest
-
-### `lib/db` (`@workspace/db`)
-
-Database layer using Drizzle ORM with PostgreSQL. Exports a Drizzle client instance and schema models.
-
-- `src/index.ts` — creates a `Pool` + Drizzle instance, exports schema
-- `src/schema/index.ts` — barrel re-export of all models
-- `src/schema/<modelname>.ts` — table definitions with `drizzle-zod` insert schemas (no models definitions exist right now)
-- `drizzle.config.ts` — Drizzle Kit config (requires `DATABASE_URL`, automatically provided by Replit)
-- Exports: `.` (pool, db, schema), `./schema` (schema only)
-
-Production migrations are handled by Replit when publishing. In development, we just use `pnpm --filter @workspace/db run push`, and we fallback to `pnpm --filter @workspace/db run push-force`.
-
-### `lib/api-spec` (`@workspace/api-spec`)
-
-Owns the OpenAPI 3.1 spec (`openapi.yaml`) and the Orval config (`orval.config.ts`). Running codegen produces output into two sibling packages:
-
-1. `lib/api-client-react/src/generated/` — React Query hooks + fetch client
-2. `lib/api-zod/src/generated/` — Zod schemas
-
-Run codegen: `pnpm --filter @workspace/api-spec run codegen`
-
-### `lib/api-zod` (`@workspace/api-zod`)
-
-Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used by `api-server` for response validation.
-
-### `lib/api-client-react` (`@workspace/api-client-react`)
-
-Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
-
-### `scripts` (`@workspace/scripts`)
-
-Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
+This project is designed for open-source collaboration on Replit and GitHub. When contributing:
+- All API contracts are defined first in `lib/api-spec/openapi.yaml`
+- Run `pnpm --filter @workspace/api-spec run codegen` after any spec changes
+- Backend routes live in `artifacts/api-server/src/routes/`
+- Frontend pages live in `artifacts/lesson-builder/src/pages/`
+- DB schema changes: edit `lib/db/src/schema/`, then run `pnpm --filter @workspace/db run push`

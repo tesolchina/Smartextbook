@@ -14,3 +14,107 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * @summary List all lessons
+ */
+export const ListLessonsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  chapterText: zod.string(),
+  summary: zod.string(),
+  keyConcepts: zod.array(
+    zod.object({
+      term: zod.string(),
+      definition: zod.string(),
+    }),
+  ),
+  quizQuestions: zod.array(
+    zod.object({
+      question: zod.string(),
+      options: zod.array(zod.string()),
+      correctIndex: zod.number(),
+      explanation: zod.string(),
+    }),
+  ),
+  status: zod.enum(["processing", "ready", "error"]),
+  createdAt: zod.date(),
+});
+export const ListLessonsResponse = zod.array(ListLessonsResponseItem);
+
+/**
+ * @summary Create a lesson from chapter text (triggers AI processing)
+ */
+export const CreateLessonBody = zod.object({
+  title: zod.string(),
+  chapterText: zod.string(),
+});
+
+/**
+ * @summary Get a lesson with full content
+ */
+export const GetLessonParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetLessonResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  chapterText: zod.string(),
+  summary: zod.string(),
+  keyConcepts: zod.array(
+    zod.object({
+      term: zod.string(),
+      definition: zod.string(),
+    }),
+  ),
+  quizQuestions: zod.array(
+    zod.object({
+      question: zod.string(),
+      options: zod.array(zod.string()),
+      correctIndex: zod.number(),
+      explanation: zod.string(),
+    }),
+  ),
+  status: zod.enum(["processing", "ready", "error"]),
+  createdAt: zod.date(),
+});
+
+/**
+ * @summary Delete a lesson
+ */
+export const DeleteLessonParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary Send a message to the AI tutor for this lesson (SSE streaming)
+ */
+export const ChatWithTutorParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const ChatWithTutorBody = zod.object({
+  message: zod.string(),
+  history: zod.array(
+    zod.object({
+      role: zod.enum(["user", "assistant"]),
+      content: zod.string(),
+    }),
+  ),
+});
+
+/**
+ * @summary Get chat history for a lesson
+ */
+export const GetLessonChatHistoryParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetLessonChatHistoryResponseItem = zod.object({
+  role: zod.enum(["user", "assistant"]),
+  content: zod.string(),
+});
+export const GetLessonChatHistoryResponse = zod.array(
+  GetLessonChatHistoryResponseItem,
+);

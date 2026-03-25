@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Chapter to Lesson Builder"
+version = "1.0.0"
+id = "artifacts/lesson-builder"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22369
+
+[services.development]
+run = "pnpm --filter @workspace/lesson-builder run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/lesson-builder", "run", "build" ]
+publicDir = "artifacts/lesson-builder/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22369"
+BASE_PATH = "/"

@@ -1,0 +1,20 @@
+packages:
+  "framer-motion": "For smooth layout transitions, chat bubble animations, and interactive quiz reveals"
+  "react-markdown": "To render the AI tutor's markdown responses nicely"
+  "remark-gfm": "For GitHub flavored markdown support in react-markdown"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility to safely merge Tailwind CSS classes"
+  "date-fns": "For formatting lesson creation dates beautifully"
+
+images:
+  - path: "artifacts/lesson-builder/public/images/hero-bg.png"
+    description: "A very subtle, light, abstract background pattern featuring elegant overlapping geometric shapes and soft warm gradients in cream, beige, and soft terracotta colors. Academic and sophisticated."
+    aspect_ratio: "16:9"
+  - path: "artifacts/lesson-builder/public/images/empty-lessons.png"
+    description: "A beautiful, modern, flat-vector illustration of a stack of books and a glowing lightbulb, in warm terracotta, gold, and cream colors. Clean white background."
+    aspect_ratio: "1:1"
+
+notes:
+  - The API uses generated React Query hooks from @workspace/api-client-react.
+  - The chat endpoint POST /api/lessons/:id/chat streams SSE manually using fetch and ReadableStream.
+  - When a lesson is created, it starts in 'processing' status. The frontend will poll until it's 'ready'.

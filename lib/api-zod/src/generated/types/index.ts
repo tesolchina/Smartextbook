@@ -6,4 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./chatHistoryMessage";
+export * from "./chatHistoryMessageRole";
+export * from "./chatMessage";
+export * from "./createLessonBody";
+export * from "./errorResponse";
 export * from "./healthStatus";
+export * from "./keyConcept";
+export * from "./lesson";
+export * from "./lessonStatus";
+export * from "./quizQuestion";
