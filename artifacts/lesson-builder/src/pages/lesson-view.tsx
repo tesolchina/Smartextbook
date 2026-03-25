@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useRoute, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Lightbulb, ListTodo, ArrowLeft } from "lucide-react";
+import { FileText, Lightbulb, ListTodo, ArrowLeft, Download } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { ChatSidebar } from "@/components/chat-sidebar";
 import { QuizView } from "@/components/quiz-view";
 import { LessonSummaryTab } from "@/components/lesson-summary-tab";
+import { ExportModal } from "@/components/export-modal";
 import { useLessonsStore } from "@/hooks/use-lessons-store";
 
 type Tab = "summary" | "quiz" | "chapter";
@@ -19,6 +20,7 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
 export default function LessonView() {
   const [match, params] = useRoute("/lessons/:id");
   const [activeTab, setActiveTab] = useState<Tab>("summary");
+  const [exportOpen, setExportOpen] = useState(false);
 
   const { getLesson } = useLessonsStore();
   const lesson = match ? getLesson(params.id) : undefined;
@@ -46,6 +48,10 @@ export default function LessonView() {
 
   return (
     <Layout>
+      {lesson && (
+        <ExportModal lesson={lesson} open={exportOpen} onClose={() => setExportOpen(false)} />
+      )}
+
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-[calc(100vh-64px)]">
 
         {/* ── Content pane ── */}
@@ -53,12 +59,20 @@ export default function LessonView() {
 
           {/* Header + Tabs */}
           <div className="px-6 pt-5 pb-0 border-b border-border bg-card">
-            <h1
-              className="text-2xl font-serif font-black text-foreground mb-4 line-clamp-1"
-              title={lesson.title}
-            >
-              {lesson.title}
-            </h1>
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <h1
+                className="text-2xl font-serif font-black text-foreground line-clamp-1 flex-1"
+                title={lesson.title}
+              >
+                {lesson.title}
+              </h1>
+              <button
+                onClick={() => setExportOpen(true)}
+                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+              >
+                <Download className="w-3.5 h-3.5" /> Export
+              </button>
+            </div>
 
             <nav className="flex gap-1">
               {TABS.map(({ id, label, icon }) => (
