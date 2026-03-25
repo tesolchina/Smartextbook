@@ -162,6 +162,8 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
         <option value="openrouter|https://openrouter.ai/api/v1">OpenRouter</option>
         <option value="mistral|https://api.mistral.ai/v1">Mistral AI</option>
         <option value="together|https://api.together.xyz/v1">Together AI</option>
+        <option value="minimax|https://api.minimax.chat/v1">MiniMax</option>
+        <option value="poe|https://api.poe.com/v1">Poe</option>
         <option value="custom|">Custom (OpenAI-compatible)</option>
       </select>
     </div>
@@ -308,6 +310,8 @@ providerSel.addEventListener('change', () => {
     'openrouter|': 'openai/gpt-4o-mini',
     'mistral|': 'mistral-small-latest',
     'together|': 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+    'minimax|': 'MiniMax-Text-01',
+    'poe|': 'Claude-3-Haiku',
   };
   const prefix = providerSel.value.split('|')[0] + '|';
   if (defaultModels[prefix]) document.getElementById('setup-model').value = defaultModels[prefix];
