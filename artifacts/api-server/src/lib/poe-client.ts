@@ -72,31 +72,45 @@ export async function queryPoe(
 function parseSseText(raw: string): string {
   const lines = raw.split("\n");
   let result = "";
+  let pendingEventType: string | null = null;
 
   for (const line of lines) {
+    if (line.startsWith("event:")) {
+      pendingEventType = line.slice(6).trim();
+      continue;
+    }
+
+    if (line.trim() === "") {
+      pendingEventType = null;
+      continue;
+    }
+
     if (!line.startsWith("data:")) continue;
+
     const jsonStr = line.slice(5).trim();
     if (!jsonStr || jsonStr === "[DONE]") continue;
 
-    let event: { text?: string; type?: string; error?: string; error_type?: string };
+    let event: { text?: string; type?: string; error?: string; allow_retry?: boolean };
     try {
       event = JSON.parse(jsonStr);
     } catch {
       continue;
     }
 
-    if (event.type === "error") {
+    const eventType = pendingEventType ?? event.type;
+
+    if (eventType === "error") {
       throw makeError(
         `Poe error: ${event.text ?? event.error ?? "unknown error"}`,
         500
       );
     }
 
-    if (event.type === "text" && typeof event.text === "string") {
+    if (eventType === "text" && typeof event.text === "string") {
       result += event.text;
     }
 
-    if (event.type === "replace_response" && typeof event.text === "string") {
+    if (eventType === "replace_response" && typeof event.text === "string") {
       result = event.text;
     }
   }

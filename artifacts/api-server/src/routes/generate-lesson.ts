@@ -1,7 +1,6 @@
 import { Router, type IRouter } from "express";
 import { GenerateLessonBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
-import { queryPoe } from "../lib/poe-client";
 
 const router: IRouter = Router();
 
@@ -48,20 +47,12 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
   const prompt = LESSON_PROMPT(title, chapterText);
 
   try {
-    let content: string;
-
-    if (llmConfig.provider === "poe") {
-      content = await queryPoe(llmConfig.model, llmConfig.apiKey, [
-        { role: "user", content: prompt },
-      ]);
-    } else {
-      const { client, model } = createLLMClient(llmConfig);
-      const response = await client.chat.completions.create({
-        model,
-        messages: [{ role: "user", content: prompt }],
-      });
-      content = response.choices[0]?.message?.content ?? "";
-    }
+    const { client, model } = createLLMClient(llmConfig);
+    const response = await client.chat.completions.create({
+      model,
+      messages: [{ role: "user", content: prompt }],
+    });
+    const content = response.choices[0]?.message?.content ?? "";
 
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {

@@ -1,6 +1,5 @@
 import { Router, type IRouter } from "express";
 import { createLLMClient } from "../lib/llm-client";
-import { queryPoe } from "../lib/poe-client";
 
 const router: IRouter = Router();
 
@@ -13,12 +12,6 @@ router.post("/test-connection", async (req, res): Promise<void> => {
   }
 
   try {
-    if (provider === "poe") {
-      await queryPoe(model, apiKey, [{ role: "user", content: "Say OK." }]);
-      res.json({ ok: true });
-      return;
-    }
-
     const { client, model: resolvedModel } = createLLMClient({
       provider,
       apiKey,

@@ -1,7 +1,6 @@
 import { Router, type IRouter } from "express";
 import { ChatWithTutorBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
-import { queryPoe, type PoeMessage } from "../lib/poe-client";
 
 const router: IRouter = Router();
 
@@ -41,28 +40,6 @@ Your role:
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
-
-  if (llmConfig.provider === "poe") {
-    const poeMessages: PoeMessage[] = [
-      { role: "system", content: systemPrompt },
-      ...history.map((h) => ({
-        role: h.role === "assistant" ? ("bot" as const) : ("user" as const),
-        content: h.content,
-      })),
-      { role: "user", content: message },
-    ];
-
-    try {
-      const text = await queryPoe(llmConfig.model, llmConfig.apiKey, poeMessages);
-      res.write(`data: ${JSON.stringify({ content: text })}\n\n`);
-      res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
-      res.end();
-    } catch (err: any) {
-      res.write(`data: ${JSON.stringify({ error: err.message || "Poe error", done: true })}\n\n`);
-      res.end();
-    }
-    return;
-  }
 
   let client: ReturnType<typeof createLLMClient>["client"];
   let model: string;
