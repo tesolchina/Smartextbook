@@ -5,10 +5,9 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { LlmConfig } from "./llmConfig";
 
-export interface CreateLessonBody {
+export interface FetchUrlResponse {
   title: string;
-  chapterText: string;
-  llmConfig: LlmConfig;
+  content: string;
+  url: string;
 }

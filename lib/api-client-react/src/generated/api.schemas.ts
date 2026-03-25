@@ -9,6 +9,30 @@ export interface HealthStatus {
   status: string;
 }
 
+/**
+ * LLM provider configuration supplied by the user (BYOK)
+ */
+export interface LlmConfig {
+  /** Provider identifier (e.g. openai, gemini, deepseek, openrouter, groq, mistral, together, minimax, custom) */
+  provider: string;
+  /** API key for the provider */
+  apiKey: string;
+  /** Model name to use */
+  model: string;
+  /** Optional custom base URL (required for provider=custom) */
+  baseUrl?: string;
+}
+
+export interface FetchUrlBody {
+  url: string;
+}
+
+export interface FetchUrlResponse {
+  title: string;
+  content: string;
+  url: string;
+}
+
 export type LessonStatus = (typeof LessonStatus)[keyof typeof LessonStatus];
 
 export const LessonStatus = {
@@ -43,6 +67,7 @@ export interface Lesson {
 export interface CreateLessonBody {
   title: string;
   chapterText: string;
+  llmConfig: LlmConfig;
 }
 
 export type ChatHistoryMessageRole =
@@ -61,6 +86,7 @@ export interface ChatHistoryMessage {
 export interface ChatMessage {
   message: string;
   history: ChatHistoryMessage[];
+  llmConfig: LlmConfig;
 }
 
 export interface ErrorResponse {

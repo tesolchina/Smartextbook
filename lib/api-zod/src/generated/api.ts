@@ -16,6 +16,19 @@ export const HealthCheckResponse = zod.object({
 });
 
 /**
+ * @summary Fetch readable text content from a URL
+ */
+export const FetchUrlBody = zod.object({
+  url: zod.string().url(),
+});
+
+export const FetchUrlResponse = zod.object({
+  title: zod.string(),
+  content: zod.string(),
+  url: zod.string(),
+});
+
+/**
  * @summary List all lessons
  */
 export const ListLessonsResponseItem = zod.object({
@@ -48,6 +61,21 @@ export const ListLessonsResponse = zod.array(ListLessonsResponseItem);
 export const CreateLessonBody = zod.object({
   title: zod.string(),
   chapterText: zod.string(),
+  llmConfig: zod
+    .object({
+      provider: zod
+        .string()
+        .describe(
+          "Provider identifier (e.g. openai, gemini, deepseek, openrouter, groq, mistral, together, minimax, custom)",
+        ),
+      apiKey: zod.string().describe("API key for the provider"),
+      model: zod.string().describe("Model name to use"),
+      baseUrl: zod
+        .string()
+        .optional()
+        .describe("Optional custom base URL (required for provider=custom)"),
+    })
+    .describe("LLM provider configuration supplied by the user (BYOK)"),
 });
 
 /**
@@ -102,6 +130,21 @@ export const ChatWithTutorBody = zod.object({
       content: zod.string(),
     }),
   ),
+  llmConfig: zod
+    .object({
+      provider: zod
+        .string()
+        .describe(
+          "Provider identifier (e.g. openai, gemini, deepseek, openrouter, groq, mistral, together, minimax, custom)",
+        ),
+      apiKey: zod.string().describe("API key for the provider"),
+      model: zod.string().describe("Model name to use"),
+      baseUrl: zod
+        .string()
+        .optional()
+        .describe("Optional custom base URL (required for provider=custom)"),
+    })
+    .describe("LLM provider configuration supplied by the user (BYOK)"),
 });
 
 /**

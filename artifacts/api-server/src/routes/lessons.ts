@@ -9,7 +9,7 @@ import {
   ChatWithTutorBody,
   GetLessonChatHistoryParams,
 } from "@workspace/api-zod";
-import { openai } from "@workspace/integrations-openai-ai-server";
+import { createLLMClient, type LlmConfig } from "../lib/llm-client";
 
 const router: IRouter = Router();
 
@@ -31,8 +31,10 @@ function serializeLesson(lesson: typeof lessonsTable.$inferSelect) {
   };
 }
 
-async function processLessonWithAI(lessonId: number, chapterText: string): Promise<void> {
+async function processLessonWithAI(lessonId: number, chapterText: string, llmConfig: LlmConfig): Promise<void> {
   try {
+    const { client, model } = createLLMClient(llmConfig);
+
     const prompt = `You are an expert educational content creator. Analyze the following book chapter and create structured lesson content.
 
 Chapter text:
@@ -64,9 +66,8 @@ Requirements:
 
 Return ONLY the JSON object, no other text.`;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-5.2",
-      max_completion_tokens: 8192,
+    const response = await client.chat.completions.create({
+      model,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -83,12 +84,13 @@ Return ONLY the JSON object, no other text.`;
         keyConcepts: parsed.keyConcepts ?? [],
         quizQuestions: parsed.quizQuestions ?? [],
         status: "ready",
+        llmApiKey: null,
       })
       .where(eq(lessonsTable.id, lessonId));
   } catch (err) {
     await db
       .update(lessonsTable)
-      .set({ status: "error" })
+      .set({ status: "error", llmApiKey: null })
       .where(eq(lessonsTable.id, lessonId));
   }
 }
@@ -108,21 +110,34 @@ router.post("/lessons", async (req, res): Promise<void> => {
     return;
   }
 
+  const { title, chapterText, llmConfig } = parsed.data;
+
+  try {
+    createLLMClient(llmConfig);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+    return;
+  }
+
   const [lesson] = await db
     .insert(lessonsTable)
     .values({
-      title: parsed.data.title,
-      chapterText: parsed.data.chapterText,
+      title,
+      chapterText,
       summary: "",
       keyConcepts: [],
       quizQuestions: [],
       status: "processing",
+      llmProvider: llmConfig.provider,
+      llmApiKey: llmConfig.apiKey,
+      llmModel: llmConfig.model,
+      llmBaseUrl: llmConfig.baseUrl ?? null,
     })
     .returning();
 
   res.status(201).json(serializeLesson(lesson));
 
-  processLessonWithAI(lesson.id, parsed.data.chapterText);
+  processLessonWithAI(lesson.id, chapterText, llmConfig);
 });
 
 router.get("/lessons/:id", async (req, res): Promise<void> => {
@@ -188,6 +203,17 @@ router.post("/lessons/:id/chat", async (req, res): Promise<void> => {
     return;
   }
 
+  let client: ReturnType<typeof createLLMClient>["client"];
+  let model: string;
+  try {
+    const result = createLLMClient(body.data.llmConfig);
+    client = result.client;
+    model = result.model;
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+    return;
+  }
+
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -225,9 +251,8 @@ Your role:
   ];
 
   try {
-    const stream = await openai.chat.completions.create({
-      model: "gpt-5.2",
-      max_completion_tokens: 8192,
+    const stream = await client.chat.completions.create({
+      model,
       messages,
       stream: true,
     });
@@ -241,8 +266,9 @@ Your role:
 
     res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
     res.end();
-  } catch (err) {
-    res.write(`data: ${JSON.stringify({ error: "AI error occurred", done: true })}\n\n`);
+  } catch (err: any) {
+    const message = err?.message || "AI error occurred";
+    res.write(`data: ${JSON.stringify({ error: message, done: true })}\n\n`);
     res.end();
   }
 });

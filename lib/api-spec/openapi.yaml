@@ -11,8 +11,8 @@ tags:
     description: Health operations
   - name: lessons
     description: Lesson generation and management
-  - name: openai
-    description: OpenAI AI chat, image, and audio operations
+  - name: content
+    description: Content fetching utilities
 paths:
   /healthz:
     get:
@@ -27,6 +27,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /fetch-url:
+    post:
+      operationId: fetchUrl
+      tags: [content]
+      summary: Fetch readable text content from a URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FetchUrlBody"
+      responses:
+        "200":
+          description: Extracted text content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FetchUrlResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Could not extract content from URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /lessons:
     get:
       operationId: listLessons
@@ -164,6 +194,47 @@ components:
           type: string
       required:
         - status
+    LlmConfig:
+      type: object
+      description: LLM provider configuration supplied by the user (BYOK)
+      properties:
+        provider:
+          type: string
+          description: Provider identifier (e.g. openai, gemini, deepseek, openrouter, groq, mistral, together, minimax, custom)
+        apiKey:
+          type: string
+          description: API key for the provider
+        model:
+          type: string
+          description: Model name to use
+        baseUrl:
+          type: string
+          description: Optional custom base URL (required for provider=custom)
+      required:
+        - provider
+        - apiKey
+        - model
+    FetchUrlBody:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+      required:
+        - url
+    FetchUrlResponse:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        url:
+          type: string
+      required:
+        - title
+        - content
+        - url
     Lesson:
       type: object
       properties:
@@ -233,9 +304,12 @@ components:
           type: string
         chapterText:
           type: string
+        llmConfig:
+          $ref: "#/components/schemas/LlmConfig"
       required:
         - title
         - chapterText
+        - llmConfig
     ChatMessage:
       type: object
       properties:
@@ -245,9 +319,12 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ChatHistoryMessage"
+        llmConfig:
+          $ref: "#/components/schemas/LlmConfig"
       required:
         - message
         - history
+        - llmConfig
     ChatHistoryMessage:
       type: object
       properties:

@@ -1,7 +1,12 @@
 import { Link } from "wouter";
-import { BookOpenText } from "lucide-react";
+import { BookOpenText, Key, CheckCircle } from "lucide-react";
+import { useSettings } from "@/hooks/use-settings";
+import { useSettingsModal } from "@/hooks/use-settings-modal";
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { isConfigured } = useSettings();
+  const { openSettings } = useSettingsModal();
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20">
       <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-xl">
@@ -14,11 +19,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
               LessonBuilder
             </span>
           </Link>
-          
-          <nav className="flex items-center gap-6">
+
+          <nav className="flex items-center gap-4">
             <Link href="/" className="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors outline-none focus-visible:text-primary">
               My Lessons
             </Link>
+            <button
+              onClick={openSettings}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                isConfigured
+                  ? "text-green-700 dark:text-green-400 bg-green-500/10 hover:bg-green-500/20 border border-green-500/20"
+                  : "text-muted-foreground bg-secondary hover:bg-secondary/80 border border-border hover:border-primary/40 hover:text-primary"
+              }`}
+            >
+              {isConfigured ? (
+                <CheckCircle className="w-3.5 h-3.5" />
+              ) : (
+                <Key className="w-3.5 h-3.5" />
+              )}
+              <span className="hidden sm:inline">{isConfigured ? "API Key ✓" : "Set API Key"}</span>
+            </button>
           </nav>
         </div>
       </header>

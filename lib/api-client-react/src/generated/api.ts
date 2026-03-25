@@ -21,6 +21,8 @@ import type {
   ChatMessage,
   CreateLessonBody,
   ErrorResponse,
+  FetchUrlBody,
+  FetchUrlResponse,
   HealthStatus,
   Lesson,
 } from "./api.schemas";
@@ -109,6 +111,92 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Fetch readable text content from a URL
+ */
+export const getFetchUrlUrl = () => {
+  return `/api/fetch-url`;
+};
+
+export const fetchUrl = async (
+  fetchUrlBody: FetchUrlBody,
+  options?: RequestInit,
+): Promise<FetchUrlResponse> => {
+  return customFetch<FetchUrlResponse>(getFetchUrlUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(fetchUrlBody),
+  });
+};
+
+export const getFetchUrlMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof fetchUrl>>,
+    TError,
+    { data: BodyType<FetchUrlBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof fetchUrl>>,
+  TError,
+  { data: BodyType<FetchUrlBody> },
+  TContext
+> => {
+  const mutationKey = ["fetchUrl"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof fetchUrl>>,
+    { data: BodyType<FetchUrlBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return fetchUrl(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type FetchUrlMutationResult = NonNullable<
+  Awaited<ReturnType<typeof fetchUrl>>
+>;
+export type FetchUrlMutationBody = BodyType<FetchUrlBody>;
+export type FetchUrlMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Fetch readable text content from a URL
+ */
+export const useFetchUrl = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof fetchUrl>>,
+    TError,
+    { data: BodyType<FetchUrlBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof fetchUrl>>,
+  TError,
+  { data: BodyType<FetchUrlBody> },
+  TContext
+> => {
+  return useMutation(getFetchUrlMutationOptions(options));
+};
 
 /**
  * @summary List all lessons

@@ -11,6 +11,10 @@ export const lessonsTable = pgTable("lessons", {
   quizQuestions: jsonb("quiz_questions").notNull().default([]),
   status: text("status").notNull().default("processing"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  llmProvider: text("llm_provider"),
+  llmApiKey: text("llm_api_key"),
+  llmModel: text("llm_model"),
+  llmBaseUrl: text("llm_base_url"),
 });
 
 export const insertLessonSchema = createInsertSchema(lessonsTable).omit({

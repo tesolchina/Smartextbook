@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import { BookOpen, Plus, Loader2, Library, ChevronRight, Trash2, AlertCircle } from "lucide-react";
+import { BookOpen, Plus, Loader2, Library, ChevronRight, Trash2, AlertCircle, Link2, FileText, Key, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Layout } from "@/components/layout";
-import { useListLessons, useCreateLesson, useDeleteLesson, getListLessonsQueryKey } from "@workspace/api-client-react";
+import { useListLessons, useCreateLesson, useDeleteLesson, useFetchUrl, getListLessonsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSettings } from "@/hooks/use-settings";
+import { useSettingsModal } from "@/hooks/use-settings-modal";
 
 const createLessonSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(100),
@@ -16,15 +18,22 @@ const createLessonSchema = z.object({
 });
 
 type CreateLessonForm = z.infer<typeof createLessonSchema>;
+type SourceTab = "paste" | "url";
 
 export default function Home() {
   const [_, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const { data: lessons, isLoading: lessonsLoading } = useListLessons();
   const { mutate: createLesson, isPending: isCreating } = useCreateLesson();
+  const { mutate: fetchUrlMutate, isPending: isFetchingUrl } = useFetchUrl();
   const { mutate: deleteLesson } = useDeleteLesson();
-  
+  const { settings, isConfigured } = useSettings();
+  const { openSettings } = useSettingsModal();
+
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [sourceTab, setSourceTab] = useState<SourceTab>("paste");
+  const [urlInput, setUrlInput] = useState("");
+  const [urlError, setUrlError] = useState("");
 
   const form = useForm<CreateLessonForm>({
     resolver: zodResolver(createLessonSchema),
@@ -32,13 +41,59 @@ export default function Home() {
   });
 
   const onSubmit = (data: CreateLessonForm) => {
-    createLesson({ data }, {
+    if (!settings) {
+      openSettings();
+      return;
+    }
+
+    createLesson({
+      data: {
+        title: data.title,
+        chapterText: data.chapterText,
+        llmConfig: {
+          provider: settings.provider,
+          apiKey: settings.apiKey,
+          model: settings.model,
+          baseUrl: settings.baseUrl || undefined,
+        },
+      }
+    }, {
       onSuccess: (newLesson) => {
         queryClient.invalidateQueries({ queryKey: getListLessonsQueryKey() });
         setIsFormOpen(false);
         form.reset();
+        setUrlInput("");
         setLocation(`/lessons/${newLesson.id}`);
       }
+    });
+  };
+
+  const handleFetchUrl = () => {
+    setUrlError("");
+    let parsed: URL;
+    try {
+      parsed = new URL(urlInput.trim());
+      if (!["http:", "https:"].includes(parsed.protocol)) {
+        setUrlError("Only http and https URLs are supported.");
+        return;
+      }
+    } catch {
+      setUrlError("Please enter a valid URL (e.g. https://example.com/article)");
+      return;
+    }
+
+    fetchUrlMutate({ data: { url: urlInput.trim() } }, {
+      onSuccess: (result) => {
+        form.setValue("chapterText", result.content, { shouldValidate: true });
+        if (!form.getValues("title")) {
+          form.setValue("title", result.title.slice(0, 100), { shouldValidate: true });
+        }
+        setSourceTab("paste");
+      },
+      onError: (err: any) => {
+        const msg = err?.data?.error ?? err?.message ?? "Failed to fetch URL";
+        setUrlError(msg);
+      },
     });
   };
 
@@ -60,7 +115,7 @@ export default function Home() {
           <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt="Abstract pattern" className="w-full h-full object-cover object-center" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-card z-0"></div>
-        
+
         <div className="container max-w-4xl mx-auto px-4 relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-bold tracking-wide uppercase mb-6 shadow-sm">
@@ -70,9 +125,9 @@ export default function Home() {
               Turn any chapter into an <br/><span className="text-primary italic">interactive lesson.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto font-medium">
-              Paste your reading material below. Our AI tutor will extract key concepts, build a comprehensive quiz, and guide you through the material.
+              Paste your reading material or provide a URL. Our AI tutor will extract key concepts, build a comprehensive quiz, and guide you through the material.
             </p>
-            
+
             {!isFormOpen ? (
               <button
                 onClick={() => setIsFormOpen(true)}
@@ -82,21 +137,43 @@ export default function Home() {
                 Create New Lesson
               </button>
             ) : (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 className="bg-background rounded-3xl p-6 md:p-8 shadow-2xl border border-border/60 text-left max-w-3xl mx-auto relative overflow-hidden"
               >
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary to-accent"></div>
-                <h3 className="font-serif text-2xl font-bold mb-6 flex items-center gap-3">
-                  <BookOpen className="w-6 h-6 text-primary" />
-                  New Lesson Setup
-                </h3>
-                
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="font-serif text-2xl font-bold flex items-center gap-3">
+                    <BookOpen className="w-6 h-6 text-primary" />
+                    New Lesson Setup
+                  </h3>
+                  <button onClick={() => setIsFormOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {!isConfigured && (
+                  <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-3">
+                    <Key className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-amber-700 dark:text-amber-400 text-sm mb-1">API key required</p>
+                      <p className="text-amber-700/80 dark:text-amber-400/80 text-xs">You need to set an AI provider API key before generating a lesson.</p>
+                    </div>
+                    <button
+                      onClick={openSettings}
+                      className="shrink-0 px-3 py-1.5 rounded-lg bg-amber-500 text-white font-semibold text-xs hover:bg-amber-600 transition-colors"
+                    >
+                      Set key
+                    </button>
+                  </div>
+                )}
+
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                   <div>
                     <label className="block text-sm font-bold text-foreground mb-2">Lesson Title</label>
-                    <input 
+                    <input
                       {...form.register("title")}
                       placeholder="e.g. Chapter 4: Cellular Respiration"
                       className="w-full bg-card border-2 border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
@@ -105,38 +182,105 @@ export default function Home() {
                       <p className="text-destructive text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4"/> {form.formState.errors.title.message}</p>
                     )}
                   </div>
-                  
+
+                  {/* Source tabs */}
                   <div>
-                    <label className="block text-sm font-bold text-foreground mb-2 flex justify-between">
-                      <span>Source Material (Chapter Text)</span>
-                      <span className="text-muted-foreground font-normal text-xs">Paste textbook chapter or article here</span>
-                    </label>
-                    <textarea 
-                      {...form.register("chapterText")}
-                      placeholder="Paste your text here..."
-                      className="w-full bg-card border-2 border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none font-serif"
-                      rows={12}
-                    />
-                    {form.formState.errors.chapterText && (
-                      <p className="text-destructive text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4"/> {form.formState.errors.chapterText.message}</p>
+                    <label className="block text-sm font-bold text-foreground mb-2">Source Material</label>
+                    <div className="flex gap-1 p-1 bg-secondary rounded-xl mb-3 w-fit">
+                      <button
+                        type="button"
+                        onClick={() => setSourceTab("paste")}
+                        className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                          sourceTab === "paste"
+                            ? "bg-background text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        <FileText className="w-4 h-4" />
+                        Paste text
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setSourceTab("url"); setUrlError(""); }}
+                        className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                          sourceTab === "url"
+                            ? "bg-background text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        <Link2 className="w-4 h-4" />
+                        Fetch from URL
+                      </button>
+                    </div>
+
+                    {sourceTab === "paste" ? (
+                      <div>
+                        <textarea
+                          {...form.register("chapterText")}
+                          placeholder="Paste your text here..."
+                          className="w-full bg-card border-2 border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none font-serif"
+                          rows={12}
+                        />
+                        {form.formState.errors.chapterText && (
+                          <p className="text-destructive text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4"/> {form.formState.errors.chapterText.message}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="flex gap-2">
+                          <input
+                            type="url"
+                            value={urlInput}
+                            onChange={(e) => { setUrlInput(e.target.value); setUrlError(""); }}
+                            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleFetchUrl(); } }}
+                            placeholder="https://en.wikipedia.org/wiki/Photosynthesis"
+                            className="flex-1 bg-card border-2 border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleFetchUrl}
+                            disabled={isFetchingUrl || !urlInput.trim()}
+                            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 shadow-lg shadow-primary/20 disabled:opacity-60 disabled:cursor-not-allowed transition-all whitespace-nowrap"
+                          >
+                            {isFetchingUrl ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2 className="w-4 h-4" />}
+                            Fetch
+                          </button>
+                        </div>
+                        {urlError && (
+                          <p className="text-destructive text-sm flex items-center gap-1">
+                            <AlertCircle className="w-4 h-4 shrink-0" /> {urlError}
+                          </p>
+                        )}
+                        <p className="text-xs text-muted-foreground">
+                          Works best with articles, Wikipedia pages, and text-heavy web pages. After fetching, you can edit the extracted text before generating.
+                        </p>
+                        {form.watch("chapterText") && (
+                          <div className="p-3 rounded-xl bg-green-500/10 border border-green-500/20 text-green-700 dark:text-green-400 text-sm font-medium flex items-center gap-2">
+                            <CheckCircleIcon className="w-4 h-4 shrink-0" />
+                            Content fetched! Switch to "Paste text" to review or edit it before generating.
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
-                  
+
                   <div className="flex items-center justify-end gap-4 pt-4 border-t border-border">
-                    <button 
-                      type="button" 
-                      onClick={() => setIsFormOpen(false)}
+                    <button
+                      type="button"
+                      onClick={() => { setIsFormOpen(false); form.reset(); setUrlInput(""); }}
                       className="px-6 py-3 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors"
                     >
                       Cancel
                     </button>
-                    <button 
+                    <button
                       type="submit"
-                      disabled={isCreating}
+                      disabled={isCreating || !isConfigured}
                       className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                     >
                       {isCreating ? (
                         <><Loader2 className="w-5 h-5 animate-spin" /> Generating AI Lesson...</>
+                      ) : !isConfigured ? (
+                        <><Key className="w-5 h-5" /> Set API Key First</>
                       ) : (
                         <><SparklesIcon className="w-5 h-5" /> Generate Lesson</>
                       )}
@@ -176,8 +320,8 @@ export default function Home() {
               {lessons.map((lesson) => (
                 <Link key={lesson.id} href={`/lessons/${lesson.id}`}>
                   <div className="group h-full bg-card rounded-2xl p-6 border border-border shadow-sm hover:shadow-xl hover:border-primary/40 transition-all duration-300 flex flex-col relative cursor-pointer active:scale-[0.98]">
-                    
-                    <button 
+
+                    <button
                       onClick={(e) => handleDelete(e, lesson.id)}
                       className="absolute top-4 right-4 w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive hover:border-destructive hover:bg-destructive/10 transition-all z-10"
                     >
@@ -199,15 +343,15 @@ export default function Home() {
                         </span>
                       )}
                     </div>
-                    
+
                     <h3 className="text-xl font-serif font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
                       {lesson.title}
                     </h3>
-                    
+
                     <p className="text-sm text-muted-foreground line-clamp-3 mb-6 flex-1">
                       {lesson.summary || lesson.chapterText.substring(0, 150) + "..."}
                     </p>
-                    
+
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/50">
                       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         {format(new Date(lesson.createdAt), "MMM d, yyyy")}
@@ -227,7 +371,6 @@ export default function Home() {
   );
 }
 
-// Inline small icons for layout above
 function SparklesIcon(props: React.SVGProps<SVGSVGElement>) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
 }

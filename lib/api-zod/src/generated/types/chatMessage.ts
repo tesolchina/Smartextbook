@@ -6,8 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ChatHistoryMessage } from "./chatHistoryMessage";
+import type { LlmConfig } from "./llmConfig";
 
 export interface ChatMessage {
   message: string;
   history: ChatHistoryMessage[];
+  llmConfig: LlmConfig;
 }

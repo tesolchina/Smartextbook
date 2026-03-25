@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { ChatHistoryMessage } from "@workspace/api-client-react";
+import { type LlmSettings } from "./use-settings";
 
 export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] = []) {
   const [messages, setMessages] = useState<ChatHistoryMessage[]>(initialHistory);
@@ -7,14 +8,18 @@ export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] =
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const sendMessage = useCallback(async (content: string) => {
+  const sendMessage = useCallback(async (content: string, llmSettings: LlmSettings | null) => {
     if (!content.trim() || isStreaming) return;
+
+    if (!llmSettings) {
+      setError("No API key configured. Click 'Set API Key' in the top menu to add your key.");
+      return;
+    }
 
     setError(null);
     const userMsg: ChatHistoryMessage = { role: "user", content };
     const historyToSend = [...messages];
-    
-    // Optimistically add user message
+
     setMessages((prev) => [...prev, userMsg]);
     setIsStreaming(true);
 
@@ -24,38 +29,50 @@ export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] =
       const res = await fetch(`/api/lessons/${lessonId}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: content, history: historyToSend }),
+        body: JSON.stringify({
+          message: content,
+          history: historyToSend,
+          llmConfig: {
+            provider: llmSettings.provider,
+            apiKey: llmSettings.apiKey,
+            model: llmSettings.model,
+            baseUrl: llmSettings.baseUrl || undefined,
+          },
+        }),
         signal: abortControllerRef.current.signal,
       });
 
       if (!res.ok) {
-        throw new Error("Failed to send message to tutor");
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Failed to send message to tutor");
       }
       if (!res.body) throw new Error("No response body");
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
 
-      // Add an empty assistant message to stream into
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       let done = false;
       while (!done) {
         const { value, done: readerDone } = await reader.read();
         done = readerDone;
-        
+
         if (value) {
           const chunk = decoder.decode(value, { stream: true });
           const lines = chunk.split("\n");
-          
+
           for (const line of lines) {
             if (line.startsWith("data: ")) {
               const dataStr = line.slice(6).trim();
               if (!dataStr) continue;
-              
+
               try {
                 const data = JSON.parse(dataStr);
                 if (data.done) {
+                  done = true;
+                } else if (data.error) {
+                  setError(data.error);
                   done = true;
                 } else if (data.content) {
                   setMessages((prev) => {
@@ -70,9 +87,8 @@ export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] =
                     return newMessages;
                   });
                 }
-              } catch (e) {
-                // Ignore incomplete JSON chunks, they will be resolved in next stream chunk
-                // in a robust SSE implementation, but typical simple SSEs send complete JSON objects per line
+              } catch {
+                // Ignore incomplete JSON chunks
               }
             }
           }
