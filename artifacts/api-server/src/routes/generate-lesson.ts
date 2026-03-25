@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { GenerateLessonBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
+import { jsonrepair } from "jsonrepair";
 
 const router: IRouter = Router();
 
@@ -54,13 +55,18 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
     });
     const content = response.choices[0]?.message?.content ?? "";
 
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    // Strip markdown code fences if present (```json ... ``` or ``` ... ```)
+    const stripped = content.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
+
+    // Extract the outermost JSON object
+    const jsonMatch = stripped.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       res.status(502).json({ error: "AI did not return valid JSON. Please try again." });
       return;
     }
 
-    const data = JSON.parse(jsonMatch[0]);
+    // Use jsonrepair to fix common LLM JSON issues (unescaped newlines, trailing commas, etc.)
+    const data = JSON.parse(jsonrepair(jsonMatch[0]));
     res.json({
       summary: data.summary ?? "",
       keyConcepts: data.keyConcepts ?? [],
