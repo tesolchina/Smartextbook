@@ -48,7 +48,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base md:text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
-              Paste a chapter or drop a URL — LessonBuilder generates a concise summary, a glossary of key concepts, and an interactive quiz. Then your personal AI tutor stays on hand to answer every question.
+              Paste a chapter or drop a URL — LessonBuilder generates a concise summary, a glossary of key concepts, an interactive quiz, and a Mind Map. Share lessons publicly, collect student comments, and generate AI-powered Learning Reports.
             </p>
 
             {!isConfigured && (
@@ -135,7 +135,7 @@ function EmptyLibrary({ onCreateClick }: { onCreateClick: () => void }) {
       />
       <h3 className="text-xl font-serif font-bold mb-1.5">No lessons yet</h3>
       <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
-        Create your first lesson from any textbook chapter, article, or web page.
+        Create your first lesson from any textbook chapter, article, or web page. Get a summary, glossary, Mind Map, and quiz — then share publicly to collect student comments and generate a Learning Report.
       </p>
       <button
         onClick={onCreateClick}

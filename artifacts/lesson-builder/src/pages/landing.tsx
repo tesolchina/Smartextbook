@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpenText, Sparkles, ListTodo, MessageSquare, Download,
   ChevronLeft, ChevronRight, Github, ExternalLink, ArrowRight,
-  FileText, Lightbulb, GraduationCap,
+  FileText, Lightbulb, GraduationCap, Network, Share2, BarChart2,
 } from "lucide-react";
 
 const SLIDES = [
@@ -25,27 +25,51 @@ const SLIDES = [
     mockup: <SummaryMockup />,
   },
   {
-    icon: <ListTodo className="w-10 h-10 text-primary" />,
-    label: "Step 3 — Quiz",
+    icon: <Network className="w-10 h-10 text-primary" />,
+    label: "Step 3 — Mind Map",
+    title: "Visualise how concepts connect",
+    body: "Switch to the Mind Map tab to see an interactive concept diagram generated from the lesson. Nodes and edges reveal how key ideas relate to one another — making structure visible at a glance.",
+    accent: "from-primary/20 to-accent/10",
+    mockup: <MindMapMockup />,
+  },
+  {
+    icon: <ListTodo className="w-10 h-10 text-accent" />,
+    label: "Step 4 — Quiz",
     title: "Test your understanding interactively",
     body: "Work through auto-generated multiple-choice questions. Get instant feedback, read explanations for every answer, and see your final score — active recall that research shows improves retention.",
-    accent: "from-primary/20 to-accent/10",
+    accent: "from-accent/20 to-primary/10",
     mockup: <QuizMockup />,
   },
   {
-    icon: <MessageSquare className="w-10 h-10 text-accent" />,
-    label: "Step 4 — Chat",
+    icon: <MessageSquare className="w-10 h-10 text-primary" />,
+    label: "Step 5 — Chat",
     title: "Ask your personal AI tutor anything",
     body: "A context-aware AI tutor sits alongside every lesson, aware of the full chapter content. Ask follow-up questions, request alternative explanations, or probe deeper — it stays on-topic.",
-    accent: "from-accent/20 to-primary/10",
+    accent: "from-primary/20 to-accent/10",
     mockup: <ChatMockup />,
   },
   {
-    icon: <Download className="w-10 h-10 text-primary" />,
-    label: "Step 5 — Export",
-    title: "Share a self-contained lesson file",
-    body: "Download any lesson as a standalone HTML page — no server needed. Name your AI tutor, choose a teaching style, and let learners bring their own API key to chat with the embedded tutor.",
+    icon: <Share2 className="w-10 h-10 text-accent" />,
+    label: "Step 6 — Share",
+    title: "Publish a public lesson link",
+    body: "Generate a shareable public link for any lesson. Students open it in their browser without an account, read the lesson, take the quiz, and leave comments — no setup required.",
+    accent: "from-accent/20 to-primary/10",
+    mockup: <ShareMockup />,
+  },
+  {
+    icon: <BarChart2 className="w-10 h-10 text-primary" />,
+    label: "Step 7 — Reports",
+    title: "Track student comments & progress",
+    body: "View every student comment in one place and generate an AI-powered Learning Report that summarises class understanding, highlights misconceptions, and suggests follow-up teaching points.",
     accent: "from-primary/20 to-accent/10",
+    mockup: <ReportMockup />,
+  },
+  {
+    icon: <Download className="w-10 h-10 text-accent" />,
+    label: "Step 8 — Export",
+    title: "Download a self-contained lesson file",
+    body: "Export any lesson as a standalone HTML page — no server needed. Name your AI tutor, choose a teaching style, and let learners bring their own API key to chat with the embedded tutor.",
+    accent: "from-accent/20 to-primary/10",
     mockup: <ExportMockup />,
   },
 ];
@@ -106,7 +130,7 @@ export default function Landing() {
               <span className="text-primary italic">into a living lesson.</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-              Paste a textbook chapter or URL — LessonBuilder generates an AI-powered summary, key-concept glossary, and interactive quiz. A personal AI tutor answers every question. Fully BYOK, no data stored.
+              Paste a textbook chapter or URL — LessonBuilder generates an AI-powered summary, key-concept glossary, interactive quiz, and Mind Map. Share lessons publicly, collect student comments, and get AI-generated Learning Reports. Fully BYOK, no data stored.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/app"
@@ -127,7 +151,7 @@ export default function Landing() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-serif font-black mb-3">How it works</h2>
-            <p className="text-muted-foreground">Five steps from raw text to mastery.</p>
+            <p className="text-muted-foreground">Eight steps from raw text to mastery — for students and educators alike.</p>
           </div>
 
           <div
@@ -387,6 +411,70 @@ function ExportMockup() {
           </div>
         </div>
         <div className="h-9 rounded-xl bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">⬇ Download HTML</div>
+      </div>
+    </div>
+  );
+}
+
+function MindMapMockup() {
+  return (
+    <div className="p-5 space-y-3">
+      <div className="text-xs font-bold text-muted-foreground mb-2">🗺 Mind Map — The Water Cycle</div>
+      <div className="relative bg-secondary rounded-xl h-36 overflow-hidden flex items-center justify-center">
+        <div className="absolute w-14 h-7 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-[10px] font-bold text-primary left-1/2 -translate-x-1/2 top-4">Water Cycle</div>
+        <div className="absolute w-12 h-6 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[9px] font-semibold text-accent left-4 top-12">Evaporation</div>
+        <div className="absolute w-14 h-6 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[9px] font-semibold text-accent right-4 top-12">Condensation</div>
+        <div className="absolute w-12 h-6 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[9px] font-semibold text-accent left-8 bottom-4">Precipitation</div>
+        <div className="absolute w-10 h-6 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-[9px] font-semibold text-accent right-8 bottom-4">Runoff</div>
+      </div>
+      <p className="text-[10px] text-muted-foreground">Tap any node to explore related concepts</p>
+    </div>
+  );
+}
+
+function ShareMockup() {
+  return (
+    <div className="p-5 space-y-3">
+      <div className="text-xs font-bold text-muted-foreground mb-2">🔗 Share Lesson</div>
+      <div className="bg-secondary rounded-xl p-3 space-y-2">
+        <p className="text-[11px] text-muted-foreground">Public link — anyone with the link can view this lesson</p>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 bg-card border border-border rounded-lg px-2.5 py-1.5 text-[10px] text-muted-foreground truncate">lessonbuilder.app/s/wc-4f9a2b…</div>
+          <div className="bg-primary text-primary-foreground rounded-lg px-2.5 py-1.5 text-[10px] font-bold shrink-0">Copy</div>
+        </div>
+      </div>
+      <div className="bg-card border border-dashed border-border rounded-xl p-3 space-y-1.5">
+        <p className="text-[11px] font-semibold">What students can do:</p>
+        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground"><span className="text-green-500">✓</span> Read the summary &amp; glossary</div>
+        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground"><span className="text-green-500">✓</span> Take the quiz</div>
+        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground"><span className="text-green-500">✓</span> Leave comments</div>
+      </div>
+    </div>
+  );
+}
+
+function ReportMockup() {
+  return (
+    <div className="p-5 space-y-3">
+      <div className="text-xs font-bold text-muted-foreground mb-2">📊 Learning Report</div>
+      <div className="space-y-1.5">
+        {[
+          { label: "Quiz average", value: "72%", bar: 72 },
+          { label: "Students completed", value: "18 / 24", bar: 75 },
+        ].map((row) => (
+          <div key={row.label} className="bg-secondary rounded-lg p-2.5">
+            <div className="flex justify-between text-[10px] mb-1">
+              <span className="text-muted-foreground">{row.label}</span>
+              <span className="font-bold text-foreground">{row.value}</span>
+            </div>
+            <div className="h-1.5 bg-border rounded-full overflow-hidden">
+              <div className="h-full bg-primary rounded-full" style={{ width: `${row.bar}%` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="bg-accent/10 border border-accent/20 rounded-lg p-2.5 text-[10px] text-muted-foreground leading-relaxed">
+        💡 AI insight: Most students confused <em>transpiration</em> with <em>evaporation</em>. Consider revisiting with a plant-biology example.
       </div>
     </div>
   );
