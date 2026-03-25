@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SettingsModalProvider } from "@/hooks/use-settings-modal";
 
+import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import LessonView from "@/pages/lesson-view";
 import Credits from "@/pages/credits";
@@ -21,7 +22,8 @@ const queryClient = new QueryClient({
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={Landing} />
+      <Route path="/app" component={Home} />
       <Route path="/lessons/:id" component={LessonView} />
       <Route path="/credits" component={Credits} />
       <Route component={NotFound} />

@@ -14,9 +14,10 @@ const makeSettings = (overrides: Partial<LlmSettings> = {}): LlmSettings => ({
 
 describe("useSettings", () => {
   describe("initial state", () => {
-    it("returns null settings when localStorage is empty", () => {
+    it("returns default settings when localStorage is empty", () => {
       const { result } = renderHook(() => useSettings());
-      expect(result.current.settings).toBeNull();
+      expect(result.current.settings.provider).toBe("openai");
+      expect(result.current.settings.apiKey).toBe("");
       expect(result.current.isConfigured).toBe(false);
     });
 
@@ -25,21 +26,24 @@ describe("useSettings", () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
 
       const { result } = renderHook(() => useSettings());
-      expect(result.current.settings?.provider).toBe("openai");
-      expect(result.current.settings?.apiKey).toBe("sk-test-abc123");
+      expect(result.current.settings.provider).toBe("openai");
+      expect(result.current.settings.apiKey).toBe("sk-test-abc123");
       expect(result.current.isConfigured).toBe(true);
     });
 
-    it("returns null for malformed localStorage data", () => {
+    it("falls back to defaults for malformed localStorage data", () => {
       localStorage.setItem(STORAGE_KEY, "{{bad json");
       const { result } = renderHook(() => useSettings());
-      expect(result.current.settings).toBeNull();
+      expect(result.current.settings.provider).toBe("openai");
+      expect(result.current.settings.apiKey).toBe("");
+      expect(result.current.isConfigured).toBe(false);
     });
 
-    it("returns null if required fields are missing", () => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ provider: "openai" }));
+    it("falls back to defaults if required fields are missing", () => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ apiKey: "orphan-key" }));
       const { result } = renderHook(() => useSettings());
-      expect(result.current.settings).toBeNull();
+      expect(result.current.settings.provider).toBe("openai");
+      expect(result.current.settings.apiKey).toBe("");
     });
   });
 
@@ -66,7 +70,7 @@ describe("useSettings", () => {
 
       act(() => { result.current.saveSettings(next); });
 
-      expect(result.current.settings?.provider).toBe("anthropic");
+      expect(result.current.settings.provider).toBe("anthropic");
       expect(result.current.isConfigured).toBe(true);
     });
 
@@ -80,13 +84,13 @@ describe("useSettings", () => {
   });
 
   describe("clearSettings", () => {
-    it("resets settings to null", () => {
+    it("resets settings to defaults and marks as not configured", () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(makeSettings()));
       const { result } = renderHook(() => useSettings());
 
       act(() => { result.current.clearSettings(); });
 
-      expect(result.current.settings).toBeNull();
+      expect(result.current.settings.apiKey).toBe("");
       expect(result.current.isConfigured).toBe(false);
     });
 

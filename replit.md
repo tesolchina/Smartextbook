@@ -82,8 +82,16 @@ Users can provide a URL instead of pasting text. The backend fetches the page, e
 - Lesson generation is **synchronous** — the API call waits for AI to complete and returns full JSON
 - Chat is **stateless** — lesson context (title, summary, keyConcepts, chapterText) is sent with each request
 
+### Frontend Routes
+- `/` — Landing / teaser page: hero, 5-slide feature carousel ("How it works"), stats strip, Dr. Simon Wang credits card, GitHub + Replit remix links, CTA to open app
+- `/app` — Lesson library (localStorage) + "Create a Lesson" form
+- `/lessons/:id` — Individual lesson view: summary tab, interactive quiz, source text, chat sidebar, export button
+- `/credits` — Full credits page: Google "Learn Your Way" inspiration, LearnLM, 8+ related open-source projects
+- `/about` links to `/` in the navbar
+
 ### Credits & Inspiration
 - `/credits` route — shows Google Research's "Learn Your Way" and LearnLM as primary inspiration, learning science foundations (Dual Coding Theory, Active Recall), and 8 related open-source GitHub projects
+- Landing page credits: **Dr. Simon Wang**, Lecturer in English & Innovation Officer, The Language Centre, Hong Kong Baptist University. GitHub: https://github.com/tesolchina/Smartextbook · Replit: https://replit.com/@SimonWang23/Smartextbook?v=1
 
 ## Development Commands
 

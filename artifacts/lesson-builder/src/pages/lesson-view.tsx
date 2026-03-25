@@ -35,7 +35,7 @@ export default function LessonView() {
               This lesson may have been cleared from browser storage, or the link is invalid.
             </p>
             <Link
-              href="/"
+              href="/app"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-destructive text-white text-sm font-bold hover:bg-destructive/90 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" /> Back to Home
