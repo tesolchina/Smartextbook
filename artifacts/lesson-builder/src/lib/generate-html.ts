@@ -181,8 +181,9 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
 
     <div class="field">
       <label>Model</label>
-      <input type="text" id="setup-model" placeholder="e.g. gpt-4o-mini, grok-2, gemini-2.0-flash" />
-      <small>Check your provider's model list for valid names.</small>
+      <select id="setup-model-sel"></select>
+      <input type="text" id="setup-model-txt" placeholder="Type model name…" autocomplete="off" style="display:none;margin-top:.5rem" />
+      <small id="model-hint"></small>
     </div>
 
     <div class="error-msg" id="setup-error"></div>
@@ -301,37 +302,139 @@ const customUrlField = document.getElementById('custom-url-field');
 const setupBtn = document.getElementById('setup-btn');
 const setupError = document.getElementById('setup-error');
 
-providerSel.addEventListener('change', () => {
-  customUrlField.style.display = providerSel.value.startsWith('custom|') ? 'block' : 'none';
-  const defaultModels = {
-    'openai|': 'gpt-4o-mini',
-    'grok|': 'grok-3-mini',
-    'gemini|': 'gemini-2.0-flash',
-    'deepseek|': 'deepseek-chat',
-    'openrouter|': 'openai/gpt-4o-mini',
-    'mistral|': 'mistral-small-latest',
-    'together|': 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
-    'minimax|': 'MiniMax-Text-01',
-    'poe|': 'Claude-3-Haiku',
-    'kimi|': 'moonshot-v1-8k',
-  };
-  const prefix = providerSel.value.split('|')[0] + '|';
-  if (defaultModels[prefix]) document.getElementById('setup-model').value = defaultModels[prefix];
-  const modelHint = document.querySelector('.field small');
-  if (modelHint) {
-    modelHint.textContent = prefix === 'poe|'
-      ? 'Enter a Poe bot handle, e.g. Claude-3-Haiku, GPT-4o-mini, Llama-3.1-405B.'
-      : "Check your provider's model list for valid names.";
+// ── Model lists per provider ──
+const PROVIDER_MODELS = {
+  openai: [
+    { v: 'gpt-4o-mini',     l: 'GPT-4o Mini — fast & affordable (recommended)' },
+    { v: 'gpt-4o',          l: 'GPT-4o — flagship' },
+    { v: 'gpt-4.1-mini',    l: 'GPT-4.1 Mini' },
+    { v: 'gpt-4.1',         l: 'GPT-4.1' },
+    { v: 'gpt-4-turbo',     l: 'GPT-4 Turbo' },
+    { v: 'o4-mini',         l: 'o4 Mini — reasoning' },
+    { v: 'o3-mini',         l: 'o3 Mini — reasoning' },
+  ],
+  grok: [
+    { v: 'grok-3-mini',     l: 'Grok 3 Mini — fast (recommended)' },
+    { v: 'grok-3',          l: 'Grok 3' },
+    { v: 'grok-2-1212',     l: 'Grok 2' },
+  ],
+  gemini: [
+    { v: 'gemini-2.0-flash',               l: 'Gemini 2.0 Flash (recommended)' },
+    { v: 'gemini-2.0-flash-lite',          l: 'Gemini 2.0 Flash Lite — fastest' },
+    { v: 'gemini-2.5-pro-preview-03-25',   l: 'Gemini 2.5 Pro Preview' },
+    { v: 'gemini-1.5-pro',                 l: 'Gemini 1.5 Pro' },
+    { v: 'gemini-1.5-flash',               l: 'Gemini 1.5 Flash' },
+  ],
+  deepseek: [
+    { v: 'deepseek-chat',      l: 'DeepSeek V3 (recommended)' },
+    { v: 'deepseek-reasoner',  l: 'DeepSeek R1 — reasoning' },
+  ],
+  openrouter: [
+    { v: 'openai/gpt-4o-mini',                          l: 'OpenAI GPT-4o Mini' },
+    { v: 'anthropic/claude-3.5-haiku',                  l: 'Claude 3.5 Haiku' },
+    { v: 'anthropic/claude-3.7-sonnet',                 l: 'Claude 3.7 Sonnet' },
+    { v: 'google/gemini-2.0-flash-exp:free',            l: 'Gemini 2.0 Flash (free)' },
+    { v: 'meta-llama/llama-3.3-70b-instruct',           l: 'Llama 3.3 70B' },
+    { v: 'deepseek/deepseek-chat',                      l: 'DeepSeek V3' },
+    { v: 'deepseek/deepseek-r1',                        l: 'DeepSeek R1 — reasoning' },
+    { v: 'qwen/qwen-2.5-72b-instruct',                  l: 'Qwen 2.5 72B' },
+    { v: 'mistralai/mistral-small-3.1-24b-instruct:free', l: 'Mistral Small 3.1 (free)' },
+  ],
+  mistral: [
+    { v: 'mistral-small-latest',   l: 'Mistral Small (recommended)' },
+    { v: 'mistral-medium-latest',  l: 'Mistral Medium' },
+    { v: 'mistral-large-latest',   l: 'Mistral Large' },
+    { v: 'open-mistral-nemo',      l: 'Mistral NeMo — open' },
+  ],
+  together: [
+    { v: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',   l: 'Llama 3.3 70B Turbo (recommended)' },
+    { v: 'meta-llama/Llama-3.1-8B-Instruct-Turbo',    l: 'Llama 3.1 8B Turbo — cheapest' },
+    { v: 'Qwen/Qwen2.5-72B-Instruct-Turbo',           l: 'Qwen 2.5 72B Turbo' },
+    { v: 'deepseek-ai/DeepSeek-V3',                   l: 'DeepSeek V3' },
+    { v: 'mistralai/Mixtral-8x22B-Instruct-v0.1',     l: 'Mixtral 8x22B' },
+  ],
+  minimax: [
+    { v: 'MiniMax-Text-01',  l: 'MiniMax Text-01 (recommended)' },
+    { v: 'abab6.5s-chat',    l: 'abab6.5s Chat' },
+  ],
+  poe: [
+    { v: 'Claude-3-Haiku',       l: 'Claude 3 Haiku' },
+    { v: 'Claude-3.5-Sonnet',    l: 'Claude 3.5 Sonnet' },
+    { v: 'GPT-4o-mini',          l: 'GPT-4o Mini' },
+    { v: 'GPT-4o',               l: 'GPT-4o' },
+    { v: 'Gemini-Flash',         l: 'Gemini Flash' },
+    { v: 'Llama-3.1-405B',       l: 'Llama 3.1 405B' },
+  ],
+  kimi: [
+    { v: 'moonshot-v1-8k',    l: 'Moonshot v1 8K (recommended)' },
+    { v: 'moonshot-v1-32k',   l: 'Moonshot v1 32K' },
+    { v: 'moonshot-v1-128k',  l: 'Moonshot v1 128K' },
+  ],
+};
+
+const modelSel  = document.getElementById('setup-model-sel');
+const modelTxt  = document.getElementById('setup-model-txt');
+const modelHint = document.getElementById('model-hint');
+
+function populateModels(prov) {
+  const models = PROVIDER_MODELS[prov] || [];
+  modelSel.innerHTML = '';
+  if (prov === 'custom') {
+    // Custom provider: hide select, always show text input
+    modelSel.style.display = 'none';
+    modelTxt.style.display = 'block';
+    modelTxt.placeholder = 'Type model name…';
+    modelHint.textContent = 'Enter the exact model ID your endpoint accepts.';
+    return;
   }
+  modelSel.style.display = 'block';
+  models.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m.v; opt.textContent = m.l;
+    modelSel.appendChild(opt);
+  });
+  // "Other" escape hatch
+  const other = document.createElement('option');
+  other.value = '__other__'; other.textContent = 'Other — type model name…';
+  modelSel.appendChild(other);
+
+  const isPoe = prov === 'poe';
+  modelHint.textContent = isPoe
+    ? 'Use the exact bot handle shown on poe.com — case-sensitive.'
+    : 'Select a model, or choose "Other" to enter a custom name.';
+  // Hide/show text input based on current selection
+  modelSel.dispatchEvent(new Event('change'));
+}
+
+modelSel.addEventListener('change', () => {
+  const isOther = modelSel.value === '__other__';
+  modelTxt.style.display = isOther ? 'block' : 'none';
+  if (isOther) { modelTxt.focus(); }
 });
+
+providerSel.addEventListener('change', () => {
+  const prov = providerSel.value.split('|')[0];
+  customUrlField.style.display = prov === 'custom' ? 'block' : 'none';
+  populateModels(prov);
+});
+
+// Initialise with the default provider (openai)
+populateModels('openai');
+
+function getModelValue() {
+  if (modelSel.style.display === 'none') return modelTxt.value.trim();
+  if (modelSel.value === '__other__') return modelTxt.value.trim();
+  return modelSel.value;
+}
 
 setupBtn.addEventListener('click', async () => {
   const key = document.getElementById('setup-key').value.trim();
-  const mdl = document.getElementById('setup-model').value.trim();
+  const mdl = getModelValue();
   const [prov, pUrl] = providerSel.value.split('|');
   const bUrl = prov === 'custom' ? document.getElementById('setup-base-url').value.trim() : pUrl;
 
-  if (!key || !mdl) { showError('Please enter your API key and model.'); return; }
+  if (!key) { showError('Please enter your API key.'); return; }
+  if (!mdl) { showError('Please select or enter a model name.'); return; }
   if (prov === 'custom' && !bUrl) { showError('Enter a base URL for custom provider.'); return; }
 
   setupError.style.display = 'none';
