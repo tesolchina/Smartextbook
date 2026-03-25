@@ -23,6 +23,7 @@ export default function LessonView() {
   const [match, params] = useRoute("/lessons/:id");
   const [activeTab, setActiveTab] = useState<Tab>("summary");
   const [exportOpen, setExportOpen] = useState(false);
+  const [mindmapDiagram, setMindmapDiagram] = useState<string | null>(null);
 
   const { getLesson } = useLessonsStore();
   const lesson = match ? getLesson(params.id) : undefined;
@@ -108,7 +109,11 @@ export default function LessonView() {
                 )}
 
                 {activeTab === "mindmap" && (
-                  <MindMapTab lesson={lesson} />
+                  <MindMapTab
+                    lesson={lesson}
+                    diagram={mindmapDiagram}
+                    onDiagramReady={setMindmapDiagram}
+                  />
                 )}
 
                 {activeTab === "chapter" && (

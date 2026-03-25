@@ -40,11 +40,11 @@ mindmap
       Sub-idea 2
 
 Rules:
-- The root node is the lesson title (keep it short, under 40 chars).
-- Add one branch per major concept (use the term as the branch label).
+- The root node uses root(...) syntax with the lesson title (kept short, under 40 chars).
+- Add one branch per major concept (use the term as the plain text branch label).
 - Each branch may have 1-3 sub-ideas drawn from the definition or related ideas.
 - Use no more than 8 top-level branches.
-- Do NOT use parentheses or special Mermaid node shapes — plain text labels only.
+- Branch and sub-branch labels must be plain text only — no parentheses, no special Mermaid node shapes.
 - Return ONLY the JSON object, no other text.`;
 };
 
