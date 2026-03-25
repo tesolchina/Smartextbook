@@ -31,9 +31,17 @@ export async function queryPoe(
       version: "1.0",
       type: "query",
       query: messages.map((m) => ({
-        role: m.role === "bot" ? "bot" : m.role,
+        role: m.role,
         content: m.content,
+        content_type: "text/markdown",
+        timestamp: 0,
+        message_id: "",
+        feedback: [],
+        attachments: [],
       })),
+      user_id: "",
+      conversation_id: "",
+      message_id: "",
     }),
   });
 
@@ -41,13 +49,24 @@ export async function queryPoe(
     let detail = `HTTP ${res.status}`;
     try {
       const body = await res.json();
-      detail = body?.detail ?? body?.error ?? detail;
-    } catch {}
+      detail = body?.detail ?? body?.error ?? body?.message ?? detail;
+    } catch {
+      try {
+        const text = await res.text();
+        if (text) detail = text.slice(0, 200);
+      } catch {}
+    }
     throw makeError(`Poe API error: ${detail}`, res.status);
   }
 
   const text = await res.text();
-  return parseSseText(text);
+  const result = parseSseText(text);
+
+  if (!result) {
+    throw makeError("Poe returned an empty response. Check the bot name and your API key.");
+  }
+
+  return result;
 }
 
 function parseSseText(raw: string): string {
@@ -59,20 +78,26 @@ function parseSseText(raw: string): string {
     const jsonStr = line.slice(5).trim();
     if (!jsonStr || jsonStr === "[DONE]") continue;
 
+    let event: { text?: string; type?: string; error?: string; error_type?: string };
     try {
-      const event = JSON.parse(jsonStr) as { text?: string; type?: string; error?: string };
+      event = JSON.parse(jsonStr);
+    } catch {
+      continue;
+    }
 
-      if (event.type === "error") {
-        throw makeError(event.error ?? "Poe returned an error");
-      }
-      if (event.type === "text" && typeof event.text === "string") {
-        result += event.text;
-      }
-      if (event.type === "replace_response" && typeof event.text === "string") {
-        result = event.text;
-      }
-    } catch (err) {
-      if ((err as PoeClientError).statusCode !== undefined) throw err;
+    if (event.type === "error") {
+      throw makeError(
+        `Poe error: ${event.text ?? event.error ?? "unknown error"}`,
+        500
+      );
+    }
+
+    if (event.type === "text" && typeof event.text === "string") {
+      result += event.text;
+    }
+
+    if (event.type === "replace_response" && typeof event.text === "string") {
+      result = event.text;
     }
   }
 

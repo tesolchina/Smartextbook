@@ -34,19 +34,15 @@ export function useLessonsStore() {
   const [lessons, setLessonsState] = useState<StoredLesson[]>(() => loadLessons());
 
   const addLesson = useCallback((lesson: StoredLesson) => {
-    setLessonsState((prev) => {
-      const next = [lesson, ...prev];
-      saveLessons(next);
-      return next;
-    });
+    const next = [lesson, ...loadLessons()];
+    saveLessons(next);
+    setLessonsState(next);
   }, []);
 
   const deleteLesson = useCallback((id: string) => {
-    setLessonsState((prev) => {
-      const next = prev.filter((l) => l.id !== id);
-      saveLessons(next);
-      return next;
-    });
+    const next = loadLessons().filter((l) => l.id !== id);
+    saveLessons(next);
+    setLessonsState(next);
   }, []);
 
   const getLesson = useCallback(
