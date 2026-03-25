@@ -148,6 +148,19 @@ export const PROVIDERS: Provider[] = [
     ],
   },
   {
+    id: "kimi",
+    name: "Kimi (Moonshot AI)",
+    baseUrl: "https://api.moonshot.cn/v1",
+    keyPlaceholder: "sk-...",
+    keyHint: "Find your API key at platform.moonshot.cn — supports Chinese & English",
+    docsUrl: "https://platform.moonshot.cn/docs/overview",
+    models: [
+      { id: "moonshot-v1-8k", name: "Moonshot v1 8K" },
+      { id: "moonshot-v1-32k", name: "Moonshot v1 32K" },
+      { id: "moonshot-v1-128k", name: "Moonshot v1 128K" },
+    ],
+  },
+  {
     id: "custom",
     name: "Custom (OpenAI-compatible)",
     baseUrl: "",

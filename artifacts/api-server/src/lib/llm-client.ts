@@ -17,6 +17,7 @@ const PROVIDER_BASE_URLS: Record<string, string> = {
   mistral: "https://api.mistral.ai/v1",
   together: "https://api.together.xyz/v1",
   poe: "https://api.poe.com/v1",
+  kimi: "https://api.moonshot.cn/v1",
 };
 
 export function createLLMClient(config: LlmConfig): { client: OpenAI; model: string } {

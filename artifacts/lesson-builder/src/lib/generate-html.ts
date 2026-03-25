@@ -164,6 +164,7 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
         <option value="together|https://api.together.xyz/v1">Together AI</option>
         <option value="minimax|https://api.minimax.chat/v1">MiniMax</option>
         <option value="poe|https://api.poe.com/v1">Poe</option>
+        <option value="kimi|https://api.moonshot.cn/v1">Kimi (Moonshot AI)</option>
         <option value="custom|">Custom (OpenAI-compatible)</option>
       </select>
     </div>
@@ -312,6 +313,7 @@ providerSel.addEventListener('change', () => {
     'together|': 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
     'minimax|': 'MiniMax-Text-01',
     'poe|': 'Claude-3-Haiku',
+    'kimi|': 'moonshot-v1-8k',
   };
   const prefix = providerSel.value.split('|')[0] + '|';
   if (defaultModels[prefix]) document.getElementById('setup-model').value = defaultModels[prefix];
