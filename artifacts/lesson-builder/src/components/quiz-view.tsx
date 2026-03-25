@@ -5,9 +5,10 @@ import type { QuizQuestion } from "@workspace/api-client-react";
 
 interface QuizViewProps {
   questions: QuizQuestion[];
+  onComplete?: (score: number, total: number) => void;
 }
 
-export function QuizView({ questions }: QuizViewProps) {
+export function QuizView({ questions, onComplete }: QuizViewProps) {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedOpt, setSelectedOpt] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -44,7 +45,9 @@ export function QuizView({ questions }: QuizViewProps) {
       setSelectedOpt(null);
       setIsAnswered(false);
     } else {
+      const finalScore = selectedOpt === questions[currentIdx].correctIndex ? score + 1 : score;
       setIsFinished(true);
+      onComplete?.(finalScore, questions.length);
     }
   };
 

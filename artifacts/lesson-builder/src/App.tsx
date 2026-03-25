@@ -7,6 +7,7 @@ import { SettingsModalProvider } from "@/hooks/use-settings-modal";
 import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import LessonView from "@/pages/lesson-view";
+import SharedLesson from "@/pages/shared-lesson";
 import Credits from "@/pages/credits";
 import NotFound from "@/pages/not-found";
 
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/" component={Landing} />
       <Route path="/app" component={Home} />
       <Route path="/lessons/:id" component={LessonView} />
+      <Route path="/shared/:id" component={SharedLesson} />
       <Route path="/credits" component={Credits} />
       <Route component={NotFound} />
     </Switch>

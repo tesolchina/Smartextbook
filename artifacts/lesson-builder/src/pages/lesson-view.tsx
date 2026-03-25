@@ -8,6 +8,8 @@ import { QuizView } from "@/components/quiz-view";
 import { LessonSummaryTab } from "@/components/lesson-summary-tab";
 import { MindMapTab } from "@/components/mind-map-tab";
 import { ExportModal } from "@/components/export-modal";
+import { ShareButton } from "@/components/share-button";
+import { LearningReportModal } from "@/components/learning-report-modal";
 import { useLessonsStore } from "@/hooks/use-lessons-store";
 
 type Tab = "summary" | "quiz" | "chapter" | "mindmap";
@@ -23,13 +25,16 @@ export default function LessonView() {
   const [match, params] = useRoute("/lessons/:id");
   const [activeTab, setActiveTab] = useState<Tab>("summary");
   const [exportOpen, setExportOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const [mindmapDiagram, setMindmapDiagram] = useState<string | null>(null);
+  const [quizScore, setQuizScore] = useState<{ score: number; total: number } | null>(null);
 
   const { getLesson } = useLessonsStore();
   const lesson = match ? getLesson(params.id) : undefined;
 
   useEffect(() => {
     setMindmapDiagram(null);
+    setQuizScore(null);
   }, [params?.id]);
 
   if (!lesson) {
@@ -58,6 +63,12 @@ export default function LessonView() {
       {lesson && (
         <ExportModal lesson={lesson} open={exportOpen} onClose={() => setExportOpen(false)} />
       )}
+      <LearningReportModal
+        lesson={lesson}
+        quizScore={quizScore}
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+      />
 
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-[calc(100vh-64px)]">
 
@@ -66,19 +77,28 @@ export default function LessonView() {
 
           {/* Header + Tabs */}
           <div className="px-6 pt-5 pb-0 border-b border-border bg-card">
-            <div className="flex items-start justify-between gap-3 mb-4">
+            <div className="flex items-start justify-between gap-2 mb-4">
               <h1
                 className="text-2xl font-serif font-black text-foreground line-clamp-1 flex-1"
                 title={lesson.title}
               >
                 {lesson.title}
               </h1>
-              <button
-                onClick={() => setExportOpen(true)}
-                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
-              >
-                <Download className="w-3.5 h-3.5" /> Export
-              </button>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => setReportOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+                >
+                  <FileText className="w-3.5 h-3.5" /> Report
+                </button>
+                <ShareButton lesson={lesson} />
+                <button
+                  onClick={() => setExportOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+                >
+                  <Download className="w-3.5 h-3.5" /> Export
+                </button>
+              </div>
             </div>
 
             <nav className="flex gap-1">
@@ -108,7 +128,10 @@ export default function LessonView() {
 
                 {activeTab === "quiz" && (
                   <div className="max-w-4xl mx-auto">
-                    <QuizView questions={lesson.quizQuestions || []} />
+                    <QuizView
+                      questions={lesson.quizQuestions || []}
+                      onComplete={(score, total) => setQuizScore({ score, total })}
+                    />
                   </div>
                 )}
 

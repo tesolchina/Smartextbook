@@ -4,7 +4,7 @@
 
 Chapter-to-Lesson Builder — an interactive tool that converts book chapters (or any web URL) into structured lessons with an embedded AI tutor. Paste in a chapter or provide a URL, and the app uses AI to generate a summary, key concepts glossary, and a comprehension quiz. A persistent AI tutor chatbot lets students ask questions about the material in real time.
 
-Built as an open-source project for Replit and GitHub collaboration. Users bring their own LLM API keys (BYOK). **No accounts, no database, no server-side storage** — all lessons are stored in the browser's localStorage.
+Built as an open-source project for Replit and GitHub collaboration. Users bring their own LLM API keys (BYOK). Lessons are stored in the browser's localStorage. Teachers can optionally publish lessons via a public share link (stored server-side in PostgreSQL for 90 days).
 
 ## Stack
 
@@ -18,7 +18,7 @@ Built as an open-source project for Replit and GitHub collaboration. Users bring
 - **Build**: esbuild (CJS bundle)
 - **AI Provider**: BYOK — users supply their own API keys for any OpenAI-compatible provider
 - **Frontend**: React + Vite, Tailwind CSS, Shadcn UI
-- **Storage**: Browser `localStorage` only — no database
+- **Storage**: Browser `localStorage` (primary) + PostgreSQL via Drizzle ORM (shared lessons + comments)
 
 ## Structure
 
@@ -39,21 +39,25 @@ artifacts-monorepo/
 └── package.json
 ```
 
-## Architecture: Fully Stateless
+## Architecture
 
-The server has **no database dependency**. All state lives in the browser:
+Primarily stateless — lesson data lives in the browser:
 
 1. **Lesson generation**: `POST /api/generate-lesson` — synchronous AI call, returns complete lesson JSON. Client generates a UUID and stores the lesson in `localStorage`.
 2. **Chat**: `POST /api/chat` — stateless SSE streaming. Client sends the full lesson context (title, summary, keyConcepts, chapterText) in every request.
 3. **URL fetching**: `POST /api/fetch-url` — fetches and extracts readable text from a URL.
 4. **Frontend storage**: `useLessonsStore` hook reads/writes to `localStorage` under the key `lessonbuilder_lessons`.
+5. **Lesson Sharing** (opt-in): `POST /api/share` stores lesson JSON in PostgreSQL with a 16-char UUID and 90-day expiry. `GET /api/shared/:id` retrieves it. Public `/shared/:id` page renders the lesson for students.
+6. **Comments**: `GET/POST /api/shared/:id/comments` — students on the shared lesson page can read and leave comments stored in PostgreSQL.
 
 ## Features
 
 ### Core User Flows
 1. **Create a Lesson** — Paste chapter text OR provide a URL to fetch content → pick a title → AI processes synchronously → saved to localStorage → redirected to lesson view
-2. **View a Lesson** — Three tabs: Summary (AI-generated) + Key Concepts glossary, Quiz (multiple-choice), Original Chapter text
+2. **View a Lesson** — Four tabs: Summary (AI-generated) + Key Concepts glossary, Quiz (multiple-choice), Mind Map (Mermaid), Source text
 3. **AI Tutor Chat** — Sidebar chat in lesson view; tutor receives full lesson context per message; streams responses
+4. **Share a Lesson** — Teacher clicks "Share" → confirms public → lesson stored to DB → copyable link generated → students visit `/shared/:id` and can read + leave comments
+5. **Learning Report** — Students (or teachers) click "Report" → enter name + reflections → download as Markdown or email via their email client (mailto:). Quiz score auto-populated if quiz was completed.
 
 ### BYOK (Bring Your Own Key)
 Users set their own API key via the "Set API Key" button in the navbar. Supported providers:
@@ -76,6 +80,10 @@ Users can provide a URL instead of pasting text. The backend fetches the page, e
 - `POST /api/generate-lesson` — Synchronous AI lesson generation (requires `llmConfig`)
 - `POST /api/chat` — SSE streaming stateless chat (requires `llmConfig` + `lessonContext`)
 - `POST /api/fetch-url` — Fetch and extract text content from a URL
+- `POST /api/share` — Store lesson in DB, returns `{ shareId, expiresAt }` (90-day public link)
+- `GET /api/shared/:id` — Retrieve shared lesson (404 if not found, 410 if expired)
+- `GET /api/shared/:id/comments` — Get all comments for a shared lesson
+- `POST /api/shared/:id/comments` — Post a new comment (`authorName`, `body`)
 
 ### AI Processing
 - `LLM client factory` at `artifacts/api-server/src/lib/llm-client.ts` — creates an OpenAI-SDK client with the right base URL for each provider
@@ -85,7 +93,8 @@ Users can provide a URL instead of pasting text. The backend fetches the page, e
 ### Frontend Routes
 - `/` — Landing / teaser page: hero, 5-slide feature carousel ("How it works"), stats strip, Dr. Simon Wang credits card, GitHub + Replit remix links, CTA to open app
 - `/app` — Lesson library (localStorage) + "Create a Lesson" form
-- `/lessons/:id` — Individual lesson view: summary tab, interactive quiz, source text, chat sidebar, export button
+- `/lessons/:id` — Individual lesson view: summary tab, interactive quiz, mind map, source text, chat sidebar; Share / Report / Export buttons
+- `/shared/:id` — Public shared lesson view (no auth needed): same tabs + AI chat + student comments section
 - `/credits` — Full credits page: Google "Learn Your Way" inspiration, LearnLM, 8+ related open-source projects
 - `/about` links to `/` in the navbar
 
