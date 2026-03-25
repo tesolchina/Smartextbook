@@ -7,15 +7,11 @@ import { type StoredLesson } from "@/hooks/use-lessons-store";
 mermaid.initialize({
   startOnLoad: false,
   theme: "default",
-  mindmap: { padding: 20 },
   fontFamily: "Georgia, serif",
   fontSize: 14,
 });
 
-let _mermaidId = 0;
-function nextMermaidId() {
-  return `mm-${++_mermaidId}`;
-}
+let _mermaidCounter = 0;
 
 interface MindMapTabProps {
   lesson: StoredLesson;
@@ -31,7 +27,6 @@ export function MindMapTab({ lesson }: MindMapTabProps) {
   const { getLlmConfig, isConfigured } = useSettings();
   const [state, setState] = useState<State>({ status: "idle" });
   const containerRef = useRef<HTMLDivElement>(null);
-  const idRef = useRef(nextMermaidId());
 
   const generate = useCallback(async () => {
     if (!isConfigured) {
@@ -64,31 +59,25 @@ export function MindMapTab({ lesson }: MindMapTabProps) {
   }, [lesson, isConfigured, getLlmConfig]);
 
   useEffect(() => {
-    if (state.status === "idle") {
-      generate();
-    }
+    generate();
   }, []);
 
   useEffect(() => {
     if (state.status !== "success" || !containerRef.current) return;
 
-    const id = idRef.current;
-    idRef.current = nextMermaidId();
-    const newId = idRef.current;
-
+    const renderId = `mm-${++_mermaidCounter}`;
     containerRef.current.innerHTML = "";
 
     mermaid
-      .render(newId, state.diagram)
+      .render(renderId, state.diagram)
       .then(({ svg }) => {
-        if (containerRef.current) {
-          containerRef.current.innerHTML = svg;
-          const svgEl = containerRef.current.querySelector("svg");
-          if (svgEl) {
-            svgEl.style.width = "100%";
-            svgEl.style.height = "auto";
-            svgEl.removeAttribute("height");
-          }
+        if (!containerRef.current) return;
+        containerRef.current.innerHTML = svg;
+        const svgEl = containerRef.current.querySelector("svg");
+        if (svgEl) {
+          svgEl.style.width = "100%";
+          svgEl.style.height = "auto";
+          svgEl.removeAttribute("height");
         }
       })
       .catch((err) => {
@@ -97,10 +86,6 @@ export function MindMapTab({ lesson }: MindMapTabProps) {
           message: `Could not render the diagram: ${err.message || "invalid Mermaid syntax"}. Try regenerating.`,
         });
       });
-
-    return () => {
-      void id;
-    };
   }, [state]);
 
   return (

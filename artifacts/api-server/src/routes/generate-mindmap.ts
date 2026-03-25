@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { GenerateMindmapBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
+import { jsonrepair } from "jsonrepair";
 
 const router: IRouter = Router();
 
@@ -21,10 +22,12 @@ ${summary.slice(0, 1500)}
 Key concepts:
 ${conceptList}
 
-Return ONLY valid Mermaid mindmap syntax — no markdown fences, no explanation, no other text.
-The output must start with the word "mindmap" on the first line.
+Return a JSON object with this exact structure:
+{"mermaid": "<the full Mermaid mindmap definition>"}
 
-Use this structure:
+The mermaid field must contain only valid Mermaid mindmap syntax starting with the word "mindmap".
+
+Use this structure for the diagram:
 mindmap
   root(${title.slice(0, 40)})
     ConceptA
@@ -42,7 +45,7 @@ Rules:
 - Each branch may have 1-3 sub-ideas drawn from the definition or related ideas.
 - Use no more than 8 top-level branches.
 - Do NOT use parentheses or special Mermaid node shapes — plain text labels only.
-- Return ONLY the Mermaid mindmap block, nothing else.`;
+- Return ONLY the JSON object, no other text.`;
 };
 
 router.post("/generate-mindmap", async (req, res): Promise<void> => {
@@ -63,22 +66,41 @@ router.post("/generate-mindmap", async (req, res): Promise<void> => {
     });
     let content = response.choices[0]?.message?.content ?? "";
 
-    // Strip markdown code fences if present
-    content = content.replace(/^```(?:mermaid)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
+    // Strip markdown code fences if present (```json ... ``` or ``` ... ```)
+    content = content.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
 
-    // Validate it starts with "mindmap"
-    if (!content.toLowerCase().startsWith("mindmap")) {
-      // Try to extract just the mindmap block
-      const match = content.match(/mindmap[\s\S]*/i);
+    // Extract the outermost JSON object
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      // Fallback: the LLM may have returned raw Mermaid — try to extract it directly
+      const mermaidMatch = content.match(/mindmap[\s\S]*/i);
+      if (mermaidMatch) {
+        res.json({ mermaid: mermaidMatch[0].trim() });
+        return;
+      }
+      res.status(502).json({ error: "AI did not return a valid Mermaid mindmap. Please try again." });
+      return;
+    }
+
+    // Use jsonrepair to handle common LLM JSON issues (trailing commas, unescaped newlines, etc.)
+    const data = JSON.parse(jsonrepair(jsonMatch[0]));
+    let mermaid = String(data.mermaid ?? "").trim();
+
+    // Strip any nested code fences the LLM may have included inside the JSON value
+    mermaid = mermaid.replace(/^```(?:mermaid)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
+
+    if (!mermaid.toLowerCase().startsWith("mindmap")) {
+      // Try to extract just the mindmap block if extra text was included
+      const match = mermaid.match(/mindmap[\s\S]*/i);
       if (match) {
-        content = match[0].trim();
+        mermaid = match[0].trim();
       } else {
         res.status(502).json({ error: "AI did not return a valid Mermaid mindmap. Please try again." });
         return;
       }
     }
 
-    res.json({ mermaid: content });
+    res.json({ mermaid });
   } catch (err: any) {
     res.status(502).json({ error: err.message || "AI provider error" });
   }
