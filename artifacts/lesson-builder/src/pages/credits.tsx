@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ExternalLink, BookOpen, GraduationCap, Lightbulb, Star, Github } from "lucide-react";
+import { ExternalLink, BookOpen, GraduationCap, Lightbulb, Star, Github, Mail, Globe } from "lucide-react";
 import { Layout } from "@/components/layout";
 
 const inspirationSources = [
@@ -141,6 +141,75 @@ export default function Credits() {
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 LessonBuilder was inspired by cutting-edge research in AI-powered education and a community of open-source builders who share the vision of making learning more accessible and effective.
               </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Created by */}
+        <section className="py-16 border-b border-border bg-background">
+          <div className="container max-w-4xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="text-3xl font-serif font-bold mb-8 flex items-center gap-3">
+                <GraduationCap className="w-8 h-8 text-primary" /> Created by
+              </h2>
+
+              <div className="rounded-3xl border border-primary/30 bg-primary/5 shadow-xl shadow-primary/5 p-8 relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
+
+                <div className="flex flex-col sm:flex-row items-start gap-6">
+                  {/* Avatar placeholder */}
+                  <div className="w-20 h-20 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                    <GraduationCap className="w-10 h-10" />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-primary uppercase tracking-widest mb-1">Founder & Creator</p>
+                    <h3 className="text-3xl font-serif font-black text-foreground mb-1">Dr. Simon Wang</h3>
+                    <p className="text-base font-semibold text-foreground/80 mb-0.5">
+                      Lecturer in English &amp; Innovation Officer
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-5">
+                      The Language Centre, Hong Kong Baptist University
+                    </p>
+
+                    <p className="text-muted-foreground leading-relaxed mb-6 max-w-2xl">
+                      Simon built SmartTextbook to help language learners and educators transform dense reading
+                      material into structured, interactive study experiences. As both a language teacher and an
+                      innovation officer, he bridges pedagogy and technology — designing tools that make
+                      AI-powered learning practical and accessible for every classroom.
+                    </p>
+
+                    <div className="flex flex-wrap gap-3">
+                      <a
+                        href="https://lc.hkbu.edu.hk/main/simonwang/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all hover:-translate-y-0.5 shadow-sm"
+                      >
+                        <Globe className="w-4 h-4" /> Personal Website
+                      </a>
+                      <a
+                        href="mailto:simonwang@hkbu.edu.hk"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-border bg-background text-sm font-bold hover:border-primary/50 hover:bg-secondary transition-all hover:-translate-y-0.5"
+                      >
+                        <Mail className="w-4 h-4" /> simonwang@hkbu.edu.hk
+                      </a>
+                      <a
+                        href="https://github.com/tesolchina/Smartextbook"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-border bg-background text-sm font-bold hover:border-primary/50 hover:bg-secondary transition-all hover:-translate-y-0.5"
+                      >
+                        <Github className="w-4 h-4" /> GitHub Repository
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -306,7 +375,7 @@ export default function Credits() {
               we'd love to have you involved.
             </p>
             <a
-              href="/"
+              href="/app"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-foreground text-background font-bold text-lg hover:bg-foreground/90 shadow-xl hover:-translate-y-1 transition-all active:scale-95"
             >
               <BookOpen className="w-5 h-5" /> Start Learning
