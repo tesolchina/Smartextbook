@@ -63,6 +63,7 @@ export function ExportModal({ lesson, open, onClose }: Props) {
     a.download = `${lesson.title.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-lesson.html`;
     a.click();
     URL.revokeObjectURL(url);
+    onClose();
   };
 
   return (
