@@ -70,33 +70,25 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
     setTestMessage("");
 
     try {
-      const resolvedBaseUrl =
-        provider === "custom" ? baseUrl.trim() : getProvider(provider)?.baseUrl ?? "";
-
-      const res = await fetch(`${resolvedBaseUrl}/chat/completions`, {
+      const res = await fetch("/api/test-provider", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey.trim()}`,
-          ...(provider === "openrouter"
-            ? { "HTTP-Referer": "https://lessonbuilder.app", "X-Title": "LessonBuilder" }
-            : {}),
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          provider,
+          apiKey: apiKey.trim(),
           model: model.trim(),
-          messages: [{ role: "user", content: "Say OK." }],
-          max_tokens: 5,
+          baseUrl: provider === "custom" ? baseUrl.trim() : undefined,
         }),
       });
 
-      if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+
+      if (data?.ok) {
         setTestStatus("ok");
         setTestMessage("Connection successful! Your key works.");
       } else {
-        const data = await res.json().catch(() => ({}));
-        const msg = data?.error?.message ?? `HTTP ${res.status}`;
         setTestStatus("error");
-        setTestMessage(`Connection failed: ${msg}`);
+        setTestMessage(`Connection failed: ${data?.error ?? "Unknown error"}`);
       }
     } catch (err: any) {
       setTestStatus("error");

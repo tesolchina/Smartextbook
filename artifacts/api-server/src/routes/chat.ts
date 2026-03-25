@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { ChatWithTutorBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
+import { queryPoe, type PoeMessage } from "../lib/poe-client";
 
 const router: IRouter = Router();
 
@@ -12,21 +13,6 @@ router.post("/chat", async (req, res): Promise<void> => {
   }
 
   const { message, history, lessonContext, llmConfig } = parsed.data;
-
-  let client: ReturnType<typeof createLLMClient>["client"];
-  let model: string;
-  try {
-    const result = createLLMClient(llmConfig);
-    client = result.client;
-    model = result.model;
-  } catch (err: any) {
-    res.status(400).json({ error: err.message });
-    return;
-  }
-
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
 
   const conceptsList = lessonContext.keyConcepts
     .map((c) => `- ${c.term}: ${c.definition}`)
@@ -52,6 +38,44 @@ Your role:
 - Reference specific parts of the chapter when relevant
 - If asked something not related to the chapter, gently redirect to the chapter content`;
 
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+
+  if (llmConfig.provider === "poe") {
+    const poeMessages: PoeMessage[] = [
+      { role: "system", content: systemPrompt },
+      ...history.map((h) => ({
+        role: h.role === "assistant" ? ("bot" as const) : ("user" as const),
+        content: h.content,
+      })),
+      { role: "user", content: message },
+    ];
+
+    try {
+      const text = await queryPoe(llmConfig.model, llmConfig.apiKey, poeMessages);
+      res.write(`data: ${JSON.stringify({ content: text })}\n\n`);
+      res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+      res.end();
+    } catch (err: any) {
+      res.write(`data: ${JSON.stringify({ error: err.message || "Poe error", done: true })}\n\n`);
+      res.end();
+    }
+    return;
+  }
+
+  let client: ReturnType<typeof createLLMClient>["client"];
+  let model: string;
+  try {
+    const result = createLLMClient(llmConfig);
+    client = result.client;
+    model = result.model;
+  } catch (err: any) {
+    res.write(`data: ${JSON.stringify({ error: err.message, done: true })}\n\n`);
+    res.end();
+    return;
+  }
+
   const messages = [
     { role: "system" as const, content: systemPrompt },
     ...history.map((h) => ({
@@ -69,17 +93,16 @@ Your role:
     });
 
     for await (const chunk of stream) {
-      const content = chunk.choices[0]?.delta?.content;
-      if (content) {
-        res.write(`data: ${JSON.stringify({ content })}\n\n`);
+      const delta = chunk.choices[0]?.delta?.content;
+      if (delta) {
+        res.write(`data: ${JSON.stringify({ content: delta })}\n\n`);
       }
     }
 
     res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
     res.end();
   } catch (err: any) {
-    const message = err?.message || "AI error occurred";
-    res.write(`data: ${JSON.stringify({ error: message, done: true })}\n\n`);
+    res.write(`data: ${JSON.stringify({ error: err?.message || "AI error", done: true })}\n\n`);
     res.end();
   }
 });

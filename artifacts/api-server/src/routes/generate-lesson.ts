@@ -1,30 +1,12 @@
 import { Router, type IRouter } from "express";
 import { GenerateLessonBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
+import { queryPoe } from "../lib/poe-client";
 
 const router: IRouter = Router();
 
-router.post("/generate-lesson", async (req, res): Promise<void> => {
-  const parsed = GenerateLessonBody.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
-    return;
-  }
-
-  const { title, chapterText, llmConfig } = parsed.data;
-
-  let client: ReturnType<typeof createLLMClient>["client"];
-  let model: string;
-  try {
-    const result = createLLMClient(llmConfig);
-    client = result.client;
-    model = result.model;
-  } catch (err: any) {
-    res.status(400).json({ error: err.message });
-    return;
-  }
-
-  const prompt = `You are an expert educational content creator. Analyze the following book chapter and create structured lesson content.
+const LESSON_PROMPT = (title: string, chapterText: string) => `\
+You are an expert educational content creator. Analyze the following book chapter and create structured lesson content.
 
 Chapter title: ${title}
 
@@ -35,8 +17,7 @@ Return a JSON object with this exact structure:
 {
   "summary": "A clear 2-3 paragraph summary of the main ideas",
   "keyConcepts": [
-    {"term": "concept name", "definition": "clear definition"},
-    ...
+    {"term": "concept name", "definition": "clear definition"}
   ],
   "quizQuestions": [
     {
@@ -44,42 +25,58 @@ Return a JSON object with this exact structure:
       "options": ["option A", "option B", "option C", "option D"],
       "correctIndex": 0,
       "explanation": "why this is correct"
-    },
-    ...
+    }
   ]
 }
 
 Requirements:
 - Provide 5-10 key concepts that are central to understanding the chapter
 - Create 5-8 multiple-choice quiz questions that test comprehension
-- Make sure quiz questions have exactly 4 options (index 0-3)
+- Each quiz question must have exactly 4 options (index 0-3)
 - correctIndex must be 0, 1, 2, or 3
 
 Return ONLY the JSON object, no other text.`;
 
-  try {
-    const response = await client.chat.completions.create({
-      model,
-      messages: [{ role: "user", content: prompt }],
-    });
+router.post("/generate-lesson", async (req, res): Promise<void> => {
+  const parsed = GenerateLessonBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
 
-    const content = response.choices[0]?.message?.content ?? "";
+  const { title, chapterText, llmConfig } = parsed.data;
+  const prompt = LESSON_PROMPT(title, chapterText);
+
+  try {
+    let content: string;
+
+    if (llmConfig.provider === "poe") {
+      content = await queryPoe(llmConfig.model, llmConfig.apiKey, [
+        { role: "user", content: prompt },
+      ]);
+    } else {
+      const { client, model } = createLLMClient(llmConfig);
+      const response = await client.chat.completions.create({
+        model,
+        messages: [{ role: "user", content: prompt }],
+      });
+      content = response.choices[0]?.message?.content ?? "";
+    }
+
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       res.status(502).json({ error: "AI did not return valid JSON. Please try again." });
       return;
     }
 
-    const parsed = JSON.parse(jsonMatch[0]);
-
+    const data = JSON.parse(jsonMatch[0]);
     res.json({
-      summary: parsed.summary ?? "",
-      keyConcepts: parsed.keyConcepts ?? [],
-      quizQuestions: parsed.quizQuestions ?? [],
+      summary: data.summary ?? "",
+      keyConcepts: data.keyConcepts ?? [],
+      quizQuestions: data.quizQuestions ?? [],
     });
   } catch (err: any) {
-    const message = err?.message || "AI provider error";
-    res.status(502).json({ error: message });
+    res.status(502).json({ error: err.message || "AI provider error" });
   }
 });
 

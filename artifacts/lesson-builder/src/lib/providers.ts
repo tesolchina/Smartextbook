@@ -130,6 +130,23 @@ export const PROVIDERS: Provider[] = [
     ],
   },
   {
+    id: "poe",
+    name: "Poe (poe.com)",
+    baseUrl: "https://api.poe.com/bot",
+    keyPlaceholder: "your-poe-api-key",
+    keyHint: "Get your API key at poe.com/api_key — requires a Poe subscription",
+    docsUrl: "https://poe.com/api_key",
+    models: [
+      { id: "Claude-3.5-Sonnet", name: "Claude 3.5 Sonnet" },
+      { id: "Claude-3-Haiku", name: "Claude 3 Haiku" },
+      { id: "GPT-4o", name: "GPT-4o" },
+      { id: "GPT-4o-Mini", name: "GPT-4o Mini" },
+      { id: "Gemini-2.0-Flash", name: "Gemini 2.0 Flash" },
+      { id: "Gemini-1.5-Pro", name: "Gemini 1.5 Pro" },
+      { id: "Llama-3.1-70B-T", name: "Llama 3.1 70B" },
+    ],
+  },
+  {
     id: "custom",
     name: "Custom (OpenAI-compatible)",
     baseUrl: "",
