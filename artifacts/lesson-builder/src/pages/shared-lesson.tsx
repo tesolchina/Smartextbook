@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Lightbulb, ListTodo, ArrowLeft, Globe, GitBranch, Loader2, AlertTriangle, FileText as ReportIcon } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { ChatSidebar } from "@/components/chat-sidebar";
-import { QuizView } from "@/components/quiz-view";
+import { QuizView, type QuizResult } from "@/components/quiz-view";
 import { LessonSummaryTab } from "@/components/lesson-summary-tab";
 import { MindMapTab } from "@/components/mind-map-tab";
 import { CommentsSection } from "@/components/comments-section";
@@ -33,7 +33,7 @@ export default function SharedLesson() {
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [activeTab, setActiveTab] = useState<Tab>("summary");
   const [mindmapDiagram, setMindmapDiagram] = useState<string | null>(null);
-  const [quizScore, setQuizScore] = useState<{ score: number; total: number } | null>(null);
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
 
   useEffect(() => {
@@ -108,12 +108,15 @@ export default function SharedLesson() {
 
   return (
     <Layout>
-      <LearningReportModal
-        lesson={lesson}
-        quizScore={quizScore}
-        open={reportOpen}
-        onClose={() => setReportOpen(false)}
-      />
+      {reportOpen && quizResult && (
+        <LearningReportModal
+          lesson={lesson}
+          quizResult={quizResult}
+          shareId={shareId}
+          open={reportOpen}
+          onClose={() => setReportOpen(false)}
+        />
+      )}
 
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-[calc(100vh-64px)]">
         {/* ── Content pane ── */}
@@ -124,16 +127,23 @@ export default function SharedLesson() {
               <h1 className="text-2xl font-serif font-black text-foreground line-clamp-1 flex-1" title={lesson.title}>
                 {lesson.title}
               </h1>
-              <button
-                onClick={() => setReportOpen(true)}
-                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
-              >
-                <ReportIcon className="w-3.5 h-3.5" /> Report
-              </button>
+              {quizResult && (
+                <button
+                  onClick={() => setReportOpen(true)}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/40 bg-primary/5 text-xs font-semibold text-primary hover:bg-primary/10 transition-all"
+                >
+                  <ReportIcon className="w-3.5 h-3.5" /> Learning Report
+                </button>
+              )}
             </div>
             <p className="text-xs text-muted-foreground mb-3 flex items-center gap-1.5">
               <Globe className="w-3 h-3" />
               Shared lesson · Expires {formatExpiry(expiresAt)}
+              {quizResult && (
+                <span className="ml-2 text-primary font-medium">
+                  · Quiz complete: {quizResult.score}/{quizResult.total}
+                </span>
+              )}
             </p>
 
             <nav className="flex gap-1">
@@ -159,8 +169,20 @@ export default function SharedLesson() {
                   <div className="max-w-4xl mx-auto">
                     <QuizView
                       questions={lesson.quizQuestions || []}
-                      onComplete={(score, total) => setQuizScore({ score, total })}
+                      onComplete={(result) => {
+                        setQuizResult(result);
+                      }}
                     />
+                    {quizResult && (
+                      <div className="mt-6 flex justify-center">
+                        <button
+                          onClick={() => setReportOpen(true)}
+                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors shadow"
+                        >
+                          <ReportIcon className="w-4 h-4" /> Generate Learning Report
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
 

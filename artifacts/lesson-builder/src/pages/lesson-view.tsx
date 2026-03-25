@@ -11,6 +11,7 @@ import { ExportModal } from "@/components/export-modal";
 import { ShareButton } from "@/components/share-button";
 import { LearningReportModal } from "@/components/learning-report-modal";
 import { useLessonsStore } from "@/hooks/use-lessons-store";
+import type { QuizResult } from "@/components/quiz-view";
 
 type Tab = "summary" | "quiz" | "chapter" | "mindmap";
 
@@ -27,14 +28,14 @@ export default function LessonView() {
   const [exportOpen, setExportOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [mindmapDiagram, setMindmapDiagram] = useState<string | null>(null);
-  const [quizScore, setQuizScore] = useState<{ score: number; total: number } | null>(null);
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
   const { getLesson } = useLessonsStore();
   const lesson = match ? getLesson(params.id) : undefined;
 
   useEffect(() => {
     setMindmapDiagram(null);
-    setQuizScore(null);
+    setQuizResult(null);
   }, [params?.id]);
 
   if (!lesson) {
@@ -63,12 +64,14 @@ export default function LessonView() {
       {lesson && (
         <ExportModal lesson={lesson} open={exportOpen} onClose={() => setExportOpen(false)} />
       )}
-      <LearningReportModal
-        lesson={lesson}
-        quizScore={quizScore}
-        open={reportOpen}
-        onClose={() => setReportOpen(false)}
-      />
+      {reportOpen && quizResult && (
+        <LearningReportModal
+          lesson={lesson}
+          quizResult={quizResult}
+          open={reportOpen}
+          onClose={() => setReportOpen(false)}
+        />
+      )}
 
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-[calc(100vh-64px)]">
 
@@ -85,12 +88,14 @@ export default function LessonView() {
                 {lesson.title}
               </h1>
               <div className="flex items-center gap-1.5 shrink-0">
-                <button
-                  onClick={() => setReportOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
-                >
-                  <FileText className="w-3.5 h-3.5" /> Report
-                </button>
+                {quizResult && (
+                  <button
+                    onClick={() => setReportOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/40 bg-primary/5 text-xs font-semibold text-primary hover:bg-primary/10 transition-all"
+                  >
+                    <FileText className="w-3.5 h-3.5" /> Learning Report
+                  </button>
+                )}
                 <ShareButton lesson={lesson} />
                 <button
                   onClick={() => setExportOpen(true)}
@@ -130,7 +135,7 @@ export default function LessonView() {
                   <div className="max-w-4xl mx-auto">
                     <QuizView
                       questions={lesson.quizQuestions || []}
-                      onComplete={(score, total) => setQuizScore({ score, total })}
+                      onComplete={(result) => setQuizResult(result)}
                     />
                   </div>
                 )}

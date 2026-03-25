@@ -3,17 +3,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, ArrowRight, RotateCcw, Trophy } from "lucide-react";
 import type { QuizQuestion } from "@workspace/api-client-react";
 
+export interface QuizResult {
+  score: number;
+  total: number;
+  missedQuestions: Array<{ question: string; yourAnswer: string; correctAnswer: string }>;
+}
+
 interface QuizViewProps {
   questions: QuizQuestion[];
-  onComplete?: (score: number, total: number) => void;
+  onComplete?: (result: QuizResult) => void;
 }
 
 export function QuizView({ questions, onComplete }: QuizViewProps) {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedOpt, setSelectedOpt] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState<number[]>([]);
   const [isFinished, setIsFinished] = useState(false);
+  const [finalResult, setFinalResult] = useState<QuizResult | null>(null);
 
   if (!questions || questions.length === 0) {
     return (
@@ -34,20 +41,31 @@ export function QuizView({ questions, onComplete }: QuizViewProps) {
     if (isAnswered) return;
     setSelectedOpt(idx);
     setIsAnswered(true);
-    if (idx === currentQ.correctIndex) {
-      setScore(s => s + 1);
-    }
   };
 
   const handleNext = () => {
+    const newAnswers = [...answers, selectedOpt!];
+
     if (currentIdx < questions.length - 1) {
+      setAnswers(newAnswers);
       setCurrentIdx(i => i + 1);
       setSelectedOpt(null);
       setIsAnswered(false);
     } else {
-      const finalScore = selectedOpt === questions[currentIdx].correctIndex ? score + 1 : score;
+      const score = newAnswers.filter((ans, i) => ans === questions[i].correctIndex).length;
+      const missedQuestions = questions
+        .map((q, i) => ({ q, i, correct: newAnswers[i] === q.correctIndex }))
+        .filter(({ correct }) => !correct)
+        .map(({ q, i }) => ({
+          question: q.question,
+          yourAnswer: q.options[newAnswers[i]] ?? "No answer",
+          correctAnswer: q.options[q.correctIndex],
+        }));
+
+      const result: QuizResult = { score, total: questions.length, missedQuestions };
+      setFinalResult(result);
       setIsFinished(true);
-      onComplete?.(finalScore, questions.length);
+      onComplete?.(result);
     }
   };
 
@@ -55,15 +73,16 @@ export function QuizView({ questions, onComplete }: QuizViewProps) {
     setCurrentIdx(0);
     setSelectedOpt(null);
     setIsAnswered(false);
-    setScore(0);
+    setAnswers([]);
     setIsFinished(false);
+    setFinalResult(null);
   };
 
-  if (isFinished) {
-    const percentage = Math.round((score / questions.length) * 100);
+  if (isFinished && finalResult) {
+    const percentage = Math.round((finalResult.score / finalResult.total) * 100);
     return (
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }} 
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="max-w-2xl mx-auto mt-12 bg-card rounded-3xl p-8 border-2 border-border shadow-xl text-center"
       >
@@ -72,9 +91,9 @@ export function QuizView({ questions, onComplete }: QuizViewProps) {
         </div>
         <h2 className="text-3xl font-serif font-bold text-foreground mb-2">Quiz Completed!</h2>
         <p className="text-lg text-muted-foreground mb-8">
-          You scored <strong className="text-primary">{score}</strong> out of <strong>{questions.length}</strong> ({percentage}%)
+          You scored <strong className="text-primary">{finalResult.score}</strong> out of <strong>{finalResult.total}</strong> ({percentage}%)
         </p>
-        
+
         <button
           onClick={handleRestart}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all"
@@ -94,7 +113,7 @@ export function QuizView({ questions, onComplete }: QuizViewProps) {
           Question {currentIdx + 1} of {questions.length}
         </span>
         <div className="flex-1 ml-6 mr-6 h-2 bg-secondary rounded-full overflow-hidden">
-          <motion.div 
+          <motion.div
             className="h-full bg-primary"
             initial={{ width: `${((currentIdx) / questions.length) * 100}%` }}
             animate={{ width: `${((currentIdx + 1) / questions.length) * 100}%` }}
@@ -102,7 +121,7 @@ export function QuizView({ questions, onComplete }: QuizViewProps) {
           />
         </div>
         <span className="text-sm font-bold text-primary">
-          Score: {score}
+          Score: {answers.filter((ans, i) => ans === questions[i].correctIndex).length}
         </span>
       </div>
 
@@ -122,7 +141,7 @@ export function QuizView({ questions, onComplete }: QuizViewProps) {
           {currentQ.options.map((opt, idx) => {
             const isSelected = selectedOpt === idx;
             const isCorrectOption = idx === currentQ.correctIndex;
-            
+
             let btnClass = "border-border/50 hover:border-primary/50 hover:bg-secondary/50";
             if (isAnswered) {
               if (isCorrectOption) btnClass = "border-green-500 bg-green-50 text-green-900 shadow-sm";
@@ -165,7 +184,7 @@ export function QuizView({ questions, onComplete }: QuizViewProps) {
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {currentQ.explanation}
                 </p>
-                
+
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={handleNext}
