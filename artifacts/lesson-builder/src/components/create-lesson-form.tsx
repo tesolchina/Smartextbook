@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BookOpen, Loader2, AlertCircle, Link2, FileText, Key, X } from "lucide-react";
+import { BookOpen, Loader2, AlertCircle, Link2, FileText, Key, X, CheckCircle2 } from "lucide-react";
 import { useFetchUrl } from "@workspace/api-client-react";
 import { useSettings } from "@/hooks/use-settings";
 import { useSettingsModal } from "@/hooks/use-settings-modal";
@@ -21,6 +21,21 @@ interface Props {
   onClose: () => void;
 }
 
+const STAGES = [
+  { label: "Analyzing source text…",    minSec: 0  },
+  { label: "Writing lesson summary…",   minSec: 8  },
+  { label: "Identifying key concepts…", minSec: 18 },
+  { label: "Building quiz questions…",  minSec: 30 },
+  { label: "Finalizing lesson…",        minSec: 46 },
+];
+
+function estimateSecs(textLength: number): number {
+  if (textLength < 1500)  return 35;
+  if (textLength < 4000)  return 50;
+  if (textLength < 8000)  return 65;
+  return 80;
+}
+
 export function CreateLessonForm({ onClose }: Props) {
   const [_, setLocation] = useLocation();
   const { addLesson } = useLessonsStore();
@@ -33,6 +48,36 @@ export function CreateLessonForm({ onClose }: Props) {
   const [urlError, setUrlError] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
+
+  const [stageIndex, setStageIndex] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+  const [estimate, setEstimate] = useState(50);
+
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (isGenerating) {
+      setStageIndex(0);
+      setElapsed(0);
+      timerRef.current = setInterval(() => {
+        setElapsed((prev) => {
+          const next = prev + 1;
+          setStageIndex(
+            STAGES.reduce((best, s, i) => (next >= s.minSec ? i : best), 0)
+          );
+          return next;
+        });
+      }, 1000);
+    } else {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isGenerating]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -74,6 +119,8 @@ export function CreateLessonForm({ onClose }: Props) {
       openSettings();
       return;
     }
+    const est = estimateSecs(data.chapterText.length);
+    setEstimate(est);
     setIsGenerating(true);
     setGenerateError(null);
 
@@ -117,6 +164,9 @@ export function CreateLessonForm({ onClose }: Props) {
       setIsGenerating(false);
     }
   };
+
+  const remaining = Math.max(0, estimate - elapsed);
+  const progressPct = Math.min(100, Math.round((elapsed / estimate) * 100));
 
   return (
     <div className="bg-background rounded-3xl p-6 md:p-8 shadow-2xl border border-border/60 text-left max-w-3xl mx-auto relative overflow-hidden">
@@ -240,6 +290,57 @@ export function CreateLessonForm({ onClose }: Props) {
             </div>
           )}
         </div>
+
+        {isGenerating && (
+          <div className="rounded-2xl border border-primary/20 bg-primary/5 px-5 py-4 space-y-3">
+            <div className="flex items-center justify-between text-xs font-semibold text-primary">
+              <span className="flex items-center gap-1.5">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                {STAGES[stageIndex].label}
+              </span>
+              <span className="tabular-nums text-muted-foreground">
+                {remaining > 0
+                  ? `~${remaining}s remaining`
+                  : "Almost done…"}
+              </span>
+            </div>
+
+            <div className="w-full h-1.5 rounded-full bg-primary/15 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-1000 ease-linear"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              {STAGES.map((s, i) => {
+                const done = stageIndex > i;
+                const active = stageIndex === i;
+                return (
+                  <span
+                    key={s.label}
+                    className={`flex items-center gap-1 text-xs transition-colors ${
+                      done
+                        ? "text-green-600 dark:text-green-400"
+                        : active
+                        ? "text-primary font-semibold"
+                        : "text-muted-foreground/50"
+                    }`}
+                  >
+                    {done ? (
+                      <CheckCircle2 className="w-3 h-3 shrink-0" />
+                    ) : (
+                      <span className="w-3 h-3 shrink-0 flex items-center justify-center">
+                        <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-primary" : "bg-muted-foreground/30"}`} />
+                      </span>
+                    )}
+                    {s.label.replace("…", "")}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center justify-end gap-3 pt-2 border-t border-border">
           <button
