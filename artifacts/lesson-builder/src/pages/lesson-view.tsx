@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoute, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Lightbulb, ListTodo, ArrowLeft, Download, GitBranch } from "lucide-react";
@@ -27,6 +27,10 @@ export default function LessonView() {
 
   const { getLesson } = useLessonsStore();
   const lesson = match ? getLesson(params.id) : undefined;
+
+  useEffect(() => {
+    setMindmapDiagram(null);
+  }, [params?.id]);
 
   if (!lesson) {
     return (
