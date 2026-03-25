@@ -24,6 +24,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Link href="/" className="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors outline-none focus-visible:text-primary">
               My Lessons
             </Link>
+            <Link href="/credits" className="hidden md:inline text-sm font-semibold text-muted-foreground hover:text-primary transition-colors outline-none focus-visible:text-primary">
+              Credits
+            </Link>
             <button
               onClick={openSettings}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${

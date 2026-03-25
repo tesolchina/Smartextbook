@@ -6,6 +6,7 @@ import { SettingsModalProvider } from "@/hooks/use-settings-modal";
 
 import Home from "@/pages/home";
 import LessonView from "@/pages/lesson-view";
+import Credits from "@/pages/credits";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -22,6 +23,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/lessons/:id" component={LessonView} />
+      <Route path="/credits" component={Credits} />
       <Route component={NotFound} />
     </Switch>
   );
