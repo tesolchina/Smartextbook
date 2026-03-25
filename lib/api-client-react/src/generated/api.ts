@@ -22,6 +22,8 @@ import type {
   FetchUrlBody,
   FetchUrlResponse,
   GenerateLessonBody,
+  GenerateMindmapBody,
+  GenerateMindmapResponse,
   GeneratedLesson,
   HealthStatus,
 } from "./api.schemas";
@@ -281,6 +283,92 @@ export const useGenerateLesson = <
   TContext
 > => {
   return useMutation(getGenerateLessonMutationOptions(options));
+};
+
+/**
+ * @summary Generate a Mermaid mind map diagram for a lesson
+ */
+export const getGenerateMindmapUrl = () => {
+  return `/api/generate-mindmap`;
+};
+
+export const generateMindmap = async (
+  generateMindmapBody: GenerateMindmapBody,
+  options?: RequestInit,
+): Promise<GenerateMindmapResponse> => {
+  return customFetch<GenerateMindmapResponse>(getGenerateMindmapUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(generateMindmapBody),
+  });
+};
+
+export const getGenerateMindmapMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateMindmap>>,
+    TError,
+    { data: BodyType<GenerateMindmapBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof generateMindmap>>,
+  TError,
+  { data: BodyType<GenerateMindmapBody> },
+  TContext
+> => {
+  const mutationKey = ["generateMindmap"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof generateMindmap>>,
+    { data: BodyType<GenerateMindmapBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return generateMindmap(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GenerateMindmapMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generateMindmap>>
+>;
+export type GenerateMindmapMutationBody = BodyType<GenerateMindmapBody>;
+export type GenerateMindmapMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Generate a Mermaid mind map diagram for a lesson
+ */
+export const useGenerateMindmap = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateMindmap>>,
+    TError,
+    { data: BodyType<GenerateMindmapBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof generateMindmap>>,
+  TError,
+  { data: BodyType<GenerateMindmapBody> },
+  TContext
+> => {
+  return useMutation(getGenerateMindmapMutationOptions(options));
 };
 
 /**

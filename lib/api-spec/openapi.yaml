@@ -87,6 +87,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /generate-mindmap:
+    post:
+      operationId: generateMindmap
+      tags: [lessons]
+      summary: Generate a Mermaid mind map diagram for a lesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateMindmapBody"
+      responses:
+        "200":
+          description: Mermaid mindmap definition string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerateMindmapResponse"
+        "400":
+          description: Bad request or invalid LLM config
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: AI provider error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /chat:
     post:
       operationId: chatWithTutor
@@ -265,6 +295,32 @@ components:
         - history
         - lessonContext
         - llmConfig
+    GenerateMindmapBody:
+      type: object
+      properties:
+        title:
+          type: string
+        summary:
+          type: string
+        keyConcepts:
+          type: array
+          items:
+            $ref: "#/components/schemas/KeyConcept"
+        llmConfig:
+          $ref: "#/components/schemas/LlmConfig"
+      required:
+        - title
+        - summary
+        - keyConcepts
+        - llmConfig
+    GenerateMindmapResponse:
+      type: object
+      properties:
+        mermaid:
+          type: string
+          description: Mermaid mindmap definition string (starts with "mindmap")
+      required:
+        - mermaid
     ErrorResponse:
       type: object
       properties:

@@ -14,6 +14,8 @@ export * from "./fetchUrlBody";
 export * from "./fetchUrlResponse";
 export * from "./generatedLesson";
 export * from "./generateLessonBody";
+export * from "./generateMindmapBody";
+export * from "./generateMindmapResponse";
 export * from "./healthStatus";
 export * from "./keyConcept";
 export * from "./lessonContext";

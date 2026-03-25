@@ -70,6 +70,41 @@ export const GenerateLessonResponse = zod.object({
 });
 
 /**
+ * @summary Generate a Mermaid mind map diagram for a lesson
+ */
+export const GenerateMindmapBody = zod.object({
+  title: zod.string(),
+  summary: zod.string(),
+  keyConcepts: zod.array(
+    zod.object({
+      term: zod.string(),
+      definition: zod.string(),
+    }),
+  ),
+  llmConfig: zod
+    .object({
+      provider: zod
+        .string()
+        .describe(
+          "Provider identifier (e.g. openai, gemini, deepseek, openrouter, groq, mistral, together, minimax, custom)",
+        ),
+      apiKey: zod.string().describe("API key for the provider"),
+      model: zod.string().describe("Model name to use"),
+      baseUrl: zod
+        .string()
+        .optional()
+        .describe("Optional custom base URL (required for provider=custom)"),
+    })
+    .describe("LLM provider configuration supplied by the user (BYOK)"),
+});
+
+export const GenerateMindmapResponse = zod.object({
+  mermaid: zod
+    .string()
+    .describe('Mermaid mindmap definition string (starts with \"mindmap\")'),
+});
+
+/**
  * @summary Chat with the AI tutor (SSE streaming, stateless)
  */
 export const ChatWithTutorBody = zod.object({

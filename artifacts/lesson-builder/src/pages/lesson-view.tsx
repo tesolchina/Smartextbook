@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { useRoute, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Lightbulb, ListTodo, ArrowLeft, Download } from "lucide-react";
+import { FileText, Lightbulb, ListTodo, ArrowLeft, Download, GitBranch } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { ChatSidebar } from "@/components/chat-sidebar";
 import { QuizView } from "@/components/quiz-view";
 import { LessonSummaryTab } from "@/components/lesson-summary-tab";
+import { MindMapTab } from "@/components/mind-map-tab";
 import { ExportModal } from "@/components/export-modal";
 import { useLessonsStore } from "@/hooks/use-lessons-store";
 
-type Tab = "summary" | "quiz" | "chapter";
+type Tab = "summary" | "quiz" | "chapter" | "mindmap";
 
 const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   { id: "summary", label: "Summary & Concepts", icon: <Lightbulb className="w-4 h-4" /> },
   { id: "quiz",    label: "Interactive Quiz",   icon: <ListTodo className="w-4 h-4" /> },
+  { id: "mindmap", label: "Mind Map",           icon: <GitBranch className="w-4 h-4" /> },
   { id: "chapter", label: "Source Text",        icon: <FileText className="w-4 h-4" /> },
 ];
 
@@ -103,6 +105,10 @@ export default function LessonView() {
                   <div className="max-w-4xl mx-auto">
                     <QuizView questions={lesson.quizQuestions || []} />
                   </div>
+                )}
+
+                {activeTab === "mindmap" && (
+                  <MindMapTab lesson={lesson} />
                 )}
 
                 {activeTab === "chapter" && (

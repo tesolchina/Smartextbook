@@ -142,7 +142,21 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
 .key-btn:hover{color:var(--primary)}
 /* Markdown in chat */
 .msg.bot code{background:#e8e4de;padding:.1em .35em;border-radius:4px;font-size:.85em;font-family:monospace}
+/* Mind map panel */
+.mindmap-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.mindmap-label{font-size:.8rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:.4rem}
+.regen-btn{font-size:.75rem;font-weight:600;color:var(--muted);border:1px solid var(--border);background:var(--card);border-radius:8px;padding:.3rem .7rem;transition:color .15s}
+.regen-btn:hover:not(:disabled){color:var(--primary);border-color:var(--primary)}
+.regen-btn:disabled{opacity:.5;cursor:default}
+.mindmap-status{text-align:center;padding:4rem 1rem;color:var(--muted);font-size:.85rem}
+.mindmap-status svg{display:block;margin:0 auto 1rem;opacity:.3}
+.mindmap-diagram{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;overflow:auto}
+.mindmap-diagram svg{width:100%;height:auto}
+.mindmap-error{background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius);padding:1.25rem;color:#dc2626;font-size:.85rem;text-align:center}
+.mm-spin{display:inline-block;animation:mmspin 1s linear infinite}
+@keyframes mmspin{to{transform:rotate(360deg)}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 </head>
 <body>
 
@@ -208,6 +222,7 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
         <button class="tab active" data-tab="summary">📋 Summary</button>
         <button class="tab" data-tab="concepts">🔑 Concepts</button>
         <button class="tab" data-tab="quiz">✏️ Quiz</button>
+        <button class="tab" data-tab="mindmap">🗺️ Mind Map</button>
         <button class="tab" data-tab="chapter">📖 Source</button>
       </div>
       <div class="tab-content">
@@ -226,6 +241,18 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
         <div class="panel" id="panel-quiz">
           <div id="quiz-container"></div>
           <div class="quiz-score" id="quiz-score" style="display:none"></div>
+        </div>
+
+        <div class="panel" id="panel-mindmap">
+          <div class="mindmap-toolbar">
+            <span class="mindmap-label">&#x1F4CC; Concept Mind Map</span>
+            <button class="regen-btn" id="mindmap-regen-btn" disabled>&#x21BB; Regenerate</button>
+          </div>
+          <div id="mindmap-body">
+            <div class="mindmap-status" id="mindmap-idle">
+              <p>Click the tab to generate a mind map. It will appear here after the first render.</p>
+            </div>
+          </div>
         </div>
 
         <div class="panel" id="panel-chapter">
@@ -556,8 +583,113 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    if (tab.dataset.tab === 'mindmap') onMindmapTabActivated();
   });
 });
+
+// ── Mind Map ──
+let mmGenerated = false;
+let mmGenerating = false;
+let mmId = 0;
+
+function mmSetBody(html) {
+  document.getElementById('mindmap-body').innerHTML = html;
+}
+
+async function generateMindmap() {
+  if (mmGenerating) return;
+  mmGenerating = true;
+  const regenBtn = document.getElementById('mindmap-regen-btn');
+  regenBtn.disabled = true;
+  mmSetBody('<div class="mindmap-status"><span class="mm-spin">&#9696;</span><br>Generating mind map…</div>');
+
+  const concepts = (LESSON.keyConcepts || []).slice(0, 12);
+  const conceptList = concepts.map(c => '- ' + c.term + ': ' + c.definition).join('\\n');
+  const title = LESSON.title.slice(0, 40);
+
+  const prompt = \`You are an expert educational content creator. Create a Mermaid mindmap diagram.
+
+Lesson title: \${LESSON.title}
+
+Summary:
+\${(LESSON.summary || '').slice(0, 1500)}
+
+Key concepts:
+\${conceptList}
+
+Return ONLY valid Mermaid mindmap syntax — no markdown fences, no explanation, no other text.
+The output must start with the word "mindmap" on the first line.
+
+Use this structure:
+mindmap
+  root(\${title})
+    ConceptA
+      Sub-idea 1
+      Sub-idea 2
+    ConceptB
+      Sub-idea 1
+
+Rules:
+- The root node is the lesson title (keep it short, under 40 chars).
+- Add one branch per major concept (use the term as the branch label).
+- Each branch may have 1-3 sub-ideas.
+- Use no more than 8 top-level branches.
+- Do NOT use parentheses or special Mermaid node shapes — plain text labels only.
+- Return ONLY the Mermaid mindmap block, nothing else.\`;
+
+  try {
+    const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey };
+    if (provider === 'openrouter') { headers['HTTP-Referer'] = 'https://lessonbuilder.app'; headers['X-Title'] = 'LessonBuilder'; }
+
+    const res = await fetch(baseUrl + '/chat/completions', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ model, messages: [{ role: 'user', content: prompt }], stream: false })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error?.message || 'HTTP ' + res.status);
+
+    let mermaidText = data.choices?.[0]?.message?.content || '';
+    mermaidText = mermaidText.replace(/^\`\`\`(?:mermaid)?\\s*/i, '').replace(/\\s*\`\`\`\\s*$/, '').trim();
+    if (!mermaidText.toLowerCase().startsWith('mindmap')) {
+      const m = mermaidText.match(/mindmap[\\s\\S]*/i);
+      mermaidText = m ? m[0].trim() : null;
+    }
+    if (!mermaidText) throw new Error('AI did not return a valid mind map. Try regenerating.');
+
+    await renderMermaid(mermaidText);
+    mmGenerated = true;
+  } catch(e) {
+    mmSetBody('<div class="mindmap-error">⚠️ ' + escHtml(e.message) + '<br><br><button class="regen-btn" onclick="generateMindmap()">↻ Try again</button></div>');
+  }
+
+  mmGenerating = false;
+  regenBtn.disabled = false;
+}
+
+async function renderMermaid(text) {
+  const id = 'mm' + (++mmId);
+  try {
+    // mermaid is loaded from CDN as a global
+    mermaid.initialize({ startOnLoad: false, theme: 'default', fontFamily: 'Georgia, serif', fontSize: 14 });
+    const { svg } = await mermaid.render(id, text);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'mindmap-diagram';
+    wrapper.innerHTML = svg;
+    const svgEl = wrapper.querySelector('svg');
+    if (svgEl) { svgEl.style.width = '100%'; svgEl.removeAttribute('height'); }
+    document.getElementById('mindmap-body').innerHTML = '';
+    document.getElementById('mindmap-body').appendChild(wrapper);
+  } catch(e) {
+    throw new Error('Could not render diagram: ' + (e.message || 'invalid Mermaid syntax') + '. Try regenerating.');
+  }
+}
+
+function onMindmapTabActivated() {
+  if (!mmGenerated && !mmGenerating) generateMindmap();
+}
+
+document.getElementById('mindmap-regen-btn').addEventListener('click', generateMindmap);
 
 // ── Chat ──
 const input = document.getElementById('chat-input');

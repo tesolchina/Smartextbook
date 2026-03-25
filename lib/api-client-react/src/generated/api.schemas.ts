@@ -87,6 +87,18 @@ export interface ChatRequest {
   llmConfig: LlmConfig;
 }
 
+export interface GenerateMindmapBody {
+  title: string;
+  summary: string;
+  keyConcepts: KeyConcept[];
+  llmConfig: LlmConfig;
+}
+
+export interface GenerateMindmapResponse {
+  /** Mermaid mindmap definition string (starts with "mindmap") */
+  mermaid: string;
+}
+
 export interface ErrorResponse {
   error: string;
 }
