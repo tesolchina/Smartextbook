@@ -239,6 +239,15 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
                   )}
                 </div>
 
+                {provider === "poe" && (
+                  <div className="flex gap-2.5 px-3.5 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs leading-relaxed dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-300">
+                    <span className="text-base leading-none shrink-0">ℹ️</span>
+                    <span>
+                      Poe uses <strong>bot handles</strong> as model names (e.g. <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">Claude-3-Haiku</code>, <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">GPT-4o-mini</code>). A <strong>Poe subscription</strong> is required to access the API.
+                    </span>
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-sm font-bold mb-2">Model</label>
                   {currentProvider && currentProvider.models.length > 0 ? (
@@ -269,7 +278,6 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
                       className="w-full bg-card border-2 border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-mono text-sm"
                     />
                   )}
-
                 </div>
 
                 <button

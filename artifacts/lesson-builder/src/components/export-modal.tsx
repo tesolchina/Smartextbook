@@ -220,6 +220,12 @@ export function ExportModal({ lesson, open, onClose }: Props) {
                     )}
                   </div>
                 </div>
+                {embedProvider === "poe" && (
+                  <div className="flex gap-2 px-2.5 py-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-[11px] leading-relaxed dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-300">
+                    <span className="shrink-0">ℹ️</span>
+                    <span>Students who open this file will need their own <strong>Poe subscription</strong> and API key to use the tutor. The model name is a Poe bot handle (e.g. <code className="bg-amber-100 dark:bg-amber-900/50 px-0.5 rounded">Claude-3-Haiku</code>).</span>
+                  </div>
+                )}
                 <p className="text-[11px] text-muted-foreground">
                   Users can change the provider and model when they open the file — this is just the default pre-selected for them.
                 </p>
