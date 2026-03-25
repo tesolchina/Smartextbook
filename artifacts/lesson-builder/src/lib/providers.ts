@@ -133,7 +133,7 @@ export const PROVIDERS: Provider[] = [
   {
     id: "poe",
     name: "Poe (poe.com)",
-    baseUrl: "https://api.poe.com/bot",
+    baseUrl: "https://api.poe.com/v1",
     keyPlaceholder: "your-poe-api-key",
     keyHint: "Get your API key at poe.com/api_key — requires a Poe subscription",
     docsUrl: "https://poe.com/api_key",

@@ -315,6 +315,12 @@ providerSel.addEventListener('change', () => {
   };
   const prefix = providerSel.value.split('|')[0] + '|';
   if (defaultModels[prefix]) document.getElementById('setup-model').value = defaultModels[prefix];
+  const modelHint = document.querySelector('.field small');
+  if (modelHint) {
+    modelHint.textContent = prefix === 'poe|'
+      ? 'Enter a Poe bot handle, e.g. Claude-3-Haiku, GPT-4o-mini, Llama-3.1-405B.'
+      : "Check your provider's model list for valid names.";
+  }
 });
 
 setupBtn.addEventListener('click', async () => {

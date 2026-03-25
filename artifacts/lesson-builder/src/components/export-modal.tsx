@@ -20,7 +20,7 @@ const STYLES: { id: Style; label: string; desc: string }[] = [
   { id: "mentor",      label: "Warm Mentor",     desc: "Encouraging, builds confidence alongside knowledge" },
 ];
 
-const EXPORT_PROVIDERS = PROVIDERS.filter((p) => p.id !== "poe" && p.id !== "custom");
+const EXPORT_PROVIDERS = PROVIDERS.filter((p) => p.id !== "custom");
 
 export function ExportModal({ lesson, open, onClose }: Props) {
   const [tutorName, setTutorName] = useState("Aria");
