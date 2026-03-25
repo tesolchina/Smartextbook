@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
-import { type LlmSettings } from "./use-settings";
 import { type StoredLesson } from "./use-lessons-store";
+import { useSettings } from "./use-settings";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -12,11 +12,12 @@ export function useChat(lesson: StoredLesson) {
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const { isConfigured, getLlmConfig } = useSettings();
 
-  const sendMessage = useCallback(async (content: string, llmSettings: LlmSettings | null) => {
+  const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isStreaming) return;
 
-    if (!llmSettings) {
+    if (!isConfigured) {
       setError("No API key configured. Click 'Set API Key' in the top menu to add your key.");
       return;
     }
@@ -43,19 +44,14 @@ export function useChat(lesson: StoredLesson) {
             keyConcepts: lesson.keyConcepts,
             chapterText: lesson.chapterText,
           },
-          llmConfig: {
-            provider: llmSettings.provider,
-            apiKey: llmSettings.apiKey,
-            model: llmSettings.model,
-            baseUrl: llmSettings.baseUrl || undefined,
-          },
+          llmConfig: getLlmConfig(),
         }),
         signal: abortControllerRef.current.signal,
       });
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data?.error || "Failed to send message to tutor");
+        throw new Error((data as any)?.error || "Failed to send message to tutor");
       }
       if (!res.body) throw new Error("No response body");
 
@@ -98,7 +94,7 @@ export function useChat(lesson: StoredLesson) {
                     return newMessages;
                   });
                 }
-              } catch {
+              } catch (e) {
                 // Ignore incomplete JSON chunks
               }
             }
@@ -115,7 +111,7 @@ export function useChat(lesson: StoredLesson) {
     } finally {
       setIsStreaming(false);
     }
-  }, [lesson, messages, isStreaming]);
+  }, [lesson, messages, isStreaming, isConfigured, getLlmConfig]);
 
   const stopStreaming = useCallback(() => {
     if (abortControllerRef.current) {

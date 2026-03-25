@@ -24,7 +24,7 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export function ChatSidebar({ lesson }: ChatSidebarProps) {
-  const { settings, isConfigured } = useSettings();
+  const { isConfigured } = useSettings();
   const { openSettings } = useSettingsModal();
   const { messages, isStreaming, sendMessage, stopStreaming, error } = useChat(lesson);
   const [input, setInput] = useState("");
@@ -37,14 +37,14 @@ export function ChatSidebar({ lesson }: ChatSidebarProps) {
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (input.trim() && !isStreaming) {
-      sendMessage(input, settings);
+      sendMessage(input);
       setInput("");
     }
   };
 
   const handleSuggested = (question: string) => {
     if (!isStreaming) {
-      sendMessage(question, settings);
+      sendMessage(question);
     }
   };
 
@@ -78,8 +78,8 @@ export function ChatSidebar({ lesson }: ChatSidebarProps) {
       )}
 
       <div className="flex-1 overflow-y-auto p-4 space-y-6 relative bg-background/50">
-        {messages.length === 0 && isConfigured && (
-          <motion.div
+        {messages.length === 0 && (
+          <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center h-full text-center px-4"
@@ -91,13 +91,14 @@ export function ChatSidebar({ lesson }: ChatSidebarProps) {
             <p className="text-muted-foreground text-sm mb-8 max-w-[250px]">
               I've read this chapter and I'm ready to help. Ask me anything, or try one of these:
             </p>
-
+            
             <div className="flex flex-col gap-2 w-full">
               {SUGGESTED_QUESTIONS.map((q, i) => (
                 <button
                   key={i}
                   onClick={() => handleSuggested(q)}
-                  className="text-left px-4 py-3 rounded-xl bg-card border border-border/50 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 transition-all text-sm text-foreground shadow-sm group"
+                  disabled={!isConfigured}
+                  className="text-left px-4 py-3 rounded-xl bg-card border border-border/50 hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 transition-all text-sm text-foreground shadow-sm group disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   <span className="group-hover:text-primary transition-colors">{q}</span>
                 </button>
@@ -119,17 +120,17 @@ export function ChatSidebar({ lesson }: ChatSidebarProps) {
             >
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1 shadow-sm",
-                msg.role === "user"
-                  ? "bg-secondary text-secondary-foreground"
+                msg.role === "user" 
+                  ? "bg-secondary text-secondary-foreground" 
                   : "bg-primary text-primary-foreground"
               )}>
                 {msg.role === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
               </div>
-
+              
               <div className={cn(
                 "px-4 py-3 rounded-2xl shadow-sm",
-                msg.role === "user"
-                  ? "bg-secondary text-secondary-foreground rounded-tr-none"
+                msg.role === "user" 
+                  ? "bg-secondary text-secondary-foreground rounded-tr-none" 
                   : "bg-card border border-border/50 text-card-foreground rounded-tl-none"
               )}>
                 {msg.role === "assistant" ? (
@@ -141,7 +142,7 @@ export function ChatSidebar({ lesson }: ChatSidebarProps) {
             </motion.div>
           ))}
         </AnimatePresence>
-
+        
         {error && (
           <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center mx-4">
             {error}

@@ -19,3 +19,4 @@ export interface LlmConfig {
   /** Optional custom base URL (required for provider=custom) */
   baseUrl?: string;
 }
+

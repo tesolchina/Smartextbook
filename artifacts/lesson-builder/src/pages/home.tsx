@@ -1,14 +1,26 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Library } from "lucide-react";
+import { Plus, Library, KeyRound } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { CreateLessonForm } from "@/components/create-lesson-form";
 import { LessonCard } from "@/components/lesson-card";
 import { useLessonsStore } from "@/hooks/use-lessons-store";
+import { useSettings } from "@/hooks/use-settings";
+import { useSettingsModal } from "@/hooks/use-settings-modal";
 
 export default function Home() {
   const { lessons, deleteLesson } = useLessonsStore();
+  const { isConfigured } = useSettings();
+  const { openSettings } = useSettingsModal();
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleCreateClick = () => {
+    if (!isConfigured) {
+      openSettings();
+      return;
+    }
+    setIsFormOpen(true);
+  };
 
   return (
     <Layout>
@@ -39,6 +51,24 @@ export default function Home() {
               Paste a chapter or drop a URL — LessonBuilder generates a concise summary, a glossary of key concepts, and an interactive quiz. Then your personal AI tutor stays on hand to answer every question.
             </p>
 
+            {!isConfigured && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-destructive/10 border border-destructive/30 text-destructive text-sm font-semibold"
+              >
+                <KeyRound className="w-4 h-4 shrink-0" />
+                No API key configured.{" "}
+                <button
+                  onClick={openSettings}
+                  className="underline underline-offset-2 hover:opacity-80 transition-opacity"
+                >
+                  Set up your API key
+                </button>{" "}
+                to create lessons.
+              </motion.div>
+            )}
+
             <AnimatePresence mode="wait">
               {!isFormOpen ? (
                 <motion.button
@@ -46,10 +76,10 @@ export default function Home() {
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.96 }}
-                  onClick={() => setIsFormOpen(true)}
+                  onClick={handleCreateClick}
                   className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-foreground text-background font-bold text-base hover:bg-foreground/90 shadow-xl shadow-foreground/10 hover:-translate-y-1 transition-all active:scale-95"
                 >
-                  <Plus className="w-5 h-5" /> Create a Lesson
+                  <Plus className="w-5 h-5" /> Create New Lesson
                 </motion.button>
               ) : (
                 <motion.div
@@ -80,7 +110,7 @@ export default function Home() {
           </div>
 
           {lessons.length === 0 ? (
-            <EmptyLibrary onCreateClick={() => setIsFormOpen(true)} />
+            <EmptyLibrary onCreateClick={handleCreateClick} />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {lessons.map((lesson) => (
@@ -90,6 +120,7 @@ export default function Home() {
           )}
         </div>
       </section>
+
     </Layout>
   );
 }

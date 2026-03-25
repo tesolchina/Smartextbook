@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { BookOpenText, Key, CheckCircle } from "lucide-react";
 import { useSettings } from "@/hooks/use-settings";
@@ -45,9 +46,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
       </header>
-      <main className="flex-1 flex flex-col">
-        {children}
-      </main>
+
+      <main className="flex-1 flex flex-col">{children}</main>
     </div>
   );
 }
