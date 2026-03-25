@@ -6,10 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ChatHistoryMessage } from "./chatHistoryMessage";
+import type { LessonContext } from "./lessonContext";
 import type { LlmConfig } from "./llmConfig";
 
-export interface ChatMessage {
+export interface ChatRequest {
   message: string;
   history: ChatHistoryMessage[];
+  lessonContext: LessonContext;
   llmConfig: LlmConfig;
 }

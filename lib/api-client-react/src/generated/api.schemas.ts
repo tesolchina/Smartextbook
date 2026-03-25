@@ -33,13 +33,11 @@ export interface FetchUrlResponse {
   url: string;
 }
 
-export type LessonStatus = (typeof LessonStatus)[keyof typeof LessonStatus];
-
-export const LessonStatus = {
-  processing: "processing",
-  ready: "ready",
-  error: "error",
-} as const;
+export interface GenerateLessonBody {
+  title: string;
+  chapterText: string;
+  llmConfig: LlmConfig;
+}
 
 export interface KeyConcept {
   term: string;
@@ -53,21 +51,20 @@ export interface QuizQuestion {
   explanation: string;
 }
 
-export interface Lesson {
-  id: number;
-  title: string;
-  chapterText: string;
+export interface GeneratedLesson {
   summary: string;
   keyConcepts: KeyConcept[];
   quizQuestions: QuizQuestion[];
-  status: LessonStatus;
-  createdAt: string;
 }
 
-export interface CreateLessonBody {
+/**
+ * Lesson context sent by the client for stateless chat
+ */
+export interface LessonContext {
   title: string;
+  summary: string;
+  keyConcepts: KeyConcept[];
   chapterText: string;
-  llmConfig: LlmConfig;
 }
 
 export type ChatHistoryMessageRole =
@@ -83,9 +80,10 @@ export interface ChatHistoryMessage {
   content: string;
 }
 
-export interface ChatMessage {
+export interface ChatRequest {
   message: string;
   history: ChatHistoryMessage[];
+  lessonContext: LessonContext;
   llmConfig: LlmConfig;
 }
 

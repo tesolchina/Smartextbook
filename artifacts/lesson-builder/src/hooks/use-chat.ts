@@ -1,9 +1,14 @@
 import { useState, useRef, useCallback } from "react";
-import { ChatHistoryMessage } from "@workspace/api-client-react";
 import { type LlmSettings } from "./use-settings";
+import { type StoredLesson } from "./use-lessons-store";
 
-export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] = []) {
-  const [messages, setMessages] = useState<ChatHistoryMessage[]>(initialHistory);
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export function useChat(lesson: StoredLesson) {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -17,7 +22,7 @@ export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] =
     }
 
     setError(null);
-    const userMsg: ChatHistoryMessage = { role: "user", content };
+    const userMsg: ChatMessage = { role: "user", content };
     const historyToSend = [...messages];
 
     setMessages((prev) => [...prev, userMsg]);
@@ -26,12 +31,18 @@ export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] =
     abortControllerRef.current = new AbortController();
 
     try {
-      const res = await fetch(`/api/lessons/${lessonId}/chat`, {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: content,
           history: historyToSend,
+          lessonContext: {
+            title: lesson.title,
+            summary: lesson.summary,
+            keyConcepts: lesson.keyConcepts,
+            chapterText: lesson.chapterText,
+          },
           llmConfig: {
             provider: llmSettings.provider,
             apiKey: llmSettings.apiKey,
@@ -104,7 +115,7 @@ export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] =
     } finally {
       setIsStreaming(false);
     }
-  }, [lessonId, messages, isStreaming]);
+  }, [lesson, messages, isStreaming]);
 
   const stopStreaming = useCallback(() => {
     if (abortControllerRef.current) {
@@ -113,12 +124,5 @@ export function useChat(lessonId: number, initialHistory: ChatHistoryMessage[] =
     }
   }, []);
 
-  return {
-    messages,
-    isStreaming,
-    sendMessage,
-    stopStreaming,
-    error,
-    setMessages
-  };
+  return { messages, isStreaming, sendMessage, stopStreaming, error };
 }

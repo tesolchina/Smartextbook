@@ -10,7 +10,7 @@ tags:
   - name: health
     description: Health operations
   - name: lessons
-    description: Lesson generation and management
+    description: Lesson generation
   - name: content
     description: Content fetching utilities
 paths:
@@ -57,134 +57,58 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /lessons:
-    get:
-      operationId: listLessons
-      tags: [lessons]
-      summary: List all lessons
-      responses:
-        "200":
-          description: List of lessons
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Lesson"
+  /generate-lesson:
     post:
-      operationId: createLesson
+      operationId: generateLesson
       tags: [lessons]
-      summary: Create a lesson from chapter text (triggers AI processing)
+      summary: Generate a lesson from chapter text using AI (synchronous)
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateLessonBody"
+              $ref: "#/components/schemas/GenerateLessonBody"
       responses:
-        "201":
-          description: Created lesson
+        "200":
+          description: Generated lesson content
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Lesson"
+                $ref: "#/components/schemas/GeneratedLesson"
+        "400":
+          description: Bad request or invalid LLM config
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: AI provider error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /chat:
+    post:
+      operationId: chatWithTutor
+      tags: [lessons]
+      summary: Chat with the AI tutor (SSE streaming, stateless)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatRequest"
+      responses:
+        "200":
+          description: SSE stream of AI tutor response
+          content:
+            text/event-stream: {}
         "400":
           description: Bad request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /lessons/{id}:
-    get:
-      operationId: getLesson
-      tags: [lessons]
-      summary: Get a lesson with full content
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Lesson with full content
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Lesson"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-    delete:
-      operationId: deleteLesson
-      tags: [lessons]
-      summary: Delete a lesson
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "204":
-          description: Deleted
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /lessons/{id}/chat:
-    post:
-      operationId: chatWithTutor
-      tags: [lessons]
-      summary: Send a message to the AI tutor for this lesson (SSE streaming)
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChatMessage"
-      responses:
-        "200":
-          description: SSE stream of AI tutor response
-          content:
-            text/event-stream: {}
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /lessons/{id}/chat-history:
-    get:
-      operationId: getLessonChatHistory
-      tags: [lessons]
-      summary: Get chat history for a lesson
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Chat history
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ChatHistoryMessage"
 components:
   schemas:
     HealthStatus:
@@ -235,15 +159,22 @@ components:
         - title
         - content
         - url
-    Lesson:
+    GenerateLessonBody:
       type: object
       properties:
-        id:
-          type: integer
         title:
           type: string
         chapterText:
           type: string
+        llmConfig:
+          $ref: "#/components/schemas/LlmConfig"
+      required:
+        - title
+        - chapterText
+        - llmConfig
+    GeneratedLesson:
+      type: object
+      properties:
         summary:
           type: string
         keyConcepts:
@@ -254,21 +185,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/QuizQuestion"
-        status:
-          type: string
-          enum: [processing, ready, error]
-        createdAt:
-          type: string
-          format: date-time
       required:
-        - id
-        - title
-        - chapterText
         - summary
         - keyConcepts
         - quizQuestions
-        - status
-        - createdAt
     KeyConcept:
       type: object
       properties:
@@ -297,34 +217,25 @@ components:
         - options
         - correctIndex
         - explanation
-    CreateLessonBody:
+    LessonContext:
       type: object
+      description: Lesson context sent by the client for stateless chat
       properties:
         title:
           type: string
-        chapterText:
+        summary:
           type: string
-        llmConfig:
-          $ref: "#/components/schemas/LlmConfig"
-      required:
-        - title
-        - chapterText
-        - llmConfig
-    ChatMessage:
-      type: object
-      properties:
-        message:
-          type: string
-        history:
+        keyConcepts:
           type: array
           items:
-            $ref: "#/components/schemas/ChatHistoryMessage"
-        llmConfig:
-          $ref: "#/components/schemas/LlmConfig"
+            $ref: "#/components/schemas/KeyConcept"
+        chapterText:
+          type: string
       required:
-        - message
-        - history
-        - llmConfig
+        - title
+        - summary
+        - keyConcepts
+        - chapterText
     ChatHistoryMessage:
       type: object
       properties:
@@ -336,6 +247,24 @@ components:
       required:
         - role
         - content
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatHistoryMessage"
+        lessonContext:
+          $ref: "#/components/schemas/LessonContext"
+        llmConfig:
+          $ref: "#/components/schemas/LlmConfig"
+      required:
+        - message
+        - history
+        - lessonContext
+        - llmConfig
     ErrorResponse:
       type: object
       properties:

@@ -7,10 +7,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Layout } from "@/components/layout";
-import { useListLessons, useCreateLesson, useDeleteLesson, useFetchUrl, getListLessonsQueryKey } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useFetchUrl } from "@workspace/api-client-react";
 import { useSettings } from "@/hooks/use-settings";
 import { useSettingsModal } from "@/hooks/use-settings-modal";
+import { useLessonsStore } from "@/hooks/use-lessons-store";
 
 const createLessonSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(100),
@@ -22,15 +22,14 @@ type SourceTab = "paste" | "url";
 
 export default function Home() {
   const [_, setLocation] = useLocation();
-  const queryClient = useQueryClient();
-  const { data: lessons, isLoading: lessonsLoading } = useListLessons();
-  const { mutate: createLesson, isPending: isCreating } = useCreateLesson();
+  const { lessons, addLesson, deleteLesson } = useLessonsStore();
   const { mutate: fetchUrlMutate, isPending: isFetchingUrl } = useFetchUrl();
-  const { mutate: deleteLesson } = useDeleteLesson();
   const { settings, isConfigured } = useSettings();
   const { openSettings } = useSettingsModal();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
   const [sourceTab, setSourceTab] = useState<SourceTab>("paste");
   const [urlInput, setUrlInput] = useState("");
   const [urlError, setUrlError] = useState("");
@@ -40,32 +39,59 @@ export default function Home() {
     defaultValues: { title: "", chapterText: "" }
   });
 
-  const onSubmit = (data: CreateLessonForm) => {
+  const onSubmit = async (data: CreateLessonForm) => {
     if (!settings) {
       openSettings();
       return;
     }
 
-    createLesson({
-      data: {
+    setIsGenerating(true);
+    setGenerateError(null);
+
+    try {
+      const res = await fetch("/api/generate-lesson", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: data.title,
+          chapterText: data.chapterText,
+          llmConfig: {
+            provider: settings.provider,
+            apiKey: settings.apiKey,
+            model: settings.model,
+            baseUrl: settings.baseUrl || undefined,
+          },
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        setGenerateError(json?.error || "Failed to generate lesson. Please try again.");
+        return;
+      }
+
+      const id = crypto.randomUUID();
+      const newLesson = {
+        id,
         title: data.title,
         chapterText: data.chapterText,
-        llmConfig: {
-          provider: settings.provider,
-          apiKey: settings.apiKey,
-          model: settings.model,
-          baseUrl: settings.baseUrl || undefined,
-        },
-      }
-    }, {
-      onSuccess: (newLesson) => {
-        queryClient.invalidateQueries({ queryKey: getListLessonsQueryKey() });
-        setIsFormOpen(false);
-        form.reset();
-        setUrlInput("");
-        setLocation(`/lessons/${newLesson.id}`);
-      }
-    });
+        summary: json.summary ?? "",
+        keyConcepts: json.keyConcepts ?? [],
+        quizQuestions: json.quizQuestions ?? [],
+        createdAt: new Date().toISOString(),
+      };
+
+      addLesson(newLesson);
+      setIsFormOpen(false);
+      form.reset();
+      setUrlInput("");
+      setLocation(`/lessons/${id}`);
+    } catch (err: any) {
+      setGenerateError(err?.message || "Network error. Please check your connection.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleFetchUrl = () => {
@@ -97,13 +123,11 @@ export default function Home() {
     });
   };
 
-  const handleDelete = (e: React.MouseEvent, id: number) => {
+  const handleDelete = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
     if (confirm("Are you sure you want to delete this lesson?")) {
-      deleteLesson({ id }, {
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: getListLessonsQueryKey() })
-      });
+      deleteLesson(id);
     }
   };
 
@@ -149,7 +173,7 @@ export default function Home() {
                     <BookOpen className="w-6 h-6 text-primary" />
                     New Lesson Setup
                   </h3>
-                  <button onClick={() => setIsFormOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+                  <button onClick={() => { setIsFormOpen(false); setGenerateError(null); }} className="text-muted-foreground hover:text-foreground transition-colors">
                     <X className="w-5 h-5" />
                   </button>
                 </div>
@@ -167,6 +191,13 @@ export default function Home() {
                     >
                       Set key
                     </button>
+                  </div>
+                )}
+
+                {generateError && (
+                  <div className="mb-5 p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                    <p className="text-destructive text-sm">{generateError}</p>
                   </div>
                 )}
 
@@ -267,17 +298,17 @@ export default function Home() {
                   <div className="flex items-center justify-end gap-4 pt-4 border-t border-border">
                     <button
                       type="button"
-                      onClick={() => { setIsFormOpen(false); form.reset(); setUrlInput(""); }}
+                      onClick={() => { setIsFormOpen(false); form.reset(); setUrlInput(""); setGenerateError(null); }}
                       className="px-6 py-3 rounded-xl font-bold text-muted-foreground hover:bg-secondary transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      disabled={isCreating || !isConfigured}
+                      disabled={isGenerating || !isConfigured}
                       className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                     >
-                      {isCreating ? (
+                      {isGenerating ? (
                         <><Loader2 className="w-5 h-5 animate-spin" /> Generating AI Lesson...</>
                       ) : !isConfigured ? (
                         <><Key className="w-5 h-5" /> Set API Key First</>
@@ -301,15 +332,10 @@ export default function Home() {
               <Library className="w-8 h-8 text-secondary-foreground" />
               Your Library
             </h2>
+            <p className="text-sm text-muted-foreground hidden md:block">Lessons are saved in this browser only</p>
           </div>
 
-          {lessonsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-48 rounded-2xl bg-secondary/50 animate-pulse border border-border"></div>
-              ))}
-            </div>
-          ) : !lessons || lessons.length === 0 ? (
+          {lessons.length === 0 ? (
             <div className="text-center py-20 bg-card rounded-3xl border border-border border-dashed">
               <img src={`${import.meta.env.BASE_URL}images/empty-lessons.png`} alt="No lessons" className="w-48 h-48 mx-auto mb-6 object-contain opacity-80" />
               <h3 className="text-2xl font-serif font-bold mb-2">Your library is empty</h3>
@@ -329,19 +355,9 @@ export default function Home() {
                     </button>
 
                     <div className="mb-4">
-                      {lesson.status === "processing" ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-accent/20 text-accent-foreground text-xs font-bold uppercase tracking-wider">
-                          <Loader2 className="w-3 h-3 animate-spin" /> Processing
-                        </span>
-                      ) : lesson.status === "error" ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-destructive/10 text-destructive text-xs font-bold uppercase tracking-wider">
-                          <AlertCircle className="w-3 h-3" /> Error
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green-500/10 text-green-700 dark:text-green-400 text-xs font-bold uppercase tracking-wider">
-                          <CheckCircleIcon className="w-3 h-3" /> Ready
-                        </span>
-                      )}
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green-500/10 text-green-700 dark:text-green-400 text-xs font-bold uppercase tracking-wider">
+                        <CheckCircleIcon className="w-3 h-3" /> Ready
+                      </span>
                     </div>
 
                     <h3 className="text-xl font-serif font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">

@@ -1,87 +1,31 @@
 import { useState } from "react";
-import { useRoute } from "wouter";
+import { useRoute, Link } from "wouter";
 import { Layout } from "@/components/layout";
 import { ChatSidebar } from "@/components/chat-sidebar";
 import { QuizView } from "@/components/quiz-view";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
-import { useGetLesson } from "@workspace/api-client-react";
-import { FileText, Lightbulb, ListTodo, Loader2, Sparkles } from "lucide-react";
+import { useLessonsStore } from "@/hooks/use-lessons-store";
+import { FileText, Lightbulb, ListTodo, Sparkles, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LessonView() {
   const [match, params] = useRoute("/lessons/:id");
-  const lessonId = match ? parseInt(params.id, 10) : 0;
+  const lessonId = match ? params.id : "";
   const [activeTab, setActiveTab] = useState<"summary" | "quiz" | "chapter">("summary");
 
-  const { data: lesson, isLoading, isError } = useGetLesson(lessonId, {
-    query: {
-      refetchInterval: (query) => {
-        // Poll every 3s if still processing
-        return query.state.data?.status === "processing" ? 3000 : false;
-      }
-    }
-  });
+  const { getLesson } = useLessonsStore();
+  const lesson = lessonId ? getLesson(lessonId) : undefined;
 
-  if (isLoading) {
-    return (
-      <Layout>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4 text-muted-foreground">
-            <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            <p className="font-serif text-xl">Loading your lesson...</p>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-
-  if (isError || !lesson) {
+  if (!lesson) {
     return (
       <Layout>
         <div className="flex-1 flex items-center justify-center p-8">
-          <div className="bg-destructive/10 text-destructive p-6 rounded-2xl max-w-md text-center border border-destructive/20">
-            <h2 className="text-xl font-bold mb-2">Lesson not found</h2>
-            <p>We couldn't load this lesson. It may have been deleted or there was an error connecting to the server.</p>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-
-  // Processing State overlay
-  if (lesson.status === "processing") {
-    return (
-      <Layout>
-        <div className="flex-1 flex items-center justify-center bg-card">
-          <div className="max-w-md w-full p-8 rounded-3xl bg-background border border-border shadow-2xl text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-secondary overflow-hidden">
-              <motion.div 
-                className="h-full bg-primary"
-                initial={{ x: "-100%" }}
-                animate={{ x: "100%" }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-              />
-            </div>
-            
-            <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center mb-6 relative">
-              <motion.div 
-                className="absolute inset-0 border-4 border-primary rounded-full border-t-transparent"
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-              />
-              <Sparkles className="w-10 h-10 text-primary" />
-            </div>
-            
-            <h2 className="text-2xl font-serif font-bold text-foreground mb-3">AI is processing...</h2>
-            <p className="text-muted-foreground mb-8">
-              We are reading the chapter, extracting key concepts, and generating a custom interactive quiz. This usually takes 15-30 seconds.
-            </p>
-            
-            <div className="space-y-3 text-left">
-              <div className="h-3 w-full bg-secondary rounded animate-pulse"></div>
-              <div className="h-3 w-5/6 bg-secondary rounded animate-pulse"></div>
-              <div className="h-3 w-4/6 bg-secondary rounded animate-pulse"></div>
-            </div>
+          <div className="bg-destructive/10 text-destructive p-8 rounded-2xl max-w-md text-center border border-destructive/20">
+            <h2 className="text-2xl font-bold mb-3">Lesson not found</h2>
+            <p className="text-sm mb-6 opacity-80">This lesson may have been cleared when the browser data was removed, or the link is invalid.</p>
+            <Link href="/" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-destructive text-white font-bold text-sm hover:bg-destructive/90 transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Go to Home
+            </Link>
           </div>
         </div>
       </Layout>
@@ -91,31 +35,31 @@ export default function LessonView() {
   return (
     <Layout>
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden h-[calc(100vh-64px)]">
-        
+
         {/* LEFT PANE: Content area */}
         <div className="flex-1 flex flex-col bg-background relative z-0 min-w-0">
-          
+
           {/* Header & Tabs */}
           <div className="px-6 pt-6 pb-0 border-b border-border bg-card">
             <h1 className="text-3xl font-serif font-black text-foreground mb-6 line-clamp-1" title={lesson.title}>
               {lesson.title}
             </h1>
-            
+
             <div className="flex gap-6 border-b border-transparent">
-              <TabButton 
-                active={activeTab === "summary"} 
+              <TabButton
+                active={activeTab === "summary"}
                 onClick={() => setActiveTab("summary")}
                 icon={<Lightbulb className="w-4 h-4" />}
                 label="Summary & Concepts"
               />
-              <TabButton 
-                active={activeTab === "quiz"} 
+              <TabButton
+                active={activeTab === "quiz"}
                 onClick={() => setActiveTab("quiz")}
                 icon={<ListTodo className="w-4 h-4" />}
                 label="Interactive Quiz"
               />
-              <TabButton 
-                active={activeTab === "chapter"} 
+              <TabButton
+                active={activeTab === "chapter"}
                 onClick={() => setActiveTab("chapter")}
                 icon={<FileText className="w-4 h-4" />}
                 label="Source Text"
@@ -149,7 +93,7 @@ export default function LessonView() {
                       <h2 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2 text-foreground border-b border-border pb-2">
                         <BookOpenIcon className="w-6 h-6 text-primary" /> Key Concepts Glossary
                       </h2>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {lesson.keyConcepts?.map((concept, i) => (
                           <div key={i} className="bg-card border border-border/60 p-5 rounded-xl hover:shadow-md hover:border-primary/30 transition-all group">
@@ -189,7 +133,7 @@ export default function LessonView() {
 
         {/* RIGHT PANE: Chat Sidebar */}
         <div className="w-full lg:w-[400px] xl:w-[450px] shrink-0 border-t lg:border-t-0 z-10 h-[50vh] lg:h-full">
-          <ChatSidebar lessonId={lesson.id} />
+          <ChatSidebar lesson={lesson} />
         </div>
 
       </div>
@@ -208,9 +152,9 @@ function TabButton({ active, onClick, icon, label }: { active: boolean, onClick:
       {icon}
       {label}
       {active && (
-        <motion.div 
-          layoutId="activeTab" 
-          className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-t-full" 
+        <motion.div
+          layoutId="activeTab"
+          className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-t-full"
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         />
       )}

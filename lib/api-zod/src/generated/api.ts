@@ -29,36 +29,9 @@ export const FetchUrlResponse = zod.object({
 });
 
 /**
- * @summary List all lessons
+ * @summary Generate a lesson from chapter text using AI (synchronous)
  */
-export const ListLessonsResponseItem = zod.object({
-  id: zod.number(),
-  title: zod.string(),
-  chapterText: zod.string(),
-  summary: zod.string(),
-  keyConcepts: zod.array(
-    zod.object({
-      term: zod.string(),
-      definition: zod.string(),
-    }),
-  ),
-  quizQuestions: zod.array(
-    zod.object({
-      question: zod.string(),
-      options: zod.array(zod.string()),
-      correctIndex: zod.number(),
-      explanation: zod.string(),
-    }),
-  ),
-  status: zod.enum(["processing", "ready", "error"]),
-  createdAt: zod.date(),
-});
-export const ListLessonsResponse = zod.array(ListLessonsResponseItem);
-
-/**
- * @summary Create a lesson from chapter text (triggers AI processing)
- */
-export const CreateLessonBody = zod.object({
+export const GenerateLessonBody = zod.object({
   title: zod.string(),
   chapterText: zod.string(),
   llmConfig: zod
@@ -78,17 +51,7 @@ export const CreateLessonBody = zod.object({
     .describe("LLM provider configuration supplied by the user (BYOK)"),
 });
 
-/**
- * @summary Get a lesson with full content
- */
-export const GetLessonParams = zod.object({
-  id: zod.coerce.number(),
-});
-
-export const GetLessonResponse = zod.object({
-  id: zod.number(),
-  title: zod.string(),
-  chapterText: zod.string(),
+export const GenerateLessonResponse = zod.object({
   summary: zod.string(),
   keyConcepts: zod.array(
     zod.object({
@@ -104,24 +67,11 @@ export const GetLessonResponse = zod.object({
       explanation: zod.string(),
     }),
   ),
-  status: zod.enum(["processing", "ready", "error"]),
-  createdAt: zod.date(),
 });
 
 /**
- * @summary Delete a lesson
+ * @summary Chat with the AI tutor (SSE streaming, stateless)
  */
-export const DeleteLessonParams = zod.object({
-  id: zod.coerce.number(),
-});
-
-/**
- * @summary Send a message to the AI tutor for this lesson (SSE streaming)
- */
-export const ChatWithTutorParams = zod.object({
-  id: zod.coerce.number(),
-});
-
 export const ChatWithTutorBody = zod.object({
   message: zod.string(),
   history: zod.array(
@@ -130,6 +80,19 @@ export const ChatWithTutorBody = zod.object({
       content: zod.string(),
     }),
   ),
+  lessonContext: zod
+    .object({
+      title: zod.string(),
+      summary: zod.string(),
+      keyConcepts: zod.array(
+        zod.object({
+          term: zod.string(),
+          definition: zod.string(),
+        }),
+      ),
+      chapterText: zod.string(),
+    })
+    .describe("Lesson context sent by the client for stateless chat"),
   llmConfig: zod
     .object({
       provider: zod
@@ -146,18 +109,3 @@ export const ChatWithTutorBody = zod.object({
     })
     .describe("LLM provider configuration supplied by the user (BYOK)"),
 });
-
-/**
- * @summary Get chat history for a lesson
- */
-export const GetLessonChatHistoryParams = zod.object({
-  id: zod.coerce.number(),
-});
-
-export const GetLessonChatHistoryResponseItem = zod.object({
-  role: zod.enum(["user", "assistant"]),
-  content: zod.string(),
-});
-export const GetLessonChatHistoryResponse = zod.array(
-  GetLessonChatHistoryResponseItem,
-);

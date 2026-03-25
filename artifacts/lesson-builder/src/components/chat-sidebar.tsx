@@ -5,6 +5,7 @@ import { useChat } from "@/hooks/use-chat";
 import { useSettings } from "@/hooks/use-settings";
 import { useSettingsModal } from "@/hooks/use-settings-modal";
 import { MarkdownRenderer } from "./markdown-renderer";
+import { type StoredLesson } from "@/hooks/use-lessons-store";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -13,7 +14,7 @@ function cn(...inputs: ClassValue[]) {
 }
 
 interface ChatSidebarProps {
-  lessonId: number;
+  lesson: StoredLesson;
 }
 
 const SUGGESTED_QUESTIONS = [
@@ -22,10 +23,10 @@ const SUGGESTED_QUESTIONS = [
   "What is the most important takeaway?",
 ];
 
-export function ChatSidebar({ lessonId }: ChatSidebarProps) {
+export function ChatSidebar({ lesson }: ChatSidebarProps) {
   const { settings, isConfigured } = useSettings();
   const { openSettings } = useSettingsModal();
-  const { messages, isStreaming, sendMessage, stopStreaming, error } = useChat(lessonId);
+  const { messages, isStreaming, sendMessage, stopStreaming, error } = useChat(lesson);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 

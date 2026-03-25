@@ -6,16 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { KeyConcept } from "./keyConcept";
-import type { LessonStatus } from "./lessonStatus";
 import type { QuizQuestion } from "./quizQuestion";
 
-export interface Lesson {
-  id: number;
-  title: string;
-  chapterText: string;
+export interface GeneratedLesson {
   summary: string;
   keyConcepts: KeyConcept[];
   quizQuestions: QuizQuestion[];
-  status: LessonStatus;
-  createdAt: Date;
 }

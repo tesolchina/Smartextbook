@@ -7,7 +7,7 @@
  */
 import type { LlmConfig } from "./llmConfig";
 
-export interface CreateLessonBody {
+export interface GenerateLessonBody {
   title: string;
   chapterText: string;
   llmConfig: LlmConfig;

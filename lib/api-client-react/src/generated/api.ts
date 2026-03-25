@@ -17,14 +17,13 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
-  ChatHistoryMessage,
-  ChatMessage,
-  CreateLessonBody,
+  ChatRequest,
   ErrorResponse,
   FetchUrlBody,
   FetchUrlResponse,
+  GenerateLessonBody,
+  GeneratedLesson,
   HealthStatus,
-  Lesson,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -199,115 +198,42 @@ export const useFetchUrl = <
 };
 
 /**
- * @summary List all lessons
+ * @summary Generate a lesson from chapter text using AI (synchronous)
  */
-export const getListLessonsUrl = () => {
-  return `/api/lessons`;
+export const getGenerateLessonUrl = () => {
+  return `/api/generate-lesson`;
 };
 
-export const listLessons = async (options?: RequestInit): Promise<Lesson[]> => {
-  return customFetch<Lesson[]>(getListLessonsUrl(), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getListLessonsQueryKey = () => {
-  return [`/api/lessons`] as const;
-};
-
-export const getListLessonsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listLessons>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof listLessons>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getListLessonsQueryKey();
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listLessons>>> = ({
-    signal,
-  }) => listLessons({ signal, ...requestOptions });
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof listLessons>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type ListLessonsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof listLessons>>
->;
-export type ListLessonsQueryError = ErrorType<unknown>;
-
-/**
- * @summary List all lessons
- */
-
-export function useListLessons<
-  TData = Awaited<ReturnType<typeof listLessons>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof listLessons>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getListLessonsQueryOptions(options);
-
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-/**
- * @summary Create a lesson from chapter text (triggers AI processing)
- */
-export const getCreateLessonUrl = () => {
-  return `/api/lessons`;
-};
-
-export const createLesson = async (
-  createLessonBody: CreateLessonBody,
+export const generateLesson = async (
+  generateLessonBody: GenerateLessonBody,
   options?: RequestInit,
-): Promise<Lesson> => {
-  return customFetch<Lesson>(getCreateLessonUrl(), {
+): Promise<GeneratedLesson> => {
+  return customFetch<GeneratedLesson>(getGenerateLessonUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createLessonBody),
+    body: JSON.stringify(generateLessonBody),
   });
 };
 
-export const getCreateLessonMutationOptions = <
+export const getGenerateLessonMutationOptions = <
   TError = ErrorType<ErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createLesson>>,
+    Awaited<ReturnType<typeof generateLesson>>,
     TError,
-    { data: BodyType<CreateLessonBody> },
+    { data: BodyType<GenerateLessonBody> },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof createLesson>>,
+  Awaited<ReturnType<typeof generateLesson>>,
   TError,
-  { data: BodyType<CreateLessonBody> },
+  { data: BodyType<GenerateLessonBody> },
   TContext
 > => {
-  const mutationKey = ["createLesson"];
+  const mutationKey = ["generateLesson"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
@@ -317,232 +243,62 @@ export const getCreateLessonMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createLesson>>,
-    { data: BodyType<CreateLessonBody> }
+    Awaited<ReturnType<typeof generateLesson>>,
+    { data: BodyType<GenerateLessonBody> }
   > = (props) => {
     const { data } = props ?? {};
 
-    return createLesson(data, requestOptions);
+    return generateLesson(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type CreateLessonMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createLesson>>
+export type GenerateLessonMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generateLesson>>
 >;
-export type CreateLessonMutationBody = BodyType<CreateLessonBody>;
-export type CreateLessonMutationError = ErrorType<ErrorResponse>;
+export type GenerateLessonMutationBody = BodyType<GenerateLessonBody>;
+export type GenerateLessonMutationError = ErrorType<ErrorResponse>;
 
 /**
- * @summary Create a lesson from chapter text (triggers AI processing)
+ * @summary Generate a lesson from chapter text using AI (synchronous)
  */
-export const useCreateLesson = <
+export const useGenerateLesson = <
   TError = ErrorType<ErrorResponse>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createLesson>>,
+    Awaited<ReturnType<typeof generateLesson>>,
     TError,
-    { data: BodyType<CreateLessonBody> },
+    { data: BodyType<GenerateLessonBody> },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
-  Awaited<ReturnType<typeof createLesson>>,
+  Awaited<ReturnType<typeof generateLesson>>,
   TError,
-  { data: BodyType<CreateLessonBody> },
+  { data: BodyType<GenerateLessonBody> },
   TContext
 > => {
-  return useMutation(getCreateLessonMutationOptions(options));
+  return useMutation(getGenerateLessonMutationOptions(options));
 };
 
 /**
- * @summary Get a lesson with full content
+ * @summary Chat with the AI tutor (SSE streaming, stateless)
  */
-export const getGetLessonUrl = (id: number) => {
-  return `/api/lessons/${id}`;
-};
-
-export const getLesson = async (
-  id: number,
-  options?: RequestInit,
-): Promise<Lesson> => {
-  return customFetch<Lesson>(getGetLessonUrl(id), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getGetLessonQueryKey = (id: number) => {
-  return [`/api/lessons/${id}`] as const;
-};
-
-export const getGetLessonQueryOptions = <
-  TData = Awaited<ReturnType<typeof getLesson>>,
-  TError = ErrorType<ErrorResponse>,
->(
-  id: number,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getLesson>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getGetLessonQueryKey(id);
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getLesson>>> = ({
-    signal,
-  }) => getLesson(id, { signal, ...requestOptions });
-
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof getLesson>>, TError, TData> & {
-    queryKey: QueryKey;
-  };
-};
-
-export type GetLessonQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getLesson>>
->;
-export type GetLessonQueryError = ErrorType<ErrorResponse>;
-
-/**
- * @summary Get a lesson with full content
- */
-
-export function useGetLesson<
-  TData = Awaited<ReturnType<typeof getLesson>>,
-  TError = ErrorType<ErrorResponse>,
->(
-  id: number,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getLesson>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetLessonQueryOptions(id, options);
-
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-/**
- * @summary Delete a lesson
- */
-export const getDeleteLessonUrl = (id: number) => {
-  return `/api/lessons/${id}`;
-};
-
-export const deleteLesson = async (
-  id: number,
-  options?: RequestInit,
-): Promise<void> => {
-  return customFetch<void>(getDeleteLessonUrl(id), {
-    ...options,
-    method: "DELETE",
-  });
-};
-
-export const getDeleteLessonMutationOptions = <
-  TError = ErrorType<ErrorResponse>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteLesson>>,
-    TError,
-    { id: number },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteLesson>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  const mutationKey = ["deleteLesson"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteLesson>>,
-    { id: number }
-  > = (props) => {
-    const { id } = props ?? {};
-
-    return deleteLesson(id, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type DeleteLessonMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteLesson>>
->;
-
-export type DeleteLessonMutationError = ErrorType<ErrorResponse>;
-
-/**
- * @summary Delete a lesson
- */
-export const useDeleteLesson = <
-  TError = ErrorType<ErrorResponse>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteLesson>>,
-    TError,
-    { id: number },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof deleteLesson>>,
-  TError,
-  { id: number },
-  TContext
-> => {
-  return useMutation(getDeleteLessonMutationOptions(options));
-};
-
-/**
- * @summary Send a message to the AI tutor for this lesson (SSE streaming)
- */
-export const getChatWithTutorUrl = (id: number) => {
-  return `/api/lessons/${id}/chat`;
+export const getChatWithTutorUrl = () => {
+  return `/api/chat`;
 };
 
 export const chatWithTutor = async (
-  id: number,
-  chatMessage: ChatMessage,
+  chatRequest: ChatRequest,
   options?: RequestInit,
 ): Promise<unknown> => {
-  return customFetch<unknown>(getChatWithTutorUrl(id), {
+  return customFetch<unknown>(getChatWithTutorUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(chatMessage),
+    body: JSON.stringify(chatRequest),
   });
 };
 
@@ -553,14 +309,14 @@ export const getChatWithTutorMutationOptions = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof chatWithTutor>>,
     TError,
-    { id: number; data: BodyType<ChatMessage> },
+    { data: BodyType<ChatRequest> },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof chatWithTutor>>,
   TError,
-  { id: number; data: BodyType<ChatMessage> },
+  { data: BodyType<ChatRequest> },
   TContext
 > => {
   const mutationKey = ["chatWithTutor"];
@@ -574,11 +330,11 @@ export const getChatWithTutorMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof chatWithTutor>>,
-    { id: number; data: BodyType<ChatMessage> }
+    { data: BodyType<ChatRequest> }
   > = (props) => {
-    const { id, data } = props ?? {};
+    const { data } = props ?? {};
 
-    return chatWithTutor(id, data, requestOptions);
+    return chatWithTutor(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -587,11 +343,11 @@ export const getChatWithTutorMutationOptions = <
 export type ChatWithTutorMutationResult = NonNullable<
   Awaited<ReturnType<typeof chatWithTutor>>
 >;
-export type ChatWithTutorMutationBody = BodyType<ChatMessage>;
+export type ChatWithTutorMutationBody = BodyType<ChatRequest>;
 export type ChatWithTutorMutationError = ErrorType<ErrorResponse>;
 
 /**
- * @summary Send a message to the AI tutor for this lesson (SSE streaming)
+ * @summary Chat with the AI tutor (SSE streaming, stateless)
  */
 export const useChatWithTutor = <
   TError = ErrorType<ErrorResponse>,
@@ -600,103 +356,15 @@ export const useChatWithTutor = <
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof chatWithTutor>>,
     TError,
-    { id: number; data: BodyType<ChatMessage> },
+    { data: BodyType<ChatRequest> },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof chatWithTutor>>,
   TError,
-  { id: number; data: BodyType<ChatMessage> },
+  { data: BodyType<ChatRequest> },
   TContext
 > => {
   return useMutation(getChatWithTutorMutationOptions(options));
 };
-
-/**
- * @summary Get chat history for a lesson
- */
-export const getGetLessonChatHistoryUrl = (id: number) => {
-  return `/api/lessons/${id}/chat-history`;
-};
-
-export const getLessonChatHistory = async (
-  id: number,
-  options?: RequestInit,
-): Promise<ChatHistoryMessage[]> => {
-  return customFetch<ChatHistoryMessage[]>(getGetLessonChatHistoryUrl(id), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getGetLessonChatHistoryQueryKey = (id: number) => {
-  return [`/api/lessons/${id}/chat-history`] as const;
-};
-
-export const getGetLessonChatHistoryQueryOptions = <
-  TData = Awaited<ReturnType<typeof getLessonChatHistory>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getLessonChatHistory>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey =
-    queryOptions?.queryKey ?? getGetLessonChatHistoryQueryKey(id);
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getLessonChatHistory>>
-  > = ({ signal }) => getLessonChatHistory(id, { signal, ...requestOptions });
-
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!id,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof getLessonChatHistory>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type GetLessonChatHistoryQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getLessonChatHistory>>
->;
-export type GetLessonChatHistoryQueryError = ErrorType<unknown>;
-
-/**
- * @summary Get chat history for a lesson
- */
-
-export function useGetLessonChatHistory<
-  TData = Awaited<ReturnType<typeof getLessonChatHistory>>,
-  TError = ErrorType<unknown>,
->(
-  id: number,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getLessonChatHistory>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetLessonChatHistoryQueryOptions(id, options);
-
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
