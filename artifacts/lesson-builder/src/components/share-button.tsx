@@ -19,7 +19,7 @@ type State =
   | { status: "checking" }
   | { status: "checked"; result: CheckResult }
   | { status: "sharing" }
-  | { status: "shared"; shareId: string; expiresAt: string }
+  | { status: "shared"; shareId: string; shareUrl: string; expiresAt: string }
   | { status: "error"; message: string };
 
 export function ShareButton({ lesson }: ShareButtonProps) {
@@ -31,10 +31,7 @@ export function ShareButton({ lesson }: ShareButtonProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const shareUrl =
-    state.status === "shared"
-      ? `${window.location.origin}/shared/${state.shareId}`
-      : "";
+  const shareUrl = state.status === "shared" ? state.shareUrl : "";
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -78,11 +75,10 @@ export function ShareButton({ lesson }: ShareButtonProps) {
       });
       const data = await res.json() as { shareId: string; shareUrl: string; expiresAt: string; error?: string };
       if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
-      const fullUrl = `${window.location.origin}${data.shareUrl}`;
-      setState({ status: "shared", shareId: data.shareId, expiresAt: data.expiresAt });
+      setState({ status: "shared", shareId: data.shareId, shareUrl: data.shareUrl, expiresAt: data.expiresAt });
       // Auto-copy on success
       try {
-        await navigator.clipboard.writeText(fullUrl);
+        await navigator.clipboard.writeText(data.shareUrl);
         toast({ title: "Link copied!", description: "Share it with your students." });
       } catch {
         toast({ title: "Lesson published!", description: "Use the copy button to get the link.", variant: "default" });

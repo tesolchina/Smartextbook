@@ -9,7 +9,10 @@ export const sharedLessonsTable = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   },
-  (t) => [index("shared_lessons_expires_at_idx").on(t.expiresAt)]
+  (t) => [
+    index("shared_lessons_expires_at_idx").on(t.expiresAt),
+    index("shared_lessons_title_idx").on(t.title),
+  ]
 );
 
 export type SharedLesson = typeof sharedLessonsTable.$inferSelect;

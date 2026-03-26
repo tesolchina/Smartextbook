@@ -1,4 +1,4 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request } from "express";
 import { db, sharedLessonsTable, commentsTable } from "@workspace/db";
 import { eq, asc } from "drizzle-orm";
 
@@ -32,6 +32,13 @@ function generateId(): string {
   return crypto.randomUUID().replace(/-/g, "").slice(0, 16);
 }
 
+function getOrigin(req: Request): string {
+  const forwarded = req.headers["x-forwarded-proto"];
+  const proto = typeof forwarded === "string" ? forwarded.split(",")[0].trim() : req.protocol;
+  const host = req.headers["x-forwarded-host"] ?? req.get("host") ?? "localhost";
+  return `${proto}://${host}`;
+}
+
 router.post("/share", async (req, res): Promise<void> => {
   const { lesson } = req.body ?? {};
   if (!isValidLesson(lesson)) {
@@ -50,7 +57,8 @@ router.post("/share", async (req, res): Promise<void> => {
       expiresAt,
     });
 
-    res.json({ shareId, shareUrl: `/shared/${shareId}`, expiresAt: expiresAt.toISOString() });
+    const shareUrl = `${getOrigin(req)}/shared/${shareId}`;
+    res.json({ shareId, shareUrl, expiresAt: expiresAt.toISOString() });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to share lesson";
     res.status(500).json({ error: message });

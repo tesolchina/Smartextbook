@@ -105,6 +105,49 @@ export const GenerateMindmapResponse = zod.object({
 });
 
 /**
+ * @summary Create a public shareable link for a lesson (valid 90 days)
+ */
+export const ShareLessonBody = zod.object({
+  lesson: zod
+    .object({
+      id: zod.string(),
+      title: zod.string(),
+      summary: zod.string(),
+      keyConcepts: zod.array(zod.unknown()),
+      quizQuestions: zod.array(zod.unknown()),
+      chapterText: zod.string(),
+    })
+    .describe("The full lesson object to publish"),
+});
+
+export const ShareLessonResponse = zod.object({
+  shareId: zod.string().describe("Unique share identifier"),
+  shareUrl: zod
+    .string()
+    .url()
+    .describe(
+      "Full public URL of the shared lesson (e.g. https:\/\/smartextbook.replit.app\/shared\/abc123)",
+    ),
+  expiresAt: zod
+    .date()
+    .describe("ISO 8601 expiry date (90 days from creation)"),
+});
+
+/**
+ * @summary Retrieve a shared lesson by its share ID
+ */
+export const GetSharedLessonParams = zod.object({
+  id: zod.coerce.string().describe("The share ID returned by POST \/share"),
+});
+
+export const GetSharedLessonResponse = zod.object({
+  lesson: zod.object({}).passthrough().describe("The stored lesson data"),
+  title: zod.string(),
+  expiresAt: zod.date(),
+  createdAt: zod.date(),
+});
+
+/**
  * @summary Chat with the AI tutor (SSE streaming, stateless)
  */
 export const ChatWithTutorBody = zod.object({

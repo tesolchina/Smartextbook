@@ -422,7 +422,8 @@ components:
           description: Unique share identifier
         shareUrl:
           type: string
-          description: Relative URL path to the shared lesson (e.g. /shared/abc123)
+          format: uri
+          description: Full public URL of the shared lesson (e.g. https://smartextbook.replit.app/shared/abc123)
         expiresAt:
           type: string
           format: date-time

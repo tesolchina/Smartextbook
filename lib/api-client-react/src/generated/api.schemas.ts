@@ -99,6 +99,45 @@ export interface GenerateMindmapResponse {
   mermaid: string;
 }
 
+/**
+ * The full lesson object to publish
+ */
+export type ShareLessonBodyLesson = {
+  id: string;
+  title: string;
+  summary: string;
+  keyConcepts: unknown[];
+  quizQuestions: unknown[];
+  chapterText: string;
+};
+
+export interface ShareLessonBody {
+  /** The full lesson object to publish */
+  lesson: ShareLessonBodyLesson;
+}
+
+export interface ShareLessonResponse {
+  /** Unique share identifier */
+  shareId: string;
+  /** Full public URL of the shared lesson (e.g. https://smartextbook.replit.app/shared/abc123) */
+  shareUrl: string;
+  /** ISO 8601 expiry date (90 days from creation) */
+  expiresAt: string;
+}
+
+/**
+ * The stored lesson data
+ */
+export type SharedLessonResponseLesson = { [key: string]: unknown };
+
+export interface SharedLessonResponse {
+  /** The stored lesson data */
+  lesson: SharedLessonResponseLesson;
+  title: string;
+  expiresAt: string;
+  createdAt: string;
+}
+
 export interface ErrorResponse {
   error: string;
 }
