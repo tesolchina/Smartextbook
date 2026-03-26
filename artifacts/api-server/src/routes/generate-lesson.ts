@@ -52,6 +52,7 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
     const response = await client.chat.completions.create({
       model,
       messages: [{ role: "user", content: prompt }],
+      stream: false,
     });
     const content = response.choices[0]?.message?.content ?? "";
 

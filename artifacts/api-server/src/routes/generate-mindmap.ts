@@ -63,6 +63,7 @@ router.post("/generate-mindmap", async (req, res): Promise<void> => {
     const response = await client.chat.completions.create({
       model,
       messages: [{ role: "user", content: prompt }],
+      stream: false,
     });
     let content = response.choices[0]?.message?.content ?? "";
 

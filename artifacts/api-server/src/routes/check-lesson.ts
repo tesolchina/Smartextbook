@@ -51,7 +51,7 @@ router.post("/check-lesson", async (req, res): Promise<void> => {
       model,
       messages: [{ role: "user", content: CHECK_PROMPT(lesson) }],
       temperature: 0.2,
-      response_format: { type: "json_object" },
+      stream: false,
     });
 
     const raw = completion.choices[0]?.message?.content ?? "{}";

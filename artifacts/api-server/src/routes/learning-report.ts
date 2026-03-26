@@ -131,6 +131,7 @@ router.post("/shared/:id/generate-report", async (req, res): Promise<void> => {
     const response = await client.chat.completions.create({
       model,
       messages: [{ role: "user", content: prompt }],
+      stream: false,
     });
 
     const reflection = response.choices[0]?.message?.content?.trim() ?? "";
