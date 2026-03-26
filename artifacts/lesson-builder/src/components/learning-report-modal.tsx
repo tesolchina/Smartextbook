@@ -103,8 +103,8 @@ export function LearningReportModal({ lesson, quizResult, open, onClose, shareId
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       setAiReflection(data.reflection);
-    } catch (err: any) {
-      setGenerateError(err.message || "Failed to generate reflection");
+    } catch (err: unknown) {
+      setGenerateError(err instanceof Error ? err.message : "Failed to generate reflection");
     }
     setGenerating(false);
   };
@@ -139,8 +139,8 @@ export function LearningReportModal({ lesson, quizResult, open, onClose, shareId
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       setSendResult({ ok: true, message: "Report sent successfully!" });
-    } catch (err: any) {
-      setSendResult({ ok: false, message: err.message || "Failed to send email" });
+    } catch (err: unknown) {
+      setSendResult({ ok: false, message: err instanceof Error ? err.message : "Failed to send email" });
     }
     setSending(false);
   };

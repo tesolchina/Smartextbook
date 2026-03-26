@@ -1,6 +1,7 @@
 import { Router, type IRouter, type Request } from "express";
 import { db, sharedLessonsTable, commentsTable } from "@workspace/db";
 import { eq, asc } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 const router: IRouter = Router();
 
@@ -28,9 +29,6 @@ function isValidLesson(v: unknown): v is ValidLesson {
   );
 }
 
-function generateId(): string {
-  return crypto.randomUUID().replace(/-/g, "").slice(0, 16);
-}
 
 function getOrigin(req: Request): string {
   const forwarded = req.headers["x-forwarded-proto"];
@@ -46,7 +44,7 @@ router.post("/share", async (req, res): Promise<void> => {
     return;
   }
 
-  const shareId = generateId();
+  const shareId = nanoid(16);
   const expiresAt = new Date(Date.now() + NINETY_DAYS_MS);
 
   try {

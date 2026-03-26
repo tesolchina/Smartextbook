@@ -33,9 +33,14 @@ app.use("/api", router);
 
 // Global error handler — catches any unhandled errors from routes/middleware
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-  const status = err?.status ?? err?.statusCode ?? 500;
-  const message = err?.message ?? "Unexpected server error";
+app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  let status = 500;
+  let message = "Unexpected server error";
+  if (err instanceof Error) {
+    message = err.message;
+    const httpErr = err as Error & { status?: number; statusCode?: number };
+    status = httpErr.status ?? httpErr.statusCode ?? 500;
+  }
   logger.error({ err }, "Unhandled error");
   res.status(status).json({ error: message });
 });
