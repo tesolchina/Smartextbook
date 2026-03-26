@@ -3,19 +3,50 @@ import { createLLMClient } from "../lib/llm-client";
 
 const router: IRouter = Router();
 
-const CHECK_PROMPT = (lesson: any) => `\
+interface LessonConcept {
+  term?: string;
+  definition?: string;
+}
+
+interface LessonQuestion {
+  question?: string;
+  correctIndex?: number;
+  options?: string[];
+  explanation?: string;
+}
+
+interface LessonInput {
+  title?: string;
+  summary?: string;
+  keyConcepts?: LessonConcept[];
+  quizQuestions?: LessonQuestion[];
+}
+
+function buildCheckPrompt(lesson: LessonInput): string {
+  const concepts = (lesson.keyConcepts ?? [])
+    .map((c) => `- ${c.term ?? ""}: ${c.definition ?? ""}`)
+    .join("\n");
+
+  const questions = (lesson.quizQuestions ?? [])
+    .map((q, i) => {
+      const correct = q.options?.[q.correctIndex ?? 0] ?? "";
+      return `Q${i + 1}: ${q.question ?? ""}\n  Correct answer (index ${q.correctIndex ?? 0}): ${correct}\n  Explanation: ${q.explanation ?? ""}`;
+    })
+    .join("\n\n");
+
+  return `\
 You are an expert educational content reviewer. Review the following lesson for accuracy, quality, and appropriateness before it is published publicly for students.
 
-Lesson Title: ${lesson.title}
+Lesson Title: ${lesson.title ?? ""}
 
 Summary:
-${lesson.summary}
+${lesson.summary ?? ""}
 
 Key Concepts (${lesson.keyConcepts?.length ?? 0}):
-${(lesson.keyConcepts ?? []).map((c: any) => `- ${c.term}: ${c.definition}`).join("\n")}
+${concepts}
 
 Quiz Questions (${lesson.quizQuestions?.length ?? 0}):
-${(lesson.quizQuestions ?? []).map((q: any, i: number) => `Q${i + 1}: ${q.question}\n  Correct answer (index ${q.correctIndex}): ${q.options?.[q.correctIndex]}\n  Explanation: ${q.explanation}`).join("\n\n")}
+${questions}
 
 Please check for:
 1. Factual errors in the summary or key concept definitions
@@ -31,6 +62,7 @@ Return a JSON object with this exact structure:
 }
 
 If there are problems, set "passed" to false and list each specific issue in the "issues" array. If the content looks good, set "passed" to true with an empty "issues" array. Keep the summary concise and constructive.`;
+}
 
 router.post("/check-lesson", async (req, res): Promise<void> => {
   const { lesson, llmConfig } = req.body ?? {};
@@ -49,7 +81,7 @@ router.post("/check-lesson", async (req, res): Promise<void> => {
 
     const completion = await client.chat.completions.create({
       model,
-      messages: [{ role: "user", content: CHECK_PROMPT(lesson) }],
+      messages: [{ role: "user", content: buildCheckPrompt(lesson as LessonInput) }],
       temperature: 0.2,
       stream: false,
     });
@@ -58,7 +90,7 @@ router.post("/check-lesson", async (req, res): Promise<void> => {
 
     let result: { passed: boolean; issues: string[]; summary: string };
     try {
-      result = JSON.parse(raw);
+      result = JSON.parse(raw) as { passed: boolean; issues: string[]; summary: string };
     } catch {
       result = { passed: true, issues: [], summary: "Content reviewed and appears suitable for students." };
     }
@@ -68,8 +100,9 @@ router.post("/check-lesson", async (req, res): Promise<void> => {
     if (typeof result.summary !== "string") result.summary = "";
 
     res.json(result);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "AI check failed" });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "AI check failed";
+    res.status(500).json({ error: message });
   }
 });
 

@@ -1,4 +1,4 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request } from "express";
 import { db, sharedLessonsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { createLLMClient } from "../lib/llm-client";
@@ -19,10 +19,39 @@ interface LlmConfig {
   baseUrl?: string;
 }
 
+interface ResendErrorBody {
+  message?: string;
+}
+
+interface SendGridErrorBody {
+  errors?: Array<{ message?: string }>;
+}
+
 const SAFE_PROVIDERS = new Set([
   "openai", "gemini", "deepseek", "openrouter", "minimax",
   "grok", "mistral", "together", "poe", "kimi",
 ]);
+
+// Simple in-memory rate limiter: max 5 email sends per IP per hour
+const EMAIL_RATE_MAP = new Map<string, number[]>();
+const EMAIL_RATE_LIMIT = 5;
+const EMAIL_RATE_WINDOW_MS = 60 * 60 * 1000;
+
+function checkEmailRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const window = now - EMAIL_RATE_WINDOW_MS;
+  const timestamps = (EMAIL_RATE_MAP.get(ip) ?? []).filter((t) => t > window);
+  if (timestamps.length >= EMAIL_RATE_LIMIT) return false;
+  timestamps.push(now);
+  EMAIL_RATE_MAP.set(ip, timestamps);
+  return true;
+}
+
+function getClientIp(req: Request): string {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (typeof forwarded === "string") return forwarded.split(",")[0].trim();
+  return req.socket.remoteAddress ?? "unknown";
+}
 
 function buildReportPrompt(
   lessonTitle: string,
@@ -57,9 +86,7 @@ function getServerLlmClient(): { client: OpenAI; model: string } | null {
   const baseURL = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
   const apiKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
   if (!baseURL || !apiKey) return null;
-
-  const client = new OpenAI({ apiKey, baseURL });
-  return { client, model: "gpt-4o" };
+  return { client: new OpenAI({ apiKey, baseURL }), model: "gpt-4o" };
 }
 
 router.post("/shared/:id/generate-report", async (req, res): Promise<void> => {
@@ -82,12 +109,8 @@ router.post("/shared/:id/generate-report", async (req, res): Promise<void> => {
       .where(eq(sharedLessonsTable.id, id))
       .limit(1);
 
-    if (!row) {
+    if (!row || row.expiresAt < new Date()) {
       res.status(404).json({ error: "Shared lesson not found" });
-      return;
-    }
-    if (row.expiresAt < new Date()) {
-      res.status(410).json({ error: "This shared lesson link has expired" });
       return;
     }
 
@@ -101,12 +124,8 @@ router.post("/shared/:id/generate-report", async (req, res): Promise<void> => {
       typeof llmConfig.model === "string"
     ) {
       const config = llmConfig as LlmConfig;
-      if (config.provider !== "custom" && !SAFE_PROVIDERS.has(config.provider)) {
+      if (config.provider === "custom" || !SAFE_PROVIDERS.has(config.provider)) {
         res.status(400).json({ error: `Unsupported provider: ${config.provider}` });
-        return;
-      }
-      if (config.provider === "custom") {
-        res.status(400).json({ error: "Custom base URL providers are not allowed for this endpoint" });
         return;
       }
       llmClientPair = createLLMClient(config);
@@ -136,16 +155,16 @@ router.post("/shared/:id/generate-report", async (req, res): Promise<void> => {
 
     const reflection = response.choices[0]?.message?.content?.trim() ?? "";
     res.json({ reflection });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "Failed to generate report" });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to generate report";
+    res.status(500).json({ error: message });
   }
 });
 
 router.get("/email-capability", (_req, res): void => {
-  const sendgridKey = process.env.SENDGRID_API_KEY;
-  const resendKey = process.env.RESEND_API_KEY;
-  const available = Boolean(sendgridKey || resendKey);
-  res.json({ available, provider: sendgridKey ? "sendgrid" : resendKey ? "resend" : null });
+  const available = Boolean(process.env.SENDGRID_API_KEY || process.env.RESEND_API_KEY);
+  const provider = process.env.SENDGRID_API_KEY ? "sendgrid" : process.env.RESEND_API_KEY ? "resend" : null;
+  res.json({ available, provider });
 });
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -162,6 +181,13 @@ router.post("/shared/:id/email-report", async (req, res): Promise<void> => {
     return;
   }
 
+  // Rate limit: 5 emails per IP per hour
+  const ip = getClientIp(req);
+  if (!checkEmailRateLimit(ip)) {
+    res.status(429).json({ error: "Too many email requests. Please try again later." });
+    return;
+  }
+
   const { id } = req.params;
   const { to, subject, body } = req.body ?? {};
 
@@ -169,7 +195,7 @@ router.post("/shared/:id/email-report", async (req, res): Promise<void> => {
     !Array.isArray(to) ||
     to.length === 0 ||
     to.length > MAX_RECIPIENTS ||
-    to.some((e) => typeof e !== "string" || !EMAIL_REGEX.test(e.trim()))
+    to.some((e: unknown) => typeof e !== "string" || !EMAIL_REGEX.test(e.trim()))
   ) {
     res.status(400).json({ error: `to must be 1–${MAX_RECIPIENTS} valid email addresses` });
     return;
@@ -194,12 +220,8 @@ router.post("/shared/:id/email-report", async (req, res): Promise<void> => {
       .where(eq(sharedLessonsTable.id, id))
       .limit(1);
 
-    if (!row) {
+    if (!row || row.expiresAt < new Date()) {
       res.status(404).json({ error: "Shared lesson not found" });
-      return;
-    }
-    if (row.expiresAt < new Date()) {
-      res.status(410).json({ error: "This shared lesson link has expired" });
       return;
     }
 
@@ -215,8 +237,8 @@ router.post("/shared/:id/email-report", async (req, res): Promise<void> => {
         }),
       });
       if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        res.status(502).json({ error: (data as any).message || "Failed to send email via Resend" });
+        const data = await response.json().catch(() => ({})) as ResendErrorBody;
+        res.status(502).json({ error: data.message ?? "Failed to send email via Resend" });
         return;
       }
       res.json({ sent: true });
@@ -235,8 +257,8 @@ router.post("/shared/:id/email-report", async (req, res): Promise<void> => {
         }),
       });
       if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        res.status(502).json({ error: (data as any).errors?.[0]?.message || "Failed to send email via SendGrid" });
+        const data = await response.json().catch(() => ({})) as SendGridErrorBody;
+        res.status(502).json({ error: data.errors?.[0]?.message ?? "Failed to send email via SendGrid" });
         return;
       }
       res.json({ sent: true });
@@ -244,8 +266,9 @@ router.post("/shared/:id/email-report", async (req, res): Promise<void> => {
     }
 
     res.status(503).json({ error: "Email service is not configured on this server" });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "Failed to send email" });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to send email";
+    res.status(500).json({ error: message });
   }
 });
 

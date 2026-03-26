@@ -47,8 +47,8 @@ Your role:
     const result = createLLMClient(llmConfig);
     client = result.client;
     model = result.model;
-  } catch (err: any) {
-    res.write(`data: ${JSON.stringify({ error: err.message, done: true })}\n\n`);
+  } catch (err: unknown) {
+    res.write(`data: ${JSON.stringify({ error: err instanceof Error ? err.message : "AI error", done: true })}\n\n`);
     res.end();
     return;
   }
@@ -78,8 +78,8 @@ Your role:
 
     res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
     res.end();
-  } catch (err: any) {
-    res.write(`data: ${JSON.stringify({ error: err?.message || "AI error", done: true })}\n\n`);
+  } catch (err: unknown) {
+    res.write(`data: ${JSON.stringify({ error: err instanceof Error ? err.message : "AI error", done: true })}\n\n`);
     res.end();
   }
 });

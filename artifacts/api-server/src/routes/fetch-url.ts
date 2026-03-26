@@ -103,12 +103,12 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
     }
 
     res.json({ title: title.slice(0, 200), content, url });
-  } catch (err: any) {
-    if (err.name === "TimeoutError") {
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name === "TimeoutError") {
       res.status(422).json({ error: "The URL took too long to respond (15 s timeout)" });
       return;
     }
-    res.status(422).json({ error: `Failed to fetch URL: ${err.message}` });
+    res.status(422).json({ error: `Failed to fetch URL: ${err instanceof Error ? err.message : String(err)}` });
   }
 });
 

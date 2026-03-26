@@ -105,8 +105,8 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
       keyConcepts,
       quizQuestions,
     });
-  } catch (err: any) {
-    res.status(502).json({ error: err.message || "AI provider error" });
+  } catch (err: unknown) {
+    res.status(502).json({ error: err instanceof Error ? err.message : "AI provider error" });
   }
 });
 

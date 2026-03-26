@@ -6,7 +6,16 @@ const router: IRouter = Router();
 
 const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
 
-function isValidLesson(v: unknown): boolean {
+interface ValidLesson {
+  id: string;
+  title: string;
+  summary: string;
+  keyConcepts: unknown[];
+  quizQuestions: unknown[];
+  chapterText: string;
+}
+
+function isValidLesson(v: unknown): v is ValidLesson {
   if (!v || typeof v !== "object") return false;
   const o = v as Record<string, unknown>;
   return (
@@ -36,14 +45,15 @@ router.post("/share", async (req, res): Promise<void> => {
   try {
     await db.insert(sharedLessonsTable).values({
       id: shareId,
-      title: (lesson as any).title as string,
-      lessonData: lesson as any,
+      title: lesson.title,
+      lessonData: lesson,
       expiresAt,
     });
 
     res.json({ shareId, expiresAt: expiresAt.toISOString() });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "Failed to share lesson" });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to share lesson";
+    res.status(500).json({ error: message });
   }
 });
 
@@ -57,13 +67,8 @@ router.get("/shared/:id", async (req, res): Promise<void> => {
       .where(eq(sharedLessonsTable.id, id))
       .limit(1);
 
-    if (!row) {
+    if (!row || row.expiresAt < new Date()) {
       res.status(404).json({ error: "Shared lesson not found" });
-      return;
-    }
-
-    if (row.expiresAt < new Date()) {
-      res.status(410).json({ error: "This shared lesson link has expired" });
       return;
     }
 
@@ -73,8 +78,9 @@ router.get("/shared/:id", async (req, res): Promise<void> => {
       expiresAt: row.expiresAt.toISOString(),
       createdAt: row.createdAt.toISOString(),
     });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "Failed to retrieve shared lesson" });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to retrieve shared lesson";
+    res.status(500).json({ error: message });
   }
 });
 
@@ -97,16 +103,15 @@ router.get("/shared/:id/comments", async (req, res): Promise<void> => {
         createdAt: r.createdAt.toISOString(),
       })),
     });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "Failed to load comments" });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to load comments";
+    res.status(500).json({ error: message });
   }
 });
 
 router.post("/shared/:id/comments", async (req, res): Promise<void> => {
   const { id } = req.params;
-  const { authorName, body } = req.body ?? {};
-
-  const { contactInfo } = req.body ?? {};
+  const { authorName, body, contactInfo } = req.body ?? {};
 
   if (
     typeof authorName !== "string" ||
@@ -136,12 +141,8 @@ router.post("/shared/:id/comments", async (req, res): Promise<void> => {
       .where(eq(sharedLessonsTable.id, id))
       .limit(1);
 
-    if (!row) {
+    if (!row || row.expiresAt < new Date()) {
       res.status(404).json({ error: "Shared lesson not found" });
-      return;
-    }
-    if (row.expiresAt < new Date()) {
-      res.status(410).json({ error: "This shared lesson link has expired" });
       return;
     }
 
@@ -164,8 +165,9 @@ router.post("/shared/:id/comments", async (req, res): Promise<void> => {
         createdAt: inserted.createdAt.toISOString(),
       },
     });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "Failed to post comment" });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to post comment";
+    res.status(500).json({ error: message });
   }
 });
 
