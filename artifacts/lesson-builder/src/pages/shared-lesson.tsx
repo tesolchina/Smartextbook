@@ -23,7 +23,6 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
 type LoadState =
   | { status: "loading" }
   | { status: "success"; lesson: StoredLesson; expiresAt: string }
-  | { status: "expired" }
   | { status: "error"; message: string };
 
 export default function SharedLesson() {
@@ -39,11 +38,9 @@ export default function SharedLesson() {
   useEffect(() => {
     if (!shareId) return;
     fetch(`/api/shared/${shareId}`)
-      .then((r) => r.json().then((d) => ({ ok: r.ok, status: r.status, data: d })))
-      .then(({ ok, status, data }) => {
-        if (status === 410) {
-          setLoadState({ status: "expired" });
-        } else if (!ok) {
+      .then((r) => r.json().then((d) => ({ ok: r.ok, data: d })))
+      .then(({ ok, data }) => {
+        if (!ok) {
           setLoadState({ status: "error", message: data.error || "Failed to load lesson." });
         } else {
           setLoadState({ status: "success", lesson: data.lesson as StoredLesson, expiresAt: data.expiresAt });
@@ -62,25 +59,6 @@ export default function SharedLesson() {
           <div className="flex flex-col items-center gap-3 text-muted-foreground">
             <Loader2 className="w-8 h-8 animate-spin" />
             <p className="text-sm">Loading shared lesson…</p>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-
-  if (loadState.status === "expired") {
-    return (
-      <Layout>
-        <div className="flex-1 flex items-center justify-center p-8">
-          <div className="bg-muted/50 p-8 rounded-2xl max-w-sm text-center border border-border">
-            <Globe className="w-10 h-10 mx-auto mb-4 text-muted-foreground opacity-50" />
-            <h2 className="text-xl font-bold mb-2">Link Expired</h2>
-            <p className="text-sm text-muted-foreground mb-5">
-              This shared lesson link has expired after 90 days. Ask the teacher to share a new link.
-            </p>
-            <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors">
-              <ArrowLeft className="w-4 h-4" /> Go to SmartTextbook
-            </Link>
           </div>
         </div>
       </Layout>

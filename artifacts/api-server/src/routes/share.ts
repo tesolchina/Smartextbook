@@ -50,7 +50,7 @@ router.post("/share", async (req, res): Promise<void> => {
       expiresAt,
     });
 
-    res.json({ shareId, expiresAt: expiresAt.toISOString() });
+    res.json({ shareId, shareUrl: `/shared/${shareId}`, expiresAt: expiresAt.toISOString() });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to share lesson";
     res.status(500).json({ error: message });

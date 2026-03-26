@@ -62,8 +62,9 @@ export function ShareButton({ lesson }: ShareButtonProps) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
       setState({ status: "checked", result: data as CheckResult });
-    } catch (err: any) {
-      setState({ status: "error", message: err.message || "AI check failed" });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "AI check failed";
+      setState({ status: "error", message });
     }
   };
 
@@ -75,11 +76,20 @@ export function ShareButton({ lesson }: ShareButtonProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lesson }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      const data = await res.json() as { shareId: string; shareUrl: string; expiresAt: string; error?: string };
+      if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+      const fullUrl = `${window.location.origin}${data.shareUrl}`;
       setState({ status: "shared", shareId: data.shareId, expiresAt: data.expiresAt });
-    } catch (err: any) {
-      setState({ status: "error", message: err.message || "Failed to share lesson" });
+      // Auto-copy on success
+      try {
+        await navigator.clipboard.writeText(fullUrl);
+        toast({ title: "Link copied!", description: "Share it with your students." });
+      } catch {
+        toast({ title: "Lesson published!", description: "Use the copy button to get the link.", variant: "default" });
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to share lesson";
+      setState({ status: "error", message });
     }
   };
 

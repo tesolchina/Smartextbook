@@ -13,6 +13,8 @@ tags:
     description: Lesson generation
   - name: content
     description: Content fetching utilities
+  - name: sharing
+    description: Lesson sharing (public links)
 paths:
   /healthz:
     get:
@@ -113,6 +115,67 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "502":
           description: AI provider error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /share:
+    post:
+      operationId: shareLesson
+      tags: [sharing]
+      summary: Create a public shareable link for a lesson (valid 90 days)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShareLessonBody"
+      responses:
+        "200":
+          description: Share link created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShareLessonResponse"
+        "400":
+          description: Invalid lesson data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /shared/{id}:
+    get:
+      operationId: getSharedLesson
+      tags: [sharing]
+      summary: Retrieve a shared lesson by its share ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The share ID returned by POST /share
+      responses:
+        "200":
+          description: Shared lesson data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SharedLessonResponse"
+        "404":
+          description: Shared lesson not found or has expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
           content:
             application/json:
               schema:
@@ -321,6 +384,72 @@ components:
           description: Mermaid mindmap definition string (starts with "mindmap")
       required:
         - mermaid
+    ShareLessonBody:
+      type: object
+      properties:
+        lesson:
+          type: object
+          description: The full lesson object to publish
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            summary:
+              type: string
+            keyConcepts:
+              type: array
+              items: {}
+            quizQuestions:
+              type: array
+              items: {}
+            chapterText:
+              type: string
+          required:
+            - id
+            - title
+            - summary
+            - keyConcepts
+            - quizQuestions
+            - chapterText
+      required:
+        - lesson
+    ShareLessonResponse:
+      type: object
+      properties:
+        shareId:
+          type: string
+          description: Unique share identifier
+        shareUrl:
+          type: string
+          description: Relative URL path to the shared lesson (e.g. /shared/abc123)
+        expiresAt:
+          type: string
+          format: date-time
+          description: ISO 8601 expiry date (90 days from creation)
+      required:
+        - shareId
+        - shareUrl
+        - expiresAt
+    SharedLessonResponse:
+      type: object
+      properties:
+        lesson:
+          type: object
+          description: The stored lesson data
+        title:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - lesson
+        - title
+        - expiresAt
+        - createdAt
     ErrorResponse:
       type: object
       properties:
