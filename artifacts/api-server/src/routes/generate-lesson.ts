@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { GenerateLessonBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
 import { jsonrepair } from "jsonrepair";
+import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 
@@ -46,6 +47,11 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
 
   const { title, chapterText, llmConfig } = parsed.data;
   const prompt = LESSON_PROMPT(title, chapterText);
+
+  logger.info(
+    { provider: llmConfig.provider, model: llmConfig.model, hasKey: Boolean(llmConfig.apiKey) },
+    "generate-lesson: starting AI call"
+  );
 
   try {
     const { client, model } = createLLMClient(llmConfig);
@@ -106,7 +112,12 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
       quizQuestions,
     });
   } catch (err: unknown) {
-    res.status(502).json({ error: err instanceof Error ? err.message : "AI provider error" });
+    const message = err instanceof Error ? err.message : "AI provider error";
+    logger.error(
+      { provider: llmConfig.provider, model: llmConfig.model, hasKey: Boolean(llmConfig.apiKey), err },
+      "generate-lesson: AI provider call failed"
+    );
+    res.status(502).json({ error: message });
   }
 });
 

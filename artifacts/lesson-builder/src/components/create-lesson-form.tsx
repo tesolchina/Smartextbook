@@ -125,6 +125,14 @@ export function CreateLessonForm({ onClose }: Props) {
     setGenerateError(null);
 
     try {
+      console.log("[LessonBuilder] Submitting generate-lesson", {
+        provider: settings.provider,
+        model: settings.model,
+        hasKey: Boolean(settings.apiKey?.trim()),
+        titleLen: data.title.length,
+        textLen: data.chapterText.length,
+      });
+
       const res = await fetch("/api/generate-lesson", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -141,8 +149,12 @@ export function CreateLessonForm({ onClose }: Props) {
       });
 
       const json = await res.json();
+      console.log("[LessonBuilder] generate-lesson response", { status: res.status, ok: res.ok, error: json?.error });
+
       if (!res.ok) {
-        setGenerateError(json?.error || "Generation failed — please try again.");
+        const errMsg = json?.error || "Generation failed — please try again.";
+        console.error("[LessonBuilder] AI error:", errMsg);
+        setGenerateError(errMsg);
         return;
       }
 
@@ -159,6 +171,7 @@ export function CreateLessonForm({ onClose }: Props) {
 
       setLocation(`/lessons/${id}`);
     } catch (err: any) {
+      console.error("[LessonBuilder] fetch error:", err);
       setGenerateError(err?.message || "Network error — check your connection.");
     } finally {
       setIsGenerating(false);
