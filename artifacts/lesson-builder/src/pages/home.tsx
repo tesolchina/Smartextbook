@@ -22,8 +22,35 @@ export default function Home() {
     setIsFormOpen(true);
   };
 
+  const handleCloseForm = () => setIsFormOpen(false);
+
   return (
     <Layout>
+      {/* ── Create Lesson Modal ── */}
+      <AnimatePresence>
+        {isFormOpen && (
+          <motion.div
+            key="modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 backdrop-blur-sm p-4 pt-16 overflow-y-auto"
+            onClick={(e) => { if (e.target === e.currentTarget) handleCloseForm(); }}
+          >
+            <motion.div
+              key="modal-content"
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.97 }}
+              transition={{ duration: 0.22 }}
+              className="w-full max-w-3xl"
+            >
+              <CreateLessonForm onClose={handleCloseForm} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Hero ── */}
       <section className="relative pt-24 pb-28 overflow-hidden border-b border-border bg-card">
         <div className="absolute inset-0 z-0 opacity-35 pointer-events-none">
@@ -69,30 +96,14 @@ export default function Home() {
               </motion.div>
             )}
 
-            <AnimatePresence mode="wait">
-              {!isFormOpen ? (
-                <motion.button
-                  key="cta"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  onClick={handleCreateClick}
-                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-foreground text-background font-bold text-base hover:bg-foreground/90 shadow-xl shadow-foreground/10 hover:-translate-y-1 transition-all active:scale-95"
-                >
-                  <Plus className="w-5 h-5" /> Create New Lesson
-                </motion.button>
-              ) : (
-                <motion.div
-                  key="form"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <CreateLessonForm onClose={() => setIsFormOpen(false)} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <motion.button
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              onClick={handleCreateClick}
+              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-foreground text-background font-bold text-base hover:bg-foreground/90 shadow-xl shadow-foreground/10 hover:-translate-y-1 transition-all active:scale-95"
+            >
+              <Plus className="w-5 h-5" /> Create New Lesson
+            </motion.button>
           </motion.div>
         </div>
       </section>
