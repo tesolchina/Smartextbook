@@ -115,7 +115,7 @@ export function CreateLessonForm({ onClose }: Props) {
   };
 
   const onSubmit = async (data: FormValues) => {
-    if (!settings) {
+    if (!isConfigured) {
       openSettings();
       return;
     }
@@ -365,13 +365,11 @@ export function CreateLessonForm({ onClose }: Props) {
           </button>
           <button
             type="submit"
-            disabled={isGenerating || !isConfigured}
+            disabled={isGenerating}
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
           >
             {isGenerating ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Generating…</>
-            ) : !isConfigured ? (
-              <><Key className="w-4 h-4" /> Set API Key First</>
             ) : (
               <>Generate Lesson</>
             )}
