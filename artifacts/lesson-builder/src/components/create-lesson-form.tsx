@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BookOpen, Loader2, AlertCircle, Link2, FileText, Key, X, CheckCircle2 } from "lucide-react";
+import { BookOpen, Loader2, AlertCircle, Link2, FileText, Key, X, CheckCircle2, FlaskConical } from "lucide-react";
 import { useFetchUrl } from "@workspace/api-client-react";
 import { useSettings } from "@/hooks/use-settings";
 import { useSettingsModal } from "@/hooks/use-settings-modal";
@@ -20,6 +20,11 @@ type Tab = "paste" | "url";
 interface Props {
   onClose: () => void;
 }
+
+const SAMPLE = {
+  url: "https://arxiv.org/abs/2509.13348",
+  title: "Towards an AI-Augmented Textbook",
+};
 
 const STAGES = [
   { label: "Analyzing source text…",    minSec: 0  },
@@ -46,6 +51,13 @@ export function CreateLessonForm({ onClose }: Props) {
   const [tab, setTab] = useState<Tab>("paste");
   const [urlInput, setUrlInput] = useState("");
   const [urlError, setUrlError] = useState("");
+
+  const loadSample = () => {
+    setTab("url");
+    setUrlInput(SAMPLE.url);
+    setUrlError("");
+    form.setValue("title", SAMPLE.title, { shouldValidate: true });
+  };
   const [isGenerating, setIsGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
 
@@ -232,7 +244,16 @@ export function CreateLessonForm({ onClose }: Props) {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-foreground mb-1.5">Source Material</label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-sm font-semibold text-foreground">Source Material</label>
+            <button
+              type="button"
+              onClick={loadSample}
+              className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 font-medium transition-colors"
+            >
+              <FlaskConical className="w-3 h-3" /> Try a sample
+            </button>
+          </div>
 
           <div className="flex gap-1 p-1 bg-secondary rounded-lg mb-3 w-fit text-xs">
             {(["paste", "url"] as Tab[]).map((t) => (
