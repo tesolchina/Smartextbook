@@ -8,7 +8,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { openSettings } = useSettingsModal();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20">
+    <div className="h-screen overflow-hidden flex flex-col bg-background text-foreground selection:bg-primary/20">
       <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="container max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group outline-none">
@@ -49,7 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col">{children}</main>
+      <main className="flex-1 flex flex-col overflow-y-auto">{children}</main>
     </div>
   );
 }
