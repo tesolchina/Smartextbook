@@ -142,3 +142,11 @@
 .prose blockquote {
   @apply border-l-4 border-primary/40 pl-4 italic text-muted-foreground my-4;
 }
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
