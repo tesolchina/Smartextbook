@@ -11,6 +11,7 @@ import SharedLesson from "@/pages/shared-lesson";
 import CourseView from "@/pages/course-view";
 import CertificatePage from "@/pages/certificate";
 import CreateCourse from "@/pages/create-course";
+import CertLookup from "@/pages/cert-lookup";
 import Credits from "@/pages/credits";
 import NotFound from "@/pages/not-found";
 
@@ -26,7 +27,8 @@ const queryClient = new QueryClient({
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Landing} />
+      <Route path="/" component={CertLookup} />
+      <Route path="/about" component={Landing} />
       <Route path="/app" component={Home} />
       <Route path="/lessons/:id" component={LessonView} />
       <Route path="/shared/:id" component={SharedLesson} />
