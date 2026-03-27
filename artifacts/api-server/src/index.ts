@@ -24,6 +24,8 @@ if (Number.isNaN(port) || port <= 0) {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const migrationsFolder = path.join(__dirname, "migrations");
 
+const BASELINE_MIGRATION_TAG = "0000_lean_thor_girl";
+
 async function runMigrations(): Promise<void> {
   const client = await pool.connect();
   try {
@@ -49,23 +51,27 @@ async function runMigrations(): Promise<void> {
       );
 
       if (tableRows[0]?.exists) {
+        const sqlContent = fs.readFileSync(
+          path.join(migrationsFolder, `${BASELINE_MIGRATION_TAG}.sql`),
+          "utf8"
+        );
+        const hash = crypto.createHash("sha256").update(sqlContent).digest("hex");
+
         const journal = JSON.parse(
           fs.readFileSync(path.join(migrationsFolder, "meta/_journal.json"), "utf8")
         ) as { entries: Array<{ tag: string; when: number }> };
 
-        for (const entry of journal.entries) {
-          const sql = fs.readFileSync(
-            path.join(migrationsFolder, `${entry.tag}.sql`),
-            "utf8"
-          );
-          const hash = crypto.createHash("sha256").update(sql).digest("hex");
-          await client.query(
-            `INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
-            [hash, entry.when]
-          );
-        }
+        const baselineEntry = journal.entries.find((e) => e.tag === BASELINE_MIGRATION_TAG);
+        const folderMillis = baselineEntry?.when ?? Date.now();
 
-        logger.info("Seeded migration tracking for existing database (created via push)");
+        await client.query(
+          `INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
+          [hash, folderMillis]
+        );
+
+        logger.info(
+          "Seeded migration tracking: marked baseline migration as applied (tables existed from push). Newer migrations will run now."
+        );
       }
     }
   } finally {
@@ -73,6 +79,7 @@ async function runMigrations(): Promise<void> {
   }
 
   await migrate(db, { migrationsFolder });
+  logger.info("Database migrations complete");
 }
 
 runMigrations()
