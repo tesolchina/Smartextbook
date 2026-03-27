@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Library, KeyRound } from "lucide-react";
+import { Plus, Library, KeyRound, BookOpen } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { CreateLessonForm } from "@/components/create-lesson-form";
 import { LessonCard } from "@/components/lesson-card";
@@ -115,9 +116,17 @@ export default function Home() {
             <h2 className="text-2xl font-serif font-bold flex items-center gap-2.5 text-foreground">
               <Library className="w-6 h-6 text-muted-foreground" /> Your Library
             </h2>
-            <span className="text-xs text-muted-foreground hidden md:block">
-              Saved in this browser only
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-muted-foreground hidden md:block">
+                Saved in this browser only
+              </span>
+              <Link
+                href="/create-course"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+              >
+                <BookOpen className="w-3.5 h-3.5" /> Create Course
+              </Link>
+            </div>
           </div>
 
           {lessons.length === 0 ? (

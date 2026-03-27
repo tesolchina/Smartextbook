@@ -8,6 +8,8 @@ import testConnectionRouter from "./test-connection";
 import shareRouter from "./share";
 import checkLessonRouter from "./check-lesson";
 import learningReportRouter from "./learning-report";
+import coursesRouter from "./courses";
+import certificatesRouter from "./certificates";
 
 const router: IRouter = Router();
 
@@ -20,5 +22,7 @@ router.use(testConnectionRouter);
 router.use(shareRouter);
 router.use(checkLessonRouter);
 router.use(learningReportRouter);
+router.use("/courses", coursesRouter);
+router.use("/certificates", certificatesRouter);
 
 export default router;

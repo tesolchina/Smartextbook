@@ -20,3 +20,5 @@
 export * from "./lessons";
 export * from "./shared-lessons";
 export * from "./comments";
+export * from "./courses";
+export * from "./certificates";

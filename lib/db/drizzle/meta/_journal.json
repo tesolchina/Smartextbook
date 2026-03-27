@@ -15,6 +15,13 @@
       "when": 1774596441334,
       "tag": "0001_ensure_shared_lessons",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774631200843,
+      "tag": "0002_lame_omega_sentinel",
+      "breakpoints": true
     }
   ]
 }

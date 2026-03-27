@@ -149,6 +149,10 @@ export default function SharedLesson() {
                       questions={lesson.quizQuestions || []}
                       onComplete={(result) => {
                         setQuizResult(result);
+                        if (shareId) {
+                          const pct = Math.round((result.score / result.total) * 100);
+                          localStorage.setItem("lessonbuilder:quiz-result", JSON.stringify({ lessonId: shareId, score: pct }));
+                        }
                       }}
                     />
                     {quizResult && (
