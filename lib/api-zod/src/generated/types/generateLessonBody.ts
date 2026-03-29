@@ -7,8 +7,17 @@
  */
 import type { LlmConfig } from "./llmConfig";
 
+export interface LearnerPreferences {
+  audience?: "general" | "k12" | "university" | "professional";
+  goal?: "understand" | "exam" | "apply" | "overview";
+  quizTemplate?: "quick" | "standard" | "deep";
+  depth?: "express" | "standard" | "deep";
+  customGoal?: string;
+}
+
 export interface GenerateLessonBody {
   title: string;
   chapterText: string;
   llmConfig: LlmConfig;
+  learnerPreferences?: LearnerPreferences;
 }

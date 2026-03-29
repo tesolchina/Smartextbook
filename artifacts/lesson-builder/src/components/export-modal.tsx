@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, X, Bot, Sparkles, Eye, EyeOff } from "lucide-react";
-import { type StoredLesson } from "@/hooks/use-lessons-store";
+import { Download, X, Bot, Sparkles, Eye, EyeOff, Save } from "lucide-react";
+import { type StoredLesson, useLessonsStore } from "@/hooks/use-lessons-store";
 import { type TutorConfig, buildSystemPrompt, generateLessonHtml } from "@/lib/generate-html";
 import { PROVIDERS } from "@/lib/providers";
 
@@ -23,6 +23,7 @@ const STYLES: { id: Style; label: string; desc: string }[] = [
 const EXPORT_PROVIDERS = PROVIDERS.filter((p) => p.id !== "custom");
 
 export function ExportModal({ lesson, open, onClose }: Props) {
+  const { exportLesson } = useLessonsStore();
   const [tutorName, setTutorName] = useState("Aria");
   const [style, setStyle] = useState<Style>("explanatory");
   const [focus, setFocus] = useState("");
@@ -103,6 +104,33 @@ export function ExportModal({ lesson, open, onClose }: Props) {
             </div>
 
             <div className="overflow-y-auto flex-1 p-5 space-y-5">
+
+              {/* Save as lesson file */}
+              <div className="p-3.5 rounded-xl bg-secondary/50 border border-border flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <Save className="w-4 h-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-foreground">Save lesson file</p>
+                  <p className="text-[11px] text-muted-foreground leading-tight">
+                    Download a <code className="font-mono">.lesson.json</code> file — re-import anytime to continue editing
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => exportLesson(lesson)}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-foreground hover:bg-background hover:border-primary/40 transition-colors"
+                >
+                  <Save className="w-3.5 h-3.5" /> Save
+                </button>
+              </div>
+
+              <div className="border-t border-border/60 pt-1">
+                <p className="text-xs font-bold text-foreground mb-4 flex items-center gap-1.5">
+                  <Bot className="w-3.5 h-3.5 text-primary" /> Export as standalone page with AI tutor
+                </p>
+              </div>
+
               {/* Tutor name */}
               <div>
                 <label className="block text-sm font-bold mb-1.5 flex items-center gap-2">

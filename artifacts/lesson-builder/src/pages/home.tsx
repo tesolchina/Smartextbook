@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Link } from "wouter";
+import { useState, useRef } from "react";
+import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Library, KeyRound, BookOpen } from "lucide-react";
+import { Plus, Library, KeyRound, BookOpen, Upload } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { CreateLessonForm } from "@/components/create-lesson-form";
 import { LessonCard } from "@/components/lesson-card";
@@ -10,10 +10,13 @@ import { useSettings } from "@/hooks/use-settings";
 import { useSettingsModal } from "@/hooks/use-settings-modal";
 
 export default function Home() {
-  const { lessons, deleteLesson } = useLessonsStore();
+  const { lessons, deleteLesson, importLesson } = useLessonsStore();
   const { isConfigured } = useSettings();
   const { openSettings } = useSettingsModal();
+  const [_, setLocation] = useLocation();
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   const handleCreateClick = () => {
     if (!isConfigured) {
@@ -24,6 +27,23 @@ export default function Home() {
   };
 
   const handleCloseForm = () => setIsFormOpen(false);
+
+  const handleImportClick = () => {
+    setImportError(null);
+    importInputRef.current?.click();
+  };
+
+  const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    try {
+      const { lesson } = await importLesson(file);
+      setLocation(`/lessons/${lesson.id}`);
+    } catch (err: any) {
+      setImportError(err?.message ?? "Could not import lesson file.");
+    }
+  };
 
   return (
     <Layout>
@@ -109,6 +129,15 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Hidden import input ── */}
+      <input
+        ref={importInputRef}
+        type="file"
+        accept=".json,.lesson.json"
+        className="hidden"
+        onChange={handleImportFile}
+      />
+
       {/* ── Library ── */}
       <section className="py-16 bg-background flex-1">
         <div className="container max-w-6xl mx-auto px-4">
@@ -116,18 +145,37 @@ export default function Home() {
             <h2 className="text-2xl font-serif font-bold flex items-center gap-2.5 text-foreground">
               <Library className="w-6 h-6 text-muted-foreground" /> Your Library
             </h2>
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-muted-foreground hidden md:block">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground hidden md:block mr-1">
                 Saved in this browser only
               </span>
+              <button
+                onClick={handleImportClick}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+              >
+                <Upload className="w-3.5 h-3.5" /> Import
+              </button>
               <Link
                 href="/create-course"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
               >
                 <BookOpen className="w-3.5 h-3.5" /> Create Course
               </Link>
+              <button
+                onClick={handleCreateClick}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" /> New Lesson
+              </button>
             </div>
           </div>
+
+          {importError && (
+            <div className="mb-5 p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-2.5">
+              <span className="text-destructive text-sm">{importError}</span>
+              <button onClick={() => setImportError(null)} className="ml-auto text-xs text-muted-foreground hover:text-foreground">Dismiss</button>
+            </div>
+          )}
 
           {lessons.length === 0 ? (
             <EmptyLibrary onCreateClick={handleCreateClick} />

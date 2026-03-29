@@ -31,6 +31,14 @@ export const FetchUrlResponse = zod.object({
 /**
  * @summary Generate a lesson from chapter text using AI (synchronous)
  */
+export const LearnerPreferences = zod.object({
+  audience: zod.enum(["general", "k12", "university", "professional"]).optional(),
+  goal: zod.enum(["understand", "exam", "apply", "overview"]).optional(),
+  quizTemplate: zod.enum(["quick", "standard", "deep"]).optional(),
+  depth: zod.enum(["express", "standard", "deep"]).optional(),
+  customGoal: zod.string().max(300).optional(),
+});
+
 export const GenerateLessonBody = zod.object({
   title: zod.string(),
   chapterText: zod.string(),
@@ -49,6 +57,7 @@ export const GenerateLessonBody = zod.object({
         .describe("Optional custom base URL (required for provider=custom)"),
     })
     .describe("LLM provider configuration supplied by the user (BYOK)"),
+  learnerPreferences: LearnerPreferences.optional(),
 });
 
 export const GenerateLessonResponse = zod.object({
