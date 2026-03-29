@@ -5,6 +5,13 @@ export interface LearnerPreferences {
   goal: "understand" | "exam" | "apply" | "overview";
   quizTemplate: "quick" | "standard" | "deep";
   customGoal?: string;
+  subjectType?: "general" | "language";
+}
+
+export interface PracticeCard {
+  prompt: string;
+  model: string;
+  tip?: string;
 }
 
 export interface StoredLesson {
@@ -18,6 +25,7 @@ export interface StoredLesson {
     correctIndex: number;
     explanation: string;
   }[];
+  practiceCards?: PracticeCard[];
   chapterText: string;
   createdAt: string;
   learnerPreferences?: LearnerPreferences;

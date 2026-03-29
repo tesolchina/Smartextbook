@@ -37,6 +37,7 @@ export const LearnerPreferences = zod.object({
   quizTemplate: zod.enum(["quick", "standard", "deep"]).optional(),
   depth: zod.enum(["express", "standard", "deep"]).optional(),
   customGoal: zod.string().max(300).optional(),
+  subjectType: zod.enum(["general", "language"]).optional(),
 });
 
 export const GenerateLessonBody = zod.object({

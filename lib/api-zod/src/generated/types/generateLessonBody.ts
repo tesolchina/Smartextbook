@@ -13,6 +13,7 @@ export interface LearnerPreferences {
   quizTemplate?: "quick" | "standard" | "deep";
   depth?: "express" | "standard" | "deep";
   customGoal?: string;
+  subjectType?: "general" | "language";
 }
 
 export interface GenerateLessonBody {

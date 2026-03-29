@@ -24,12 +24,14 @@ type Tab = "paste" | "url";
 type Audience = "general" | "k12" | "university" | "professional";
 type Goal = "understand" | "exam" | "apply" | "overview";
 type QuizTemplate = "quick" | "standard" | "deep";
+type SubjectType = "general" | "language";
 
 interface LearnerPreferences {
   audience: Audience;
   goal: Goal;
   quizTemplate: QuizTemplate;
   customGoal: string;
+  subjectType: SubjectType;
 }
 
 interface Props {
@@ -99,6 +101,7 @@ export function CreateLessonForm({ onClose }: Props) {
     goal: "understand",
     quizTemplate: "standard",
     customGoal: "",
+    subjectType: "general",
   });
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -194,6 +197,7 @@ export function CreateLessonForm({ onClose }: Props) {
             goal: prefs.goal,
             quizTemplate: prefs.quizTemplate,
             customGoal: prefs.customGoal || undefined,
+            subjectType: prefs.subjectType,
           },
         }),
       });
@@ -212,6 +216,7 @@ export function CreateLessonForm({ onClose }: Props) {
         summary: json.summary ?? "",
         keyConcepts: json.keyConcepts ?? [],
         quizQuestions: json.quizQuestions ?? [],
+        practiceCards: json.practiceCards ?? undefined,
         createdAt: new Date().toISOString(),
         learnerPreferences: prefs,
       });
@@ -406,6 +411,51 @@ export function CreateLessonForm({ onClose }: Props) {
       {/* ── STEP 2: Lesson Design ── */}
       {step === 2 && (
         <div className="space-y-6">
+
+          {/* Subject type */}
+          <div>
+            <label className="flex items-center gap-1.5 text-sm font-bold text-foreground mb-2.5">
+              <BookOpen className="w-4 h-4 text-primary" /> What type of subject is this?
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {(
+                [
+                  {
+                    id: "general" as SubjectType,
+                    emoji: "📚",
+                    label: "General Subject",
+                    desc: "Facts, concepts, theory — any content subject",
+                  },
+                  {
+                    id: "language" as SubjectType,
+                    emoji: "✍️",
+                    label: "Language & Writing",
+                    desc: "English writing, reading, academic literacy",
+                  },
+                ] as const
+              ).map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setPrefs((p) => ({ ...p, subjectType: s.id }))}
+                  className={`text-left p-3 rounded-xl border-2 transition-all ${
+                    prefs.subjectType === s.id
+                      ? "border-primary bg-primary/5 text-foreground"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                  }`}
+                >
+                  <span className="text-lg">{s.emoji}</span>
+                  <p className="font-semibold text-sm mt-1">{s.label}</p>
+                  <p className="text-xs opacity-70 mt-0.5">{s.desc}</p>
+                </button>
+              ))}
+            </div>
+            {prefs.subjectType === "language" && (
+              <p className="text-xs text-primary/80 mt-2 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2">
+                Writing Practice cards will be generated — sentence analysis, rewrite tasks, vocabulary in context, and more.
+              </p>
+            )}
+          </div>
 
           {/* Audience */}
           <div>

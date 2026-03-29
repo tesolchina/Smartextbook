@@ -10,6 +10,7 @@ type Audience = "general" | "k12" | "university" | "professional";
 type Goal = "understand" | "exam" | "apply" | "overview";
 type QuizTemplate = "quick" | "standard" | "deep";
 type Depth = "express" | "standard" | "deep";
+type SubjectType = "general" | "language";
 
 const AUDIENCE_LABELS: Record<Audience, string> = {
   general: "general audience (no assumed background knowledge)",
@@ -69,16 +70,10 @@ const DEPTH_CONFIGS: Record<Depth, { summaryLength: string; conceptCount: string
   },
 };
 
-function buildPrompt(
+function buildGeneralPrompt(
   title: string,
   chapterText: string,
-  prefs: {
-    audience: Audience;
-    goal: Goal;
-    quizTemplate: QuizTemplate;
-    depth: Depth;
-    customGoal?: string;
-  }
+  prefs: { audience: Audience; goal: Goal; quizTemplate: QuizTemplate; depth: Depth; customGoal?: string }
 ): string {
   const audienceLabel = AUDIENCE_LABELS[prefs.audience];
   const audienceStyle = AUDIENCE_STYLE[prefs.audience];
@@ -86,13 +81,10 @@ function buildPrompt(
   const goalInstruction = GOAL_INSTRUCTIONS[prefs.goal];
   const quizConfig = QUIZ_CONFIGS[prefs.quizTemplate];
   const depthConfig = DEPTH_CONFIGS[prefs.depth];
-
-  const customGoalSection = prefs.customGoal
-    ? `\nSpecific learning objective stated by the teacher: "${prefs.customGoal}"\n`
-    : "";
+  const customGoalSection = prefs.customGoal ? `\nSpecific learning objective: "${prefs.customGoal}"\n` : "";
 
   return `\
-You are an expert educational content designer. Your task is to transform the source material below into a structured, high-quality lesson tailored to a specific learner profile.
+You are an expert educational content designer. Transform the source material below into a structured lesson tailored to a specific learner profile.
 
 ━━━ LEARNER PROFILE ━━━
 • Target audience: ${audienceLabel}
@@ -109,13 +101,13 @@ Title: ${title}
 ${chapterText.slice(0, 9000)}
 
 ━━━ CRITICAL RULES ━━━
-1. Stay FAITHFUL to the source material — do not invent facts, statistics, or examples not present in the text.
+1. Stay FAITHFUL to the source — do not invent facts not present in the text.
 2. Use the author's original terminology and key phrases.
 3. Adapt LANGUAGE and FRAMING (not content) to suit the learner profile.
 4. Every quiz question must be answerable from the source material alone.
 
-━━━ OUTPUT FORMAT ━━━
-Return a JSON object with EXACTLY this structure (no other text):
+━━━ OUTPUT ━━━
+Return ONLY this JSON (no other text, no markdown fences):
 
 {
   "summary": "${depthConfig.summaryLength}",
@@ -127,7 +119,7 @@ Return a JSON object with EXACTLY this structure (no other text):
       "question": "question text",
       "options": ["option A", "option B", "option C", "option D"],
       "correctIndex": 0,
-      "explanation": "why this answer is correct, referencing the source material"
+      "explanation": "why this answer is correct"
     }
   ]
 }
@@ -137,10 +129,90 @@ CONSTRAINTS:
 - keyConcepts: ${depthConfig.conceptCount}
 - quizQuestions: ${quizConfig.instructions}
 - Each quiz question must have EXACTLY 4 options (index 0–3)
-- correctIndex must be 0, 1, 2, or 3
-- Explanations should cite specific ideas from the source text
+- correctIndex must be 0, 1, 2, or 3`;
+}
 
-Return ONLY the JSON object. No preamble, no markdown fences.`;
+function buildLanguagePrompt(
+  title: string,
+  chapterText: string,
+  prefs: { audience: Audience; goal: Goal; quizTemplate: QuizTemplate; depth: Depth; customGoal?: string }
+): string {
+  const audienceLabel = AUDIENCE_LABELS[prefs.audience];
+  const quizConfig = QUIZ_CONFIGS[prefs.quizTemplate];
+  const depthConfig = DEPTH_CONFIGS[prefs.depth];
+  const customGoalSection = prefs.customGoal ? `\nSpecific learning objective: "${prefs.customGoal}"\n` : "";
+
+  return `\
+You are an expert language and writing teacher. Transform the source material below into a structured lesson for language, writing, or academic literacy instruction.
+
+━━━ LEARNER PROFILE ━━━
+• Target audience: ${audienceLabel}
+• Subject focus: Language, Writing & Academic Literacy${customGoalSection}
+
+━━━ SOURCE MATERIAL ━━━
+Title: ${title}
+
+${chapterText.slice(0, 9000)}
+
+━━━ YOUR TASK ━━━
+Generate a lesson with THREE components:
+
+1. SUMMARY — ${depthConfig.summaryLength}
+   Focus on the communicative purpose, rhetorical structure, and key linguistic features of the text.
+   Highlight how the author constructs arguments, uses evidence, and achieves their communicative goals.
+
+2. KEY CONCEPTS — ${depthConfig.conceptCount}
+   Include: key academic vocabulary used in the text, rhetorical/linguistic terms, writing techniques demonstrated.
+   For each concept provide a definition AND a short usage example from the text where possible.
+
+3. PRACTICE CARDS — 6–8 cards for language/writing skills development.
+   Each card is a teaching task. Mix at least 4 of these card types:
+   - Sentence Analysis: Quote a sentence → ask what technique/structure it uses
+   - Vocabulary in Context: Quote a sentence with a key word → ask its meaning/role in context
+   - Rewrite Task: Present a sentence → ask how to make it more academic, concise, or clear
+   - Pattern Recognition: Show a writing pattern (e.g., hedging, concession) → explain name and function
+   - Close Reading: Short passage extract → ask about writer's purpose or technique
+   - Grammar Focus: Identify a grammatical structure used effectively in the source
+
+   For REWRITE TASKS, the model answer must provide the improved version.
+   All prompts must quote or reference actual sentences/passages from the source material.
+
+━━━ CRITICAL RULES ━━━
+1. All quoted sentences MUST come from the source material exactly as written.
+2. Practice card tasks must be concrete and actionable — students should be able to attempt them independently.
+3. Every quiz question must be answerable from the source material alone.
+
+━━━ OUTPUT ━━━
+Return ONLY this JSON (no other text, no markdown fences):
+
+{
+  "summary": "...",
+  "keyConcepts": [
+    { "term": "term", "definition": "definition — usage example if applicable" }
+  ],
+  "practiceCards": [
+    {
+      "prompt": "The full task description shown to the student. Quote exact sentences where relevant.",
+      "model": "The model answer or analysis. For rewrite tasks, include the improved sentence.",
+      "tip": "Optional: brief pedagogical note for the teacher (1 sentence)"
+    }
+  ],
+  "quizQuestions": [
+    {
+      "question": "question text",
+      "options": ["option A", "option B", "option C", "option D"],
+      "correctIndex": 0,
+      "explanation": "why this answer is correct"
+    }
+  ]
+}
+
+CONSTRAINTS:
+- keyConcepts: ${depthConfig.conceptCount}
+- practiceCards: exactly 6–8 cards, mixing at least 4 different card types
+- quizQuestions: ${quizConfig.instructions} — focus on reading comprehension and language awareness
+- Each quiz question must have EXACTLY 4 options (index 0–3)
+- correctIndex must be 0, 1, 2, or 3`;
 }
 
 router.post("/generate-lesson", async (req, res): Promise<void> => {
@@ -158,9 +230,12 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
     quizTemplate: (learnerPreferences?.quizTemplate ?? "standard") as QuizTemplate,
     depth: (learnerPreferences?.depth ?? "standard") as Depth,
     customGoal: learnerPreferences?.customGoal,
+    subjectType: (learnerPreferences?.subjectType ?? "general") as SubjectType,
   };
 
-  const prompt = buildPrompt(title, chapterText, prefs);
+  const prompt = prefs.subjectType === "language"
+    ? buildLanguagePrompt(title, chapterText, prefs)
+    : buildGeneralPrompt(title, chapterText, prefs);
 
   logger.info(
     { provider: llmConfig.provider, model: llmConfig.model, hasKey: Boolean(llmConfig.apiKey), prefs },
@@ -177,7 +252,6 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
     const content = response.choices[0]?.message?.content ?? "";
 
     const stripped = content.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
-
     const jsonMatch = stripped.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       res.status(502).json({ error: "AI did not return valid JSON. Please try again." });
@@ -197,26 +271,28 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
     const quizQuestions = (Array.isArray(data.quizQuestions) ? data.quizQuestions : [])
       .filter((q: any) => q && typeof q === "object")
       .map((q: any) => {
-        const options: string[] = Array.isArray(q.options)
-          ? q.options.slice(0, 4).map(String)
-          : [];
+        const options: string[] = Array.isArray(q.options) ? q.options.slice(0, 4).map(String) : [];
         const correctIndex = Math.min(3, Math.max(0, parseInt(String(q.correctIndex ?? 0), 10)));
-        return {
-          question: String(q.question ?? "").trim(),
-          options,
-          correctIndex,
-          explanation: String(q.explanation ?? "").trim(),
-        };
+        return { question: String(q.question ?? "").trim(), options, correctIndex, explanation: String(q.explanation ?? "").trim() };
       })
-      .filter(
-        (q: { question: string; options: string[]; explanation: string }) =>
-          q.question && q.options.length === 4 && q.explanation
-      );
+      .filter((q: { question: string; options: string[]; explanation: string }) => q.question && q.options.length === 4 && q.explanation);
+
+    const practiceCards = Array.isArray(data.practiceCards)
+      ? data.practiceCards
+          .filter((c: any) => c && typeof c === "object")
+          .map((c: any) => ({
+            prompt: String(c.prompt ?? "").trim(),
+            model: String(c.model ?? "").trim(),
+            tip: c.tip ? String(c.tip).trim() : undefined,
+          }))
+          .filter((c: { prompt: string; model: string }) => c.prompt && c.model)
+      : [];
 
     res.json({
       summary: String(data.summary ?? "").trim(),
       keyConcepts,
       quizQuestions,
+      ...(practiceCards.length > 0 ? { practiceCards } : {}),
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "AI provider error";
