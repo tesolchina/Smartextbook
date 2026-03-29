@@ -86,6 +86,7 @@
   "dependencies": {
     "mermaid": "^11.13.0",
     "react-markdown": "^10.1.0",
+    "react-quizlet-flashcard": "^4.0.22",
     "remark-gfm": "^4.0.1"
   }
 }
