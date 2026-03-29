@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { X, Key, Eye, EyeOff, CheckCircle, AlertCircle, Loader2, ExternalLink, ChevronDown } from "lucide-react";
+import { X, Key, Eye, EyeOff, CheckCircle, AlertCircle, Loader2, ExternalLink, ChevronDown, BotMessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PROVIDERS, getProvider } from "@/lib/providers";
 import { type LlmSettings, useSettings } from "@/hooks/use-settings";
@@ -16,6 +16,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
   const [apiKey, setApiKey] = useState(settings.apiKey);
   const [model, setModel] = useState(settings.model);
   const [baseUrl, setBaseUrl] = useState(settings.baseUrl);
+  const [teachingPrompt, setTeachingPrompt] = useState(settings.teachingPrompt ?? "");
   const [showKey, setShowKey] = useState(false);
   const [testStatus, setTestStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [testMessage, setTestMessage] = useState("");
@@ -28,6 +29,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
       setApiKey(settings.apiKey);
       setModel(settings.model);
       setBaseUrl(settings.baseUrl);
+      setTeachingPrompt(settings.teachingPrompt ?? "");
       setTestStatus("idle");
       setTestMessage("");
     }
@@ -49,6 +51,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
       apiKey: apiKey.trim(),
       model: model.trim(),
       baseUrl: baseUrl.trim(),
+      teachingPrompt: teachingPrompt.trim(),
     };
     saveSettings(next);
     onClose();
@@ -60,6 +63,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
     setModel("gpt-4o");
     setBaseUrl("");
     setProvider("openai");
+    setTeachingPrompt("");
     setTestStatus("idle");
     setTestMessage("");
   };
@@ -305,6 +309,26 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
                     {testMessage}
                   </div>
                 )}
+
+                {/* Teaching Persona */}
+                <div className="border-t border-border pt-5">
+                  <label className="flex items-center gap-1.5 text-sm font-bold mb-1">
+                    <BotMessageSquare className="w-4 h-4 text-primary" /> Teaching Persona
+                  </label>
+                  <p className="text-xs text-muted-foreground mb-2.5 leading-relaxed">
+                    Write custom instructions that shape how the AI teaches — tone, language, subject focus, or student context. Applied to every lesson you generate.
+                  </p>
+                  <textarea
+                    value={teachingPrompt}
+                    onChange={(e) => setTeachingPrompt(e.target.value.slice(0, 600))}
+                    placeholder={`e.g. You are a supportive English teacher for Hong Kong secondary school students. Use simple, clear English. When explaining writing techniques, always include both the literary term and a plain-language description. Encourage students by noting what they're already doing well.`}
+                    className="w-full bg-card border-2 border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none leading-relaxed"
+                    rows={5}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1 text-right tabular-nums">
+                    {teachingPrompt.length} / 600
+                  </p>
+                </div>
 
                 <div className="p-3 rounded-xl bg-secondary/60 border border-border/50 text-xs text-muted-foreground leading-relaxed">
                   <strong className="text-foreground">Privacy:</strong> Your API key is stored only in your browser&apos;s local storage. It is sent directly to{" "}

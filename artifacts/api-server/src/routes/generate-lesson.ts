@@ -73,7 +73,8 @@ const DEPTH_CONFIGS: Record<Depth, { summaryLength: string; conceptCount: string
 function buildGeneralPrompt(
   title: string,
   chapterText: string,
-  prefs: { audience: Audience; goal: Goal; quizTemplate: QuizTemplate; depth: Depth; customGoal?: string }
+  prefs: { audience: Audience; goal: Goal; quizTemplate: QuizTemplate; depth: Depth; customGoal?: string },
+  teachingPrompt?: string
 ): string {
   const audienceLabel = AUDIENCE_LABELS[prefs.audience];
   const audienceStyle = AUDIENCE_STYLE[prefs.audience];
@@ -82,9 +83,10 @@ function buildGeneralPrompt(
   const quizConfig = QUIZ_CONFIGS[prefs.quizTemplate];
   const depthConfig = DEPTH_CONFIGS[prefs.depth];
   const customGoalSection = prefs.customGoal ? `\nSpecific learning objective: "${prefs.customGoal}"\n` : "";
+  const teachingSection = teachingPrompt ? `\n━━━ TEACHER INSTRUCTIONS ━━━\n${teachingPrompt}\n` : "";
 
   return `\
-You are an expert educational content designer. Transform the source material below into a structured lesson tailored to a specific learner profile.
+You are an expert educational content designer. Transform the source material below into a structured lesson tailored to a specific learner profile.${teachingSection}
 
 ━━━ LEARNER PROFILE ━━━
 • Target audience: ${audienceLabel}
@@ -135,15 +137,17 @@ CONSTRAINTS:
 function buildLanguagePrompt(
   title: string,
   chapterText: string,
-  prefs: { audience: Audience; goal: Goal; quizTemplate: QuizTemplate; depth: Depth; customGoal?: string }
+  prefs: { audience: Audience; goal: Goal; quizTemplate: QuizTemplate; depth: Depth; customGoal?: string },
+  teachingPrompt?: string
 ): string {
   const audienceLabel = AUDIENCE_LABELS[prefs.audience];
   const quizConfig = QUIZ_CONFIGS[prefs.quizTemplate];
   const depthConfig = DEPTH_CONFIGS[prefs.depth];
   const customGoalSection = prefs.customGoal ? `\nSpecific learning objective: "${prefs.customGoal}"\n` : "";
+  const teachingSection = teachingPrompt ? `\n━━━ TEACHER INSTRUCTIONS ━━━\n${teachingPrompt}\n` : "";
 
   return `\
-You are an expert language and writing teacher. Transform the source material below into a structured lesson for language, writing, or academic literacy instruction.
+You are an expert language and writing teacher. Transform the source material below into a structured lesson for language, writing, or academic literacy instruction.${teachingSection}
 
 ━━━ LEARNER PROFILE ━━━
 • Target audience: ${audienceLabel}
@@ -222,7 +226,7 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
     return;
   }
 
-  const { title, chapterText, llmConfig, learnerPreferences } = parsed.data;
+  const { title, chapterText, llmConfig, learnerPreferences, teachingPrompt } = parsed.data;
 
   const prefs = {
     audience: (learnerPreferences?.audience ?? "university") as Audience,
@@ -234,8 +238,8 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
   };
 
   const prompt = prefs.subjectType === "language"
-    ? buildLanguagePrompt(title, chapterText, prefs)
-    : buildGeneralPrompt(title, chapterText, prefs);
+    ? buildLanguagePrompt(title, chapterText, prefs, teachingPrompt)
+    : buildGeneralPrompt(title, chapterText, prefs, teachingPrompt);
 
   logger.info(
     { provider: llmConfig.provider, model: llmConfig.model, hasKey: Boolean(llmConfig.apiKey), prefs },

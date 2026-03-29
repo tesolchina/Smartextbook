@@ -186,6 +186,7 @@ export function CreateLessonForm({ onClose }: Props) {
         body: JSON.stringify({
           title: data.title,
           chapterText: data.chapterText,
+          teachingPrompt: settings.teachingPrompt?.trim() || undefined,
           llmConfig: {
             provider: settings.provider,
             apiKey: settings.apiKey,

@@ -43,6 +43,7 @@ export const LearnerPreferences = zod.object({
 export const GenerateLessonBody = zod.object({
   title: zod.string(),
   chapterText: zod.string(),
+  teachingPrompt: zod.string().max(600).optional(),
   llmConfig: zod
     .object({
       provider: zod

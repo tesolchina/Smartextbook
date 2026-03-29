@@ -9,6 +9,7 @@ export interface LlmSettings {
   apiKey: string;
   model: string;
   baseUrl: string;
+  teachingPrompt: string;
 }
 
 const STORAGE_KEY = "lessonbuilder:llm-settings";
@@ -19,6 +20,7 @@ const DEFAULT_SETTINGS: LlmSettings = {
   apiKey: "",
   model: "gpt-4o",
   baseUrl: "",
+  teachingPrompt: "",
 };
 
 function loadSettings(): LlmSettings {

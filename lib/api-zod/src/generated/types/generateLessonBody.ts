@@ -19,6 +19,7 @@ export interface LearnerPreferences {
 export interface GenerateLessonBody {
   title: string;
   chapterText: string;
+  teachingPrompt?: string;
   llmConfig: LlmConfig;
   learnerPreferences?: LearnerPreferences;
 }
