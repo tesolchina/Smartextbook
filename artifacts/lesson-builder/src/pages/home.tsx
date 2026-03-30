@@ -73,7 +73,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* ── Hero ── */}
-      <section className="relative pt-24 pb-28 overflow-hidden border-b border-border bg-card">
+      <section className="relative pt-24 pb-28 overflow-hidden border-b border-border bg-card shrink-0">
         <div className="absolute inset-0 z-0 opacity-35 pointer-events-none">
           <img
             src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
