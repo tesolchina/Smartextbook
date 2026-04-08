@@ -82,6 +82,14 @@ export function useChat(lesson: StoredLesson) {
                 } else if (data.error) {
                   setError(data.error);
                   done = true;
+                  // Remove the empty/partial placeholder assistant message
+                  setMessages((prev) => {
+                    const last = prev[prev.length - 1];
+                    if (last?.role === "assistant" && !last.content.trim()) {
+                      return prev.slice(0, -1);
+                    }
+                    return prev;
+                  });
                 } else if (data.content) {
                   setMessages((prev) => {
                     const newMessages = [...prev];

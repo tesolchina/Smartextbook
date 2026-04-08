@@ -1,11 +1,22 @@
 import { Router, type IRouter, type Request } from "express";
 import { db, sharedLessonsTable, commentsTable } from "@workspace/db";
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, lt } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 const router: IRouter = Router();
 
 const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
+
+async function cleanupExpiredShares(): Promise<void> {
+  try {
+    await db.delete(sharedLessonsTable).where(lt(sharedLessonsTable.expiresAt, new Date()));
+  } catch {
+    // Non-fatal: cleanup failures should not crash the server
+  }
+}
+
+// Run cleanup once on module load (server startup)
+cleanupExpiredShares();
 
 interface ValidLesson {
   id: string;
@@ -46,6 +57,11 @@ router.post("/share", async (req, res): Promise<void> => {
 
   const shareId = nanoid(16);
   const expiresAt = new Date(Date.now() + NINETY_DAYS_MS);
+
+  // Probabilistic background cleanup: ~1 in 50 share requests triggers a purge
+  if (Math.random() < 0.02) {
+    cleanupExpiredShares();
+  }
 
   try {
     await db.insert(sharedLessonsTable).values({

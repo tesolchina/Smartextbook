@@ -67,6 +67,25 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
       $("h1").first().text().trim() ||
       parsedUrl.hostname;
 
+    // Detect SPA sites before removing scripts: look for common framework markers
+    const isSPA =
+      /id=["']root["']|id=["']app["']|id=["']__next["']|data-reactroot|ng-version|ng-app|data-vue|__nuxt/i.test(html);
+
+    // Try JSON-LD structured data first (works on many modern/SPA sites)
+    let jsonLdContent = "";
+    $('script[type="application/ld+json"]').each((_i, el) => {
+      if (jsonLdContent) return;
+      try {
+        const ld = JSON.parse($(el).html() ?? "");
+        const candidate = ld.articleBody || ld.description || ld.text;
+        if (typeof candidate === "string" && candidate.length > 150) {
+          jsonLdContent = candidate;
+        }
+      } catch {
+        // malformed JSON-LD — skip
+      }
+    });
+
     $("script, style, nav, header, footer, aside, form, noscript, iframe, svg, img, button, [role=navigation], [role=banner], [role=complementary], .ad, .ads, .advertisement, #comments").remove();
 
     let content = "";
@@ -95,10 +114,22 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
         .join("\n\n");
     }
 
+    // Fall back to JSON-LD content if DOM extraction failed
+    if ((!content || content.length < 200) && jsonLdContent) {
+      content = jsonLdContent;
+    }
+
     content = content.replace(/\n{3,}/g, "\n\n").trim().slice(0, 50_000);
 
     if (!content || content.length < 100) {
-      res.status(422).json({ error: "Could not extract readable text from this page. Try copying the text manually." });
+      if (isSPA) {
+        res.status(422).json({
+          error:
+            "This page is a JavaScript-rendered app and its content cannot be fetched directly. Please open the page in your browser, select all the text, and paste it manually.",
+        });
+      } else {
+        res.status(422).json({ error: "Could not extract readable text from this page. Try copying the text manually." });
+      }
       return;
     }
 
