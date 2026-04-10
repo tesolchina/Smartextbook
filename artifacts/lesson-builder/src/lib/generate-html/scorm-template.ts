@@ -1,59 +1,12 @@
 import { type StoredLesson } from "@/hooks/use-lessons-store";
+import { type TutorConfig } from "./types";
 
-export interface TutorConfig {
-  name: string;
-  style: "explanatory" | "socratic" | "exam" | "mentor";
-  focus: string;
-  systemPrompt: string;
-  provider: string;
-  baseUrl: string;
-  model: string;
-}
-
-export function buildSystemPrompt(
-  lesson: StoredLesson,
-  config: Pick<TutorConfig, "name" | "style" | "focus">
-): string {
-  const styleDesc: Record<TutorConfig["style"], string> = {
-    explanatory:
-      "You explain concepts clearly and thoroughly, using examples and analogies to make abstract ideas concrete.",
-    socratic:
-      "You use the Socratic method — you guide students to answers through questions rather than stating answers directly. Ask probing questions to stimulate critical thinking.",
-    exam:
-      "You are focused on exam preparation. You highlight testable facts, quiz the student frequently, and point out common misconceptions they should watch out for.",
-    mentor:
-      "You are a warm, encouraging mentor. You celebrate progress, normalize confusion, and build the student's confidence alongside their understanding.",
-  };
-
-  const keyConcepts = lesson.keyConcepts
-    .map((c) => `  • ${c.term}: ${c.definition}`)
-    .join("\n");
-
-  const focusLine = config.focus.trim()
-    ? `\nAdditional instruction: ${config.focus.trim()}`
-    : "";
-
-  return `You are ${config.name}, an expert AI tutor. ${styleDesc[config.style]}
-
-You are helping a student study the following material:
-
-Title: ${lesson.title}
-
-Summary:
-${lesson.summary}
-
-Key concepts:
-${keyConcepts}
-
-Source text (first 3000 characters):
-${lesson.chapterText.slice(0, 3000)}
-${focusLine}
-
-Guidelines:
-- Stay focused on the chapter content above.
-- If asked something unrelated, gently redirect back to the material.
-- Keep responses concise but complete — avoid walls of text.
-- Use markdown formatting (bold, bullet points) to improve readability.`;
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 export function generateLessonHtml(lesson: StoredLesson, tutor: TutorConfig): string {
@@ -74,7 +27,6 @@ h1,h2,h3{font-family:var(--font-serif)}
 button{cursor:pointer;font-family:inherit}
 input,textarea,select{font-family:inherit}
 a{color:var(--primary);text-decoration:none}
-/* Layout */
 #setup{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
 #app{display:none;flex-direction:column;height:100vh}
 header{background:var(--card);border-bottom:1px solid var(--border);padding:.9rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-shrink:0}
@@ -87,14 +39,12 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
 .tab:hover:not(.active){color:var(--text)}
 .tab-content{flex:1;overflow-y:auto;padding:1.25rem}
 .panel{display:none;max-width:860px;margin:0 auto}.panel.active{display:block}
-/* Cards */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
 .section-title{font-family:var(--font-serif);font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
 .concepts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.65rem}
 .concept{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.85rem}
 .concept strong{display:block;font-size:.85rem;margin-bottom:.25rem;color:var(--text)}
 .concept p{font-size:.8rem;color:var(--muted);margin:0;line-height:1.5}
-/* Quiz */
 .quiz-q{margin-bottom:1.25rem}.quiz-q p{font-size:.9rem;font-weight:600;margin-bottom:.6rem}
 .option{display:flex;align-items:center;gap:.6rem;padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;font-size:.85rem;margin-bottom:.4rem;background:var(--card)}
 .option:hover:not(.disabled){border-color:var(--primary);background:#fdf6f4}
@@ -103,9 +53,7 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
 .option.disabled{cursor:default}
 .explanation{font-size:.8rem;color:var(--muted);margin-top:.5rem;padding:.6rem .8rem;background:#f9f7f5;border-radius:8px;border-left:3px solid var(--accent)}
 .quiz-score{text-align:center;padding:1.5rem;font-family:var(--font-serif);font-size:1.1rem;font-weight:700;color:var(--primary)}
-/* Chapter */
 .chapter-text{font-family:var(--font-serif);font-size:.92rem;line-height:1.9;white-space:pre-wrap;color:var(--text)}
-/* Chat */
 .chat-pane{width:360px;flex-shrink:0;border-left:1px solid var(--border);display:flex;flex-direction:column;background:var(--card)}
 @media(max-width:780px){.main-row{flex-direction:column}.chat-pane{width:100%;border-left:none;border-top:1px solid var(--border);height:42vh}}
 .chat-header{padding:.75rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;flex-shrink:0}
@@ -124,7 +72,6 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
 .chat-input:focus{border-color:var(--primary)}
 .send-btn{padding:.5rem .9rem;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:.8rem;font-weight:700;transition:opacity .15s}
 .send-btn:disabled{opacity:.55}
-/* Setup screen */
 .setup-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.08)}
 .setup-card h2{font-family:var(--font-serif);font-size:1.4rem;font-weight:900;margin-bottom:.3rem}
 .setup-card p{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem}
@@ -137,12 +84,9 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
 .btn-primary:hover{opacity:.9}
 .btn-primary:disabled{opacity:.55}
 .error-msg{font-size:.78rem;color:#dc2626;margin-top:.5rem;padding:.5rem .75rem;background:#fef2f2;border-radius:8px;display:none}
-/* Key change in header */
 .key-btn{font-size:.75rem;font-weight:600;color:var(--muted);border:1px solid var(--border);background:var(--card);border-radius:8px;padding:.3rem .65rem;transition:color .15s}
 .key-btn:hover{color:var(--primary)}
-/* Markdown in chat */
 .msg.bot code{background:#e8e4de;padding:.1em .35em;border-radius:4px;font-size:.85em;font-family:monospace}
-/* Mind map panel */
 .mindmap-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 .mindmap-label{font-size:.8rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:.4rem}
 .regen-btn{font-size:.75rem;font-weight:600;color:var(--muted);border:1px solid var(--border);background:var(--card);border-radius:8px;padding:.3rem .7rem;transition:color .15s}
@@ -160,7 +104,6 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
 </head>
 <body>
 
-<!-- ── Setup screen ── -->
 <div id="setup">
   <div class="setup-card">
     <h2>🎓 ${escapeHtml(lesson.title)}</h2>
@@ -208,7 +151,6 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
   </div>
 </div>
 
-<!-- ── Main app ── -->
 <div id="app">
   <header>
     <h1>${escapeHtml(lesson.title)}</h1>
@@ -216,7 +158,6 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
   </header>
 
   <div class="main-row">
-    <!-- Content -->
     <div class="content-pane">
       <div class="tabs">
         <button class="tab active" data-tab="summary">📋 Summary</button>
@@ -263,7 +204,6 @@ header h1{font-size:1.1rem;font-weight:900;white-space:nowrap;overflow:hidden;te
       </div>
     </div>
 
-    <!-- Chat -->
     <div class="chat-pane">
       <div class="chat-header">
         <div class="chat-avatar" id="chat-avatar"></div>
@@ -288,11 +228,9 @@ const LESSON = ${escapedLesson};
 const TUTOR = ${escapedTutor};
 const STORAGE_KEY = 'lb_key_${lesson.id}';
 
-// ── State ──
 let chatHistory = [];
 let apiKey = '', model = '', baseUrl = '', provider = '';
 
-// ── Setup / boot ──
 function loadSaved() {
   try {
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
@@ -323,13 +261,11 @@ function showApp() {
   renderLesson();
 }
 
-// ── Setup screen logic ──
 const providerSel = document.getElementById('setup-provider');
 const customUrlField = document.getElementById('custom-url-field');
 const setupBtn = document.getElementById('setup-btn');
 const setupError = document.getElementById('setup-error');
 
-// ── Model lists per provider ──
 const PROVIDER_MODELS = {
   openai: [
     { v: 'gpt-4o-mini',     l: 'GPT-4o Mini — fast & affordable (recommended)' },
@@ -357,14 +293,14 @@ const PROVIDER_MODELS = {
     { v: 'deepseek-reasoner',  l: 'DeepSeek R1 — reasoning' },
   ],
   openrouter: [
-    { v: 'openai/gpt-4o-mini',                          l: 'OpenAI GPT-4o Mini' },
-    { v: 'anthropic/claude-3.5-haiku',                  l: 'Claude 3.5 Haiku' },
-    { v: 'anthropic/claude-3.7-sonnet',                 l: 'Claude 3.7 Sonnet' },
-    { v: 'google/gemini-2.0-flash-exp:free',            l: 'Gemini 2.0 Flash (free)' },
-    { v: 'meta-llama/llama-3.3-70b-instruct',           l: 'Llama 3.3 70B' },
-    { v: 'deepseek/deepseek-chat',                      l: 'DeepSeek V3' },
-    { v: 'deepseek/deepseek-r1',                        l: 'DeepSeek R1 — reasoning' },
-    { v: 'qwen/qwen-2.5-72b-instruct',                  l: 'Qwen 2.5 72B' },
+    { v: 'openai/gpt-4o-mini',                            l: 'OpenAI GPT-4o Mini' },
+    { v: 'anthropic/claude-3.5-haiku',                    l: 'Claude 3.5 Haiku' },
+    { v: 'anthropic/claude-3.7-sonnet',                   l: 'Claude 3.7 Sonnet' },
+    { v: 'google/gemini-2.0-flash-exp:free',              l: 'Gemini 2.0 Flash (free)' },
+    { v: 'meta-llama/llama-3.3-70b-instruct',             l: 'Llama 3.3 70B' },
+    { v: 'deepseek/deepseek-chat',                        l: 'DeepSeek V3' },
+    { v: 'deepseek/deepseek-r1',                          l: 'DeepSeek R1 — reasoning' },
+    { v: 'qwen/qwen-2.5-72b-instruct',                    l: 'Qwen 2.5 72B' },
     { v: 'mistralai/mistral-small-3.1-24b-instruct:free', l: 'Mistral Small 3.1 (free)' },
   ],
   mistral: [
@@ -374,23 +310,23 @@ const PROVIDER_MODELS = {
     { v: 'open-mistral-nemo',      l: 'Mistral NeMo — open' },
   ],
   together: [
-    { v: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',   l: 'Llama 3.3 70B Turbo (recommended)' },
-    { v: 'meta-llama/Llama-3.1-8B-Instruct-Turbo',    l: 'Llama 3.1 8B Turbo — cheapest' },
-    { v: 'Qwen/Qwen2.5-72B-Instruct-Turbo',           l: 'Qwen 2.5 72B Turbo' },
-    { v: 'deepseek-ai/DeepSeek-V3',                   l: 'DeepSeek V3' },
-    { v: 'mistralai/Mixtral-8x22B-Instruct-v0.1',     l: 'Mixtral 8x22B' },
+    { v: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',  l: 'Llama 3.3 70B Turbo (recommended)' },
+    { v: 'meta-llama/Llama-3.1-8B-Instruct-Turbo',   l: 'Llama 3.1 8B Turbo — cheapest' },
+    { v: 'Qwen/Qwen2.5-72B-Instruct-Turbo',          l: 'Qwen 2.5 72B Turbo' },
+    { v: 'deepseek-ai/DeepSeek-V3',                  l: 'DeepSeek V3' },
+    { v: 'mistralai/Mixtral-8x22B-Instruct-v0.1',    l: 'Mixtral 8x22B' },
   ],
   minimax: [
     { v: 'MiniMax-Text-01',  l: 'MiniMax Text-01 (recommended)' },
     { v: 'abab6.5s-chat',    l: 'abab6.5s Chat' },
   ],
   poe: [
-    { v: 'Claude-3-Haiku',       l: 'Claude 3 Haiku' },
-    { v: 'Claude-3.5-Sonnet',    l: 'Claude 3.5 Sonnet' },
-    { v: 'GPT-4o-mini',          l: 'GPT-4o Mini' },
-    { v: 'GPT-4o',               l: 'GPT-4o' },
-    { v: 'Gemini-Flash',         l: 'Gemini Flash' },
-    { v: 'Llama-3.1-405B',       l: 'Llama 3.1 405B' },
+    { v: 'Claude-3-Haiku',     l: 'Claude 3 Haiku' },
+    { v: 'Claude-3.5-Sonnet',  l: 'Claude 3.5 Sonnet' },
+    { v: 'GPT-4o-mini',        l: 'GPT-4o Mini' },
+    { v: 'GPT-4o',             l: 'GPT-4o' },
+    { v: 'Gemini-Flash',       l: 'Gemini Flash' },
+    { v: 'Llama-3.1-405B',     l: 'Llama 3.1 405B' },
   ],
   kimi: [
     { v: 'moonshot-v1-8k',    l: 'Moonshot v1 8K (recommended)' },
@@ -407,7 +343,6 @@ function populateModels(prov) {
   const models = PROVIDER_MODELS[prov] || [];
   modelSel.innerHTML = '';
   if (prov === 'custom') {
-    // Custom provider: hide select, always show text input
     modelSel.style.display = 'none';
     modelTxt.style.display = 'block';
     modelTxt.placeholder = 'Type model name…';
@@ -420,16 +355,13 @@ function populateModels(prov) {
     opt.value = m.v; opt.textContent = m.l;
     modelSel.appendChild(opt);
   });
-  // "Other" escape hatch
   const other = document.createElement('option');
   other.value = '__other__'; other.textContent = 'Other — type model name…';
   modelSel.appendChild(other);
-
   const isPoe = prov === 'poe';
   modelHint.textContent = isPoe
     ? 'Use the exact bot handle shown on poe.com — case-sensitive.'
     : 'Select a model, or choose "Other" to enter a custom name.';
-  // Hide/show text input based on current selection
   modelSel.dispatchEvent(new Event('change'));
 }
 
@@ -445,7 +377,6 @@ providerSel.addEventListener('change', () => {
   populateModels(prov);
 });
 
-// Initialise with the default provider (openai)
 populateModels('openai');
 
 function getModelValue() {
@@ -486,8 +417,7 @@ async function testKey(key, mdl, bUrl, prov) {
     const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key };
     if (prov === 'openrouter') { headers['HTTP-Referer'] = 'https://lessonbuilder.app'; headers['X-Title'] = 'LessonBuilder'; }
     const res = await fetch(bUrl + '/chat/completions', {
-      method: 'POST',
-      headers,
+      method: 'POST', headers,
       body: JSON.stringify({ model: mdl, messages: [{ role: 'user', content: 'Say OK.' }], max_tokens: 5 })
     });
     if (res.ok) return true;
@@ -500,12 +430,9 @@ document.getElementById('change-key-btn').addEventListener('click', () => {
   localStorage.removeItem(STORAGE_KEY); showSetup();
 });
 
-// ── Lesson render ──
 function renderLesson() {
-  // Summary
   document.getElementById('summary-text').innerHTML = simpleMarkdown(LESSON.summary || 'No summary available.');
 
-  // Concepts
   const grid = document.getElementById('concepts-grid');
   grid.innerHTML = '';
   (LESSON.keyConcepts || []).forEach(c => {
@@ -515,13 +442,9 @@ function renderLesson() {
     grid.appendChild(el);
   });
 
-  // Quiz
   renderQuiz();
-
-  // Chapter
   document.getElementById('chapter-text').textContent = LESSON.chapterText || '';
 
-  // Chat
   const initials = TUTOR.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
   document.getElementById('chat-avatar').textContent = initials;
   document.getElementById('chat-name').textContent = TUTOR.name;
@@ -530,20 +453,17 @@ function renderLesson() {
   );
 }
 
-// ── Quiz ──
 function renderQuiz() {
   const qs = LESSON.quizQuestions || [];
   const container = document.getElementById('quiz-container');
   if (!qs.length) { container.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No quiz questions available.</p>'; return; }
 
-  let answered = 0;
-  let correct = 0;
-
+  let answered = 0, correct = 0;
   container.innerHTML = '';
+
   qs.forEach((q, qi) => {
     const qDiv = document.createElement('div');
     qDiv.className = 'quiz-q';
-
     const qText = document.createElement('p');
     qText.textContent = (qi + 1) + '. ' + q.question;
     qDiv.appendChild(qText);
@@ -576,7 +496,6 @@ function renderQuiz() {
   });
 }
 
-// ── Tabs ──
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -587,14 +506,9 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// ── Mind Map ──
-let mmGenerated = false;
-let mmGenerating = false;
-let mmId = 0;
+let mmGenerated = false, mmGenerating = false, mmId = 0;
 
-function mmSetBody(html) {
-  document.getElementById('mindmap-body').innerHTML = html;
-}
+function mmSetBody(html) { document.getElementById('mindmap-body').innerHTML = html; }
 
 async function generateMindmap() {
   if (mmGenerating) return;
@@ -642,8 +556,7 @@ Rules:
     if (provider === 'openrouter') { headers['HTTP-Referer'] = 'https://lessonbuilder.app'; headers['X-Title'] = 'LessonBuilder'; }
 
     const res = await fetch(baseUrl + '/chat/completions', {
-      method: 'POST',
-      headers,
+      method: 'POST', headers,
       body: JSON.stringify({ model, messages: [{ role: 'user', content: prompt }], stream: false })
     });
     const data = await res.json();
@@ -670,7 +583,6 @@ Rules:
 async function renderMermaid(text) {
   const id = 'mm' + (++mmId);
   try {
-    // mermaid is loaded from CDN as a global
     mermaid.initialize({ startOnLoad: false, theme: 'default', fontFamily: 'Georgia, serif', fontSize: 14 });
     const { svg } = await mermaid.render(id, text);
     const wrapper = document.createElement('div');
@@ -691,7 +603,6 @@ function onMindmapTabActivated() {
 
 document.getElementById('mindmap-regen-btn').addEventListener('click', generateMindmap);
 
-// ── Chat ──
 const input = document.getElementById('chat-input');
 const sendBtn = document.getElementById('send-btn');
 const messagesEl = document.getElementById('messages');
@@ -722,7 +633,6 @@ async function sendMessage() {
 
   appendMsg('user', escHtml(text));
   chatHistory.push({ role: 'user', content: text });
-
   const typing = appendMsg('bot typing', '…');
 
   try {
@@ -735,11 +645,9 @@ async function sendMessage() {
     ];
 
     const res = await fetch(baseUrl + '/chat/completions', {
-      method: 'POST',
-      headers,
+      method: 'POST', headers,
       body: JSON.stringify({ model, messages, stream: false })
     });
-
     const data = await res.json();
     if (!res.ok) throw new Error(data?.error?.message || 'HTTP ' + res.status);
 
@@ -755,7 +663,6 @@ async function sendMessage() {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
-// ── Helpers ──
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -775,12 +682,4 @@ boot();
 </script>
 </body>
 </html>`;
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
