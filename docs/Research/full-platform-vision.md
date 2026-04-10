@@ -62,35 +62,31 @@ The SCORM package works completely offline after download. No LessonBuilder serv
 
 ---
 
-### Stage 4 — Live Classroom Engagement (Kahoot-style)
+### Stage 4 — Integration with Real-Time Classroom Systems
 
-When a teacher wants real-time engagement — for example, at the start or end of a class — they can launch a **Live Session** directly from LessonBuilder.
+LessonBuilder is designed to be a **content source**, not a classroom management platform. Once a lesson is generated, its structured data (quiz questions, concept tags, learning objectives) can be pulled by any external real-time engagement system via the public sharing API.
 
-Inspired by Kahoot, this mode works as follows:
+This means a teacher can:
+- Generate a lesson in LessonBuilder
+- Share the lesson link with any compatible classroom system
+- That system imports the questions and concept structure automatically — no copy-pasting
 
-- Teacher opens the lesson and clicks "Start Live Session"
-- A join code appears on the projector screen
-- Students open the join link on their phones, tablets, or laptops — no app install needed
-- The teacher runs through questions one by one; everyone answers simultaneously
-- Results appear in real time on the teacher's screen: a bar chart showing how many students chose each answer
-- The class discusses the most-missed question together
+The integration point is the public `GET /api/shared/:id` endpoint, which returns the full lesson JSON including all quiz questions in a standard format. Any real-time classroom tool that can consume a REST API can build on top of this.
 
-Every response is recorded as an xAPI event (see Stage 5). The teacher sees not just who got it right, but which concept the question mapped to.
-
-**Key difference from Kahoot:** the questions are not generic — they are generated directly from the chapter the class just studied. No manual question writing required.
+This keeps LessonBuilder focused on what it does best — **content generation and AI tutoring** — while allowing specialist classroom engagement tools to handle real-time interaction, hardware devices, and live session management.
 
 ---
 
-### Stage 5 — Self-Paced Learning (Nearpod-style)
+### Stage 5 — Self-Paced Learning
 
-Outside of class time, students work through the material at their own pace. This mirrors **Nearpod's Student-Paced mode**:
+Outside of class time, students work through the material at their own pace:
 
 - The SCORM package (or a web version of it) is assigned in Moodle
 - The student opens it any time, on any device
 - They read, explore the mind map, chat with the AI tutor, and complete the quiz
 - Their progress is saved locally and synced when connected
 
-The AI tutor in this mode is particularly powerful: it knows exactly which concepts this chapter covers, and can detect from the student's questions which areas are unclear. If a student asks the same concept three times in different ways, the system notes it.
+The AI tutor in this mode is particularly powerful: it knows exactly which concepts this chapter covers, and can detect from the student's questions which areas are unclear. If a student asks the same concept three times in different ways, the system flags it.
 
 ---
 
@@ -165,28 +161,31 @@ LessonBuilder itself, in its default configuration, **does not store any student
 [LessonBuilder AI]
    Summary · Glossary · Mind Map · Quiz · Concept Tags
          │
-    ┌────┴─────────────────────┐
-    │                          │
-    ▼                          ▼
-[SCORM Package]          [Live Session]
-  Moodle / any LMS        Real-time quiz
-  Offline capable          (Kahoot-style)
-  Self-paced               Teacher-projected
-    │                          │
-    └──────────┬───────────────┘
-               │
-               ▼
-           [xAPI / LRS]
-     Every learning action recorded
-               │
-        ┌──────┴──────┐
-        │             │
-        ▼             ▼
-  [Student View]  [Teacher View]
-  Personal        Class-wide
-  knowledge map   concept heatmap
-  Learning path   Early warning
-  AI tutor        flags
+    ┌────┴──────────────────────────┐
+    │                               │
+    ▼                               ▼
+[SCORM Package]            [Public Sharing API]
+  Moodle / any LMS           GET /api/shared/:id
+  Offline capable             Standard JSON format
+  Self-paced AI tutor         Any external system
+    │                         can pull lesson data
+    │                               │
+    └──────────────┬────────────────┘
+                   │
+                   ▼
+               [xAPI / LRS]
+         Every learning action recorded
+         (from SCORM, external systems,
+          or direct web access)
+                   │
+            ┌──────┴──────┐
+            │             │
+            ▼             ▼
+      [Student View]  [Teacher View]
+      Personal        Class-wide
+      knowledge map   concept heatmap
+      Learning path   Early warning
+      AI tutor        flags
 ```
 
 ---
@@ -197,7 +196,7 @@ LessonBuilder itself, in its default configuration, **does not store any student
 |-------|----------------|---------|
 | **1 — Now** | Core lesson generation (done), JSON export (done), bug fixes (done) | Working product |
 | **2 — Near** | SCORM export, basic xAPI event emission | Moodle-ready lessons |
-| **3 — Mid** | Live session (real-time quiz mode), LRS integration | Classroom engagement |
+| **3 — Mid** | External system integration (xAPI receive endpoint, richer sharing API) | Compatible with real-time classroom tools |
 | **4 — Later** | Cross-lesson concept graph, personalised learning paths | Full ecosystem |
 | **5 — Scale** | LTI registration, institution identity federation, privacy dashboard | Institutional deployment |
 
