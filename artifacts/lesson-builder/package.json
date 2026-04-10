@@ -85,6 +85,7 @@
   },
   "dependencies": {
     "mermaid": "^11.13.0",
+    "pdfjs-dist": "^5.6.205",
     "react-markdown": "^10.1.0",
     "react-quizlet-flashcard": "^4.0.22",
     "remark-gfm": "^4.0.1"

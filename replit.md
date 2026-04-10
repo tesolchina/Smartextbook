@@ -53,7 +53,7 @@ Primarily stateless — lesson data lives in the browser:
 ## Features
 
 ### Core User Flows
-1. **Create a Lesson** — Paste chapter text OR provide a URL to fetch content → pick a title → AI processes synchronously → saved to localStorage → redirected to lesson view
+1. **Create a Lesson** — Paste chapter text, provide a URL to fetch content, or upload a PDF (client-side text extraction via pdfjs-dist, no file sent to server) → pick a title → AI processes synchronously → saved to localStorage → redirected to lesson view
 2. **View a Lesson** — Four tabs: Summary (AI-generated) + Key Concepts glossary, Quiz (multiple-choice), Mind Map (Mermaid), Source text
 3. **AI Tutor Chat** — Sidebar chat in lesson view; tutor receives full lesson context per message; streams responses
 4. **Share a Lesson** — Teacher clicks "Share" → confirms public → lesson stored to DB → copyable link generated → students visit `/shared/:id` and can read + leave comments
@@ -80,6 +80,7 @@ Users can provide a URL instead of pasting text. The backend fetches the page, e
 - `POST /api/generate-lesson` — Synchronous AI lesson generation (requires `llmConfig`)
 - `POST /api/chat` — SSE streaming stateless chat (requires `llmConfig` + `lessonContext`)
 - `POST /api/fetch-url` — Fetch and extract text content from a URL
+- `POST /api/generate-slides` — Generate a self-contained Reveal.js HTML slide deck from lesson data (title, summary, key concepts, quiz)
 - `POST /api/share` — Store lesson in DB, returns `{ shareId, expiresAt }` (90-day public link)
 - `GET /api/shared/:id` — Retrieve shared lesson (404 if not found, 410 if expired)
 - `GET /api/shared/:id/comments` — Get all comments for a shared lesson

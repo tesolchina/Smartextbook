@@ -6,12 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   BookOpen, Loader2, AlertCircle, Link2, FileText, Key, X,
   CheckCircle2, FlaskConical, ChevronRight, ChevronLeft,
-  Users, Target, ClipboardList,
+  Users, Target, ClipboardList, FileUp,
 } from "lucide-react";
 import { useFetchUrl } from "@workspace/api-client-react";
 import { useSettings } from "@/hooks/use-settings";
 import { useSettingsModal } from "@/hooks/use-settings-modal";
 import { useLessonsStore } from "@/hooks/use-lessons-store";
+import { PdfExtractor } from "@/components/pdf-extractor";
 
 const schema = z.object({
   title: z.string().min(3, "At least 3 characters").max(100),
@@ -19,7 +20,7 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
-type Tab = "paste" | "url";
+type Tab = "paste" | "url" | "pdf";
 
 type Audience = "general" | "k12" | "university" | "professional";
 type Goal = "understand" | "exam" | "apply" | "overview";
@@ -321,20 +322,37 @@ export function CreateLessonForm({ onClose }: Props) {
             </div>
 
             <div className="flex gap-1 p-1 bg-secondary rounded-lg mb-3 w-fit text-xs">
-              {(["paste", "url"] as Tab[]).map((t) => (
+              {(
+                [
+                  { id: "paste", label: "Paste text", icon: <FileText className="w-3.5 h-3.5" /> },
+                  { id: "url",   label: "Fetch URL",  icon: <Link2 className="w-3.5 h-3.5" /> },
+                  { id: "pdf",   label: "Upload PDF",  icon: <FileUp className="w-3.5 h-3.5" /> },
+                ] as { id: Tab; label: string; icon: React.ReactNode }[]
+              ).map((t) => (
                 <button
-                  key={t}
+                  key={t.id}
                   type="button"
-                  onClick={() => { setTab(t); setUrlError(""); }}
+                  onClick={() => { setTab(t.id); setUrlError(""); }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-semibold transition-all ${
-                    tab === t ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                    tab === t.id ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {t === "paste" ? <FileText className="w-3.5 h-3.5" /> : <Link2 className="w-3.5 h-3.5" />}
-                  {t === "paste" ? "Paste text" : "Fetch URL"}
+                  {t.icon} {t.label}
                 </button>
               ))}
             </div>
+
+            {tab === "pdf" && (
+              <PdfExtractor
+                onExtracted={(text, guessedTitle) => {
+                  form.setValue("chapterText", text, { shouldValidate: true });
+                  if (!form.getValues("title")) {
+                    form.setValue("title", guessedTitle.slice(0, 100), { shouldValidate: true });
+                  }
+                  setTab("paste");
+                }}
+              />
+            )}
 
             {tab === "paste" ? (
               <div>

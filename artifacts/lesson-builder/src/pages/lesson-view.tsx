@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRoute, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Lightbulb, ListTodo, ArrowLeft, Download, GitBranch, MessageSquare, X } from "lucide-react";
+import { FileText, Lightbulb, ListTodo, ArrowLeft, Download, GitBranch, MessageSquare, X, Presentation, Loader2 } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { ChatSidebar } from "@/components/chat-sidebar";
 import { QuizView } from "@/components/quiz-view";
@@ -30,6 +30,7 @@ export default function LessonView() {
   const [mindmapDiagram, setMindmapDiagram] = useState<string | null>(null);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [isDownloadingSlides, setIsDownloadingSlides] = useState(false);
 
   const { getLesson } = useLessonsStore();
   const lesson = match ? getLesson(params.id) : undefined;
@@ -39,6 +40,37 @@ export default function LessonView() {
     setQuizResult(null);
     setChatOpen(false);
   }, [params?.id]);
+
+  const handleDownloadSlides = async () => {
+    if (!lesson || isDownloadingSlides) return;
+    setIsDownloadingSlides(true);
+    try {
+      const res = await fetch("/api/generate-slides", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lesson }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        alert(err?.error || "Failed to generate slides");
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const safeName = lesson.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "lesson";
+      a.download = `${safeName}-slides.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      alert("Network error — could not generate slides");
+    } finally {
+      setIsDownloadingSlides(false);
+    }
+  };
 
   if (!lesson) {
     return (
@@ -148,6 +180,17 @@ export default function LessonView() {
                 )}
                 <ShareButton lesson={lesson} />
                 <button
+                  onClick={handleDownloadSlides}
+                  disabled={isDownloadingSlides}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  title="Download as Reveal.js slide deck (HTML)"
+                >
+                  {isDownloadingSlides
+                    ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    : <Presentation className="w-3.5 h-3.5" />}
+                  Slides
+                </button>
+                <button
                   onClick={() => setExportOpen(true)}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
                 >
@@ -158,6 +201,16 @@ export default function LessonView() {
               {/* Mobile actions: icon row */}
               <div className="flex sm:hidden items-center gap-0.5 shrink-0">
                 <ShareButton lesson={lesson} />
+                <button
+                  onClick={handleDownloadSlides}
+                  disabled={isDownloadingSlides}
+                  className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  aria-label="Download Slides"
+                >
+                  {isDownloadingSlides
+                    ? <Loader2 className="w-4 h-4 animate-spin" />
+                    : <Presentation className="w-4 h-4" />}
+                </button>
                 <button
                   onClick={() => setExportOpen(true)}
                   className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
