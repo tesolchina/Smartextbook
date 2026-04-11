@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Democratising AI-Augmented Textbook Creation — Simon Wang</title>
+<style>
+:root {
+  --primary: #b84c2a;
+  --accent: #c97b3a;
+  --bg: #faf9f7;
+  --card: #fff;
+  --text: #1a1714;
+  --muted: #6b6560;
+  --border: #e8e4de;
+  --serif: 'Georgia', 'Times New Roman', serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --slide-w: 960px;
+  --slide-h: 540px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1a1714;
+  font-family: var(--serif);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+  gap: 16px;
+}
+
+/* ── Slide container ── */
+#deck {
+  width: 100%;
+  max-width: var(--slide-w);
+  aspect-ratio: 16/9;
+  position: relative;
+  background: var(--bg);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,.5);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 56px;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity .4s ease, transform .4s ease;
+  pointer-events: none;
+}
+.slide.active {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.slide.exit {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+/* ── Typography helpers ── */
+.eyebrow {
+  font-family: var(--sans);
+  font-size: .65em;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: .7em;
+}
+.slide-title {
+  font-family: var(--serif);
+  font-size: 2.1em;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--text);
+}
+.slide-title em { color: var(--primary); font-style: normal; }
+.slide-sub {
+  font-family: var(--sans);
+  font-size: .82em;
+  color: var(--muted);
+  margin-top: .8em;
+  line-height: 1.6;
+}
+.body-text {
+  font-family: var(--sans);
+  font-size: .85em;
+  line-height: 1.75;
+  color: var(--text);
+}
+.body-text strong { color: var(--primary); font-weight: 700; }
+
+/* ── Layout helpers ── */
+.cols { display: flex; gap: 2em; flex: 1; align-items: flex-start; }
+.col { flex: 1; }
+.spacer { flex: 1; }
+
+/* ── Card ── */
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1em 1.3em;
+}
+.card-title {
+  font-family: var(--sans);
+  font-size: .7em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  margin-bottom: .5em;
+}
+
+/* ── Stat ── */
+.stat-block {
+  background: linear-gradient(135deg, var(--primary) 0%, #8b2a14 100%);
+  border-radius: 14px;
+  padding: 1.1em 1.3em;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: .3em;
+}
+.stat-num {
+  font-family: var(--serif);
+  font-size: 2.8em;
+  font-weight: 900;
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--sans);
+  font-size: .65em;
+  opacity: .85;
+  line-height: 1.4;
+}
+
+/* ── List ── */
+.bullet-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .55em;
+}
+.bullet-list li {
+  display: flex;
+  gap: .7em;
+  font-family: var(--sans);
+  font-size: .82em;
+  line-height: 1.5;
+  color: var(--text);
+}
+.bullet-list li::before {
+  content: '▸';
+  color: var(--primary);
+  font-size: .9em;
+  margin-top: .1em;
+  flex-shrink: 0;
+}
+
+/* ── Title slide ── */
+.slide-title-bg {
+  background: linear-gradient(140deg, #1a1714 0%, #2d1f10 100%);
+}
+.slide-title-bg .eyebrow { color: #c97b3a; }
+.slide-title-bg .slide-title { color: #f5ede4; font-size: 1.7em; }
+.slide-title-bg .slide-sub { color: rgba(255,255,255,.55); }
+.slide-title-bg .presenter { color: rgba(255,255,255,.85); font-family: var(--sans); font-size: .85em; margin-top: 1.6em; }
+.slide-title-bg .presenter strong { color: #c97b3a; }
+.accent-bar {
+  width: 64px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 2px;
+  margin: 1em 0;
+}
+
+/* ── Quote slide ── */
+.blockquote {
+  border-left: 4px solid var(--primary);
+  padding: .6em 1.2em;
+  font-family: var(--serif);
+  font-size: 1em;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.6;
+  background: #fdf7f4;
+  border-radius: 0 10px 10px 0;
+}
+.blockquote cite {
+  display: block;
+  font-style: normal;
+  font-family: var(--sans);
+  font-size: .72em;
+  color: var(--muted);
+  margin-top: .6em;
+}
+
+/* ── Flow diagram ── */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+}
+.flow-step {
+  flex: 1;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: .7em .9em;
+  text-align: center;
+}
+.flow-step .fs-icon { font-size: 1.4em; margin-bottom: .3em; }
+.flow-step .fs-label {
+  font-family: var(--sans);
+  font-size: .65em;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+}
+.flow-arrow {
+  color: var(--muted);
+  font-size: .9em;
+  flex-shrink: 0;
+}
+
+/* ── Pill badge ── */
+.badge {
+  display: inline-block;
+  padding: .25em .75em;
+  border-radius: 99px;
+  font-family: var(--sans);
+  font-size: .65em;
+  font-weight: 700;
+}
+.badge-orange { background: #fff0e6; color: #b84c2a; }
+.badge-green  { background: #edfcf2; color: #166534; }
+.badge-blue   { background: #eff6ff; color: #1e40af; }
+
+/* ── Footer bar ── */
+.slide-footer {
+  position: absolute;
+  bottom: 16px;
+  left: 56px;
+  right: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: .6em;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+/* ── Controls ── */
+#controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #888;
+  font-family: var(--sans);
+  font-size: .82rem;
+  user-select: none;
+}
+#slide-counter { min-width: 60px; text-align: center; }
+.ctrl-btn {
+  background: #2c2826;
+  border: 1px solid #3d3633;
+  color: #ddd;
+  border-radius: 8px;
+  padding: 6px 18px;
+  cursor: pointer;
+  font-size: .82rem;
+  transition: background .15s;
+}
+.ctrl-btn:hover { background: #3d3633; }
+.ctrl-btn:disabled { opacity: .35; cursor: default; }
+
+/* ── Progress bar ── */
+#progress {
+  width: 100%;
+  max-width: var(--slide-w);
+  height: 3px;
+  background: #2c2826;
+  border-radius: 2px;
+  overflow: hidden;
+}
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 2px;
+  transition: width .4s ease;
+}
+
+/* ── Highlight box ── */
+.highlight-box {
+  background: linear-gradient(135deg, #fff8f5 0%, #fdf0e8 100%);
+  border: 1.5px solid rgba(184,76,42,.2);
+  border-radius: 12px;
+  padding: .9em 1.1em;
+}
+.highlight-box .hb-label {
+  font-family: var(--sans);
+  font-size: .62em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--primary);
+  margin-bottom: .4em;
+}
+.highlight-box p {
+  font-family: var(--sans);
+  font-size: .78em;
+  line-height: 1.55;
+  color: var(--text);
+}
+.highlight-box p strong { color: var(--primary); }
+
+/* Slide 7 grid */
+.contrib-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .7em;
+  flex: 1;
+  align-content: start;
+}
+.contrib-item {
+  display: flex;
+  gap: .6em;
+  align-items: flex-start;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: .7em .9em;
+}
+.contrib-icon { font-size: 1.3em; flex-shrink: 0; }
+.contrib-text { font-family: var(--sans); font-size: .72em; line-height: 1.5; color: var(--text); }
+.contrib-text strong { display: block; color: var(--primary); font-weight: 700; margin-bottom: .2em; font-size: .9em; }
+</style>
+</head>
+<body>
+
+<div id="progress"><div id="progress-fill"></div></div>
+<div id="deck">
+
+  <!-- ═══════ SLIDE 1 — Title ═══════ -->
+  <div class="slide slide-title-bg active" data-slide="1">
+    <div class="eyebrow">Academic Lecture · April 2026</div>
+    <div class="slide-title">
+      Democratising AI-Augmented<br>
+      Textbook Creation Through<br>
+      <em>No-Code Chatbot Customisation</em>
+    </div>
+    <div class="accent-bar"></div>
+    <div class="presenter">
+      <strong>Simon Wang</strong><br>
+      SmartTextbook Research Group
+    </div>
+    <div class="spacer"></div>
+    <div style="display:flex;gap:.8em;flex-wrap:wrap;margin-top:.5em">
+      <span class="badge badge-orange">AI in Education</span>
+      <span class="badge badge-orange">No-Code Tools</span>
+      <span class="badge badge-orange">Vibe Coding</span>
+    </div>
+    <div class="slide-footer">
+      <span>Simon Wang · 2026</span>
+      <span>1 / 9</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 2 — The Problem ═══════ -->
+  <div class="slide" data-slide="2">
+    <div class="eyebrow">The Challenge</div>
+    <div class="slide-title">Textbooks Are <em>Static</em>.<br>Learners Are Not.</div>
+    <div class="spacer"></div>
+    <div class="cols">
+      <div class="col">
+        <ul class="bullet-list">
+          <li>Traditional educational materials are <strong>fixed</strong> — same content, same sequence, same depth for every student</li>
+          <li>Modern students need <strong>personalised pacing</strong>, immediate feedback, and learning pathways matched to their prior knowledge</li>
+          <li>The result: <strong>disengagement, knowledge gaps,</strong> and a "one-size-fits-none" experience</li>
+          <li>Educators know this — but have no accessible tools to fix it</li>
+        </ul>
+      </div>
+      <div class="col" style="display:flex;flex-direction:column;gap:.7em">
+        <div class="stat-block">
+          <div class="stat-num">📚</div>
+          <div class="stat-label">Most textbooks in use today were written before the smartphone — let alone generative AI</div>
+        </div>
+        <div class="card">
+          <div class="card-title">The Core Paradox</div>
+          <p class="body-text">AI can now generate <strong>bespoke learning experiences</strong> — yet 95% of classroom content remains static PDFs and printed books.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Simon Wang · 2026</span>
+      <span>2 / 9</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 3 — Prior Art: Google ═══════ -->
+  <div class="slide" data-slide="3">
+    <div class="eyebrow">Prior Art</div>
+    <div class="slide-title">The Evidence:<br><em>AI Works</em> — But Isn't Accessible</div>
+    <div class="spacer"></div>
+    <div class="cols">
+      <div class="col" style="display:flex;flex-direction:column;gap:.7em">
+        <div class="blockquote">
+          "Students using AI-augmented textbooks showed an average <strong>11% improvement</strong> in learning outcomes compared to traditional materials."
+          <cite>— Google DeepMind, <em>Learn Your Way</em> research, 2024</cite>
+        </div>
+        <ul class="bullet-list" style="margin-top:.3em">
+          <li>AI tutors could explain, quiz, re-explain — adapting to each student's confusion in real time</li>
+          <li>The learning gains are <strong>real and measurable</strong></li>
+        </ul>
+      </div>
+      <div class="col" style="display:flex;flex-direction:column;gap:.7em">
+        <div class="stat-block">
+          <div class="stat-num">11%</div>
+          <div class="stat-label">Average learning improvement with AI-augmented textbooks (Google, 2024)</div>
+        </div>
+        <div class="card" style="border-color:rgba(184,76,42,.25)">
+          <div class="card-title">⚠ The Catch</div>
+          <p class="body-text">Google's implementation required a <strong>large engineering team</strong>. A maths teacher in Christchurch cannot replicate it. The gap between research and classroom reality remains vast.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Simon Wang · 2026</span>
+      <span>3 / 9</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 4 — The Gap ═══════ -->
+  <div class="slide" data-slide="4">
+    <div class="eyebrow">The Gap We're Closing</div>
+    <div class="slide-title">Technical Barriers<br>Are <em>Gatekeeping</em> AI Education</div>
+    <div class="spacer"></div>
+    <div class="cols">
+      <div class="col">
+        <ul class="bullet-list">
+          <li>Existing AI-augmented tools require <strong>API integrations, prompt engineering, hosting infrastructure</strong> — all beyond typical educators</li>
+          <li>Ed-tech platforms offer generic AI assistants — not ones that <strong>understand your specific course material</strong></li>
+          <li>The "last mile" problem: great AI exists, but <strong>educators cannot drive it</strong></li>
+          <li>Our question: can we make this as easy as <strong>writing a document</strong>?</li>
+        </ul>
+      </div>
+      <div class="col" style="display:flex;flex-direction:column;gap:.7em">
+        <div class="highlight-box">
+          <div class="hb-label">Our Research Question</div>
+          <p>Can a non-technical educator — without writing a single line of code — produce an <strong>AI tutor that deeply understands their subject content</strong> and is ready for students within minutes?</p>
+        </div>
+        <div class="card">
+          <div class="card-title">The Barrier Breakdown</div>
+          <p class="body-text">Technical setup · Prompt design · Content grounding · Deployment · Maintenance</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Simon Wang · 2026</span>
+      <span>4 / 9</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 5 — Vibe Coding ═══════ -->
+  <div class="slide" data-slide="5">
+    <div class="eyebrow">Our Approach</div>
+    <div class="slide-title">"<em>Vibe Coding</em>":<br>Natural Language as the Interface</div>
+    <div class="spacer"></div>
+    <div class="cols">
+      <div class="col" style="display:flex;flex-direction:column;gap:.75em">
+        <div class="body-text" style="margin-bottom:.2em">
+          Coined by Andrej Karpathy (2025), <strong>"vibe coding"</strong> describes the practice of directing AI systems using plain natural language — describing <em>what you want</em> rather than coding <em>how to build it</em>.
+        </div>
+        <div class="highlight-box">
+          <div class="hb-label">In Our Platform</div>
+          <p>An educator types: <em>"My students struggle with passive voice. Be strict but encouraging. Focus on academic writing style."</em><br><br>The platform translates this into a <strong>fully configured content-aware AI tutor</strong> — no code, no settings panels.</p>
+        </div>
+      </div>
+      <div class="col" style="display:flex;flex-direction:column;gap:.65em">
+        <div class="card">
+          <div class="card-title">Traditional Approach</div>
+          <ul class="bullet-list">
+            <li>Write system prompts</li>
+            <li>Configure API endpoints</li>
+            <li>Ground in content manually</li>
+            <li>Deploy & maintain</li>
+          </ul>
+        </div>
+        <div class="stat-block" style="font-size:.9em">
+          <div class="stat-num" style="font-size:1.8em">Vibe</div>
+          <div class="stat-label"><strong>Educator types one sentence.</strong><br>Platform handles everything else — grounding, tone, domain focus, deployment.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Simon Wang · 2026</span>
+      <span>5 / 9</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 6 — Platform Overview ═══════ -->
+  <div class="slide" data-slide="6">
+    <div class="eyebrow">Platform Architecture</div>
+    <div class="slide-title">From <em>Static Content</em><br>to Intelligent Experience</div>
+    <div class="spacer"></div>
+    <div class="flow" style="margin-bottom:1.2em">
+      <div class="flow-step">
+        <div class="fs-icon">📄</div>
+        <div class="fs-label">Educator uploads chapter / URL / PDF</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-icon">✍️</div>
+        <div class="fs-label">Types a one-line teaching instruction</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="fs-icon">⚡</div>
+        <div class="fs-label">AI generates lesson, quiz, glossary, mind map</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color:rgba(184,76,42,.4);background:#fff8f5">
+        <div class="fs-icon">🎓</div>
+        <div class="fs-label">Students learn with content-aware AI tutor</div>
+      </div>
+    </div>
+    <div class="cols">
+      <div class="col">
+        <div class="card">
+          <div class="card-title">What the Platform Produces</div>
+          <ul class="bullet-list">
+            <li>Structured lesson summary</li>
+            <li>Key concepts glossary</li>
+            <li>Adaptive quiz (5–15 questions)</li>
+            <li>Concept mind map</li>
+            <li>Shareable interactive lesson with AI tutor</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-title">Key Design Principles</div>
+          <ul class="bullet-list">
+            <li><strong>BYOK</strong> — educator supplies own API key</li>
+            <li><strong>Open source</strong> — fully transparent</li>
+            <li><strong>Privacy first</strong> — no data leaves the browser</li>
+            <li><strong>Provider agnostic</strong> — OpenAI, Gemini, Grok, DeepSeek…</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Simon Wang · 2026</span>
+      <span>6 / 9</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 7 — Contributions ═══════ -->
+  <div class="slide" data-slide="7">
+    <div class="eyebrow">Research Contributions</div>
+    <div class="slide-title">What We Contribute<br>to the <em>Field</em></div>
+    <div class="spacer"></div>
+    <div class="contrib-grid">
+      <div class="contrib-item">
+        <div class="contrib-icon">🗣️</div>
+        <div class="contrib-text">
+          <strong>Vibe-Coding Pedagogy</strong>
+          A new interaction model: educators direct AI through natural language rather than structured configuration
+        </div>
+      </div>
+      <div class="contrib-item">
+        <div class="contrib-icon">🔒</div>
+        <div class="contrib-text">
+          <strong>Privacy-First AI Tutoring</strong>
+          API keys stored only in-browser; no student data transmitted to third parties
+        </div>
+      </div>
+      <div class="contrib-item">
+        <div class="contrib-icon">📐</div>
+        <div class="contrib-text">
+          <strong>Content Grounding at Scale</strong>
+          Tutor system prompts are automatically grounded in the specific chapter text — not generic AI
+        </div>
+      </div>
+      <div class="contrib-item">
+        <div class="contrib-icon">🌍</div>
+        <div class="contrib-text">
+          <strong>Democratised Access</strong>
+          Open-source platform replicable by any educator globally — no vendor lock-in, no subscription cost
+        </div>
+      </div>
+      <div class="contrib-item">
+        <div class="contrib-icon">🔄</div>
+        <div class="contrib-text">
+          <strong>Multi-Modal Output</strong>
+          One input → summary + glossary + quiz + mind map + shareable AI tutor in minutes
+        </div>
+      </div>
+      <div class="contrib-item">
+        <div class="contrib-icon">📊</div>
+        <div class="contrib-text">
+          <strong>Learner Profiling</strong>
+          Audience, goal, and quiz depth are tunable — the same chapter produces different lessons for a Year 12 vs a PhD student
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Simon Wang · 2026</span>
+      <span>7 / 9</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 8 — Implications ═══════ -->
+  <div class="slide" data-slide="8">
+    <div class="eyebrow">Broader Impact</div>
+    <div class="slide-title">Towards <em>Truly</em> Democratised<br>AI-Enhanced Education</div>
+    <div class="spacer"></div>
+    <div class="cols">
+      <div class="col" style="display:flex;flex-direction:column;gap:.75em">
+        <ul class="bullet-list">
+          <li>If Google's implementation yields <strong>11% improvement</strong>, what happens when <em>every educator</em> can do this?</li>
+          <li>The bottleneck shifts from <strong>technology</strong> to <strong>pedagogy</strong> — the right question again</li>
+          <li>Educators become <strong>AI directors</strong>, not passive consumers of generic tools</li>
+          <li>Opens a path to <strong>truly personalised curricula</strong> at the classroom level</li>
+        </ul>
+        <div class="highlight-box" style="margin-top:.3em">
+          <div class="hb-label">The Deeper Argument</div>
+          <p>AI in education should not be a privilege of well-funded institutions. <strong>Vibe coding flips the power dynamic</strong> — the expert is the educator, not the engineer.</p>
+        </div>
+      </div>
+      <div class="col" style="display:flex;flex-direction:column;gap:.65em">
+        <div class="stat-block">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Lines of code required from an educator to deploy a content-aware AI tutor on our platform</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Open Questions for Discussion</div>
+          <ul class="bullet-list">
+            <li>How do educators evaluate AI-generated content for accuracy?</li>
+            <li>What does "vibe coding" mean for pedagogical responsibility?</li>
+            <li>Can this scale across languages and curricula?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Simon Wang · 2026</span>
+      <span>8 / 9</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 9 — Q&A ═══════ -->
+  <div class="slide slide-title-bg" data-slide="9">
+    <div class="spacer"></div>
+    <div class="eyebrow">Thank You</div>
+    <div class="slide-title" style="font-size:2.5em">Questions &amp; Discussion</div>
+    <div class="accent-bar"></div>
+    <div class="body-text" style="color:rgba(255,255,255,.65);margin-top:.5em;max-width:480px">
+      "The most profound technologies are those that disappear. AI tutoring should be invisible — educators should just <em>teach</em>."
+    </div>
+    <div class="spacer"></div>
+    <div style="display:flex;gap:2.5em;margin-bottom:1em">
+      <div style="font-family:var(--sans);font-size:.72em;color:rgba(255,255,255,.5)">
+        <div style="color:#c97b3a;font-weight:700;margin-bottom:.3em">Research</div>
+        Democratising AI-Augmented Textbook<br>Creation Through No-Code Chatbot Customisation
+      </div>
+      <div style="font-family:var(--sans);font-size:.72em;color:rgba(255,255,255,.5)">
+        <div style="color:#c97b3a;font-weight:700;margin-bottom:.3em">Platform</div>
+        Open-source · BYOK · Provider-agnostic<br>Privacy-first · No registration required
+      </div>
+    </div>
+    <div class="slide-footer" style="border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.35)">
+      <span>Simon Wang · 2026</span>
+      <span>9 / 9</span>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- Controls -->
+<div id="controls">
+  <button class="ctrl-btn" id="prev-btn" disabled>← Prev</button>
+  <span id="slide-counter">1 / 9</span>
+  <button class="ctrl-btn" id="next-btn">Next →</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total  = slides.length;
+let current  = 0;
+
+const prevBtn    = document.getElementById('prev-btn');
+const nextBtn    = document.getElementById('next-btn');
+const counter    = document.getElementById('slide-counter');
+const progressFill = document.getElementById('progress-fill');
+
+function goTo(index) {
+  slides[current].classList.remove('active');
+  slides[current].classList.add('exit');
+  setTimeout(() => slides[current].classList.remove('exit'), 400);
+
+  current = Math.max(0, Math.min(total - 1, index));
+  slides[current].classList.add('active');
+
+  counter.textContent = (current + 1) + ' / ' + total;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === total - 1;
+  progressFill.style.width = ((current + 1) / total * 100) + '%';
+}
+
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); goTo(current - 1); }
+});
+
+// Init
+progressFill.style.width = (1 / total * 100) + '%';
+</script>
+</body>
+</html>
