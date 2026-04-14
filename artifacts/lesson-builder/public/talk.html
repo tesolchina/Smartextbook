@@ -193,6 +193,10 @@ body:hover #controls { opacity: 1; }
 
 <div id="deck">
 
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PART 1 · 2024 — CHATBOT CUSTOMISATION              -->
+<!-- ═══════════════════════════════════════════════════ -->
+
 <!-- ═══ 1. TITLE ═══ -->
 <div class="slide dark-bg active" data-slide="1">
   <div class="eyebrow">TeachingMatters Seminar · April 15, 2026</div>
@@ -211,14 +215,14 @@ body:hover #controls { opacity: 1; }
     <span class="badge badge-orange">AI in Education</span>
     <span class="badge badge-orange">Natural Language Orchestration</span>
     <span class="badge badge-orange">Open Source</span>
-    <span class="badge badge-orange">Learning Analytics</span>
+    <span class="badge badge-orange">BYOK</span>
   </div>
-  <div class="slide-footer"><span>Simon Wang · Lecturer in English & Innovation Officer · HKBU Language Centre</span><span>1 / 13</span></div>
+  <div class="slide-footer"><span>Simon Wang · Lecturer in English &amp; Innovation Officer · HKBU Language Centre</span><span>1 / 13</span></div>
 </div>
 
-<!-- ═══ 2. ORIGIN ═══ -->
+<!-- ═══ 2. ORIGIN — 2024 ARTICLE ═══ -->
 <div class="slide" data-slide="2">
-  <div class="eyebrow">Where This Started</div>
+  <div class="eyebrow">Part 1 — 2024 · Where This Started</div>
   <div class="slide-title">A Question Asked in<br><em>August 2024</em></div>
   <div class="spacer"></div>
   <div class="cols">
@@ -229,141 +233,85 @@ body:hover #controls { opacity: 1; }
         <span style="font-family:var(--sans);font-size:.85em;opacity:.7">timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation</span></cite>
       </div>
       <ul class="bullet-list" style="margin-top:.5em">
-        <li>The article explored how educators could <strong>customise AI chatbots</strong> for their own teaching — without coding</li>
-        <li>At the time, the best available tool was <strong>Poe.com</strong> — a platform for building and sharing custom chatbots</li>
-        <li>The idea worked. Students engaged. But a critical problem emerged.</li>
+        <li>Generic chatbots like ChatGPT are powerful — but not designed for <strong>your course, your students, your method</strong></li>
+        <li>The article asked: can educators build chatbots tailored to their own teaching — <strong>without writing code?</strong></li>
+        <li>The answer turned out to be yes. But it raised a new question.</li>
       </ul>
     </div>
     <div class="col">
-      <div class="card" style="border-color:rgba(184,76,42,.3)">
-        <div class="card-title">The Problem Poe Couldn't Solve</div>
+      <div class="card" style="border-color:rgba(184,76,42,.3);margin-bottom:.6em">
+        <div class="card-title">The Key Insight</div>
         <ul class="bullet-list">
-          <li>Teachers could <strong>build</strong> a chatbot — but couldn't <strong>see</strong> what happened when students used it</li>
-          <li>All conversation data stayed inside Poe — the educator saw nothing</li>
-          <li>No logs. No patterns. No feedback loop.</li>
-          <li>The chatbot was a <strong>black box</strong> — used once, then forgotten</li>
+          <li>AI behaviour can be directed entirely through <strong>plain English instructions</strong> — a "system prompt"</li>
+          <li>A well-written system prompt can encode a teacher's <strong>full pedagogical workflow</strong></li>
+          <li>No programming knowledge required — only pedagogical clarity</li>
         </ul>
       </div>
-      <div class="highlight-box" style="margin-top:.6em">
-        <div class="hb-label">The Question That Drove This Work</div>
-        <p>What if educators could customise AI tutors <strong>and</strong> own the conversation data their students produce?</p>
+      <div class="highlight-box">
+        <div class="hb-label">The Question This Talk Answers</div>
+        <p>Chatbot customisation works for individual bots. Can we <strong>embed it into an entire textbook experience</strong> — and own the data?</p>
       </div>
     </div>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>2 / 13</span></div>
 </div>
 
-<!-- ═══ 3. EVIDENCE ═══ -->
+<!-- ═══ 3. WHAT IS CHATBOT CUSTOMISATION ═══ -->
 <div class="slide" data-slide="3">
-  <div class="eyebrow">The Evidence</div>
-  <div class="slide-title">Research Confirms It —<br><em>AI-Augmented Textbooks Work</em></div>
+  <div class="eyebrow">Part 1 — 2024 · The Core Concept</div>
+  <div class="slide-title">What Is<br><em>Chatbot Customisation?</em></div>
   <div class="spacer"></div>
   <div class="cols">
     <div class="col">
-      <div class="blockquote">
-        "Students using AI-augmented textbooks showed an average <strong>11% improvement</strong> in learning outcomes compared to traditional materials."
-        <cite>— Google DeepMind, <em>Learn Your Way</em>, 2024</cite>
+      <div class="card" style="margin-bottom:.6em">
+        <div class="card-title">Generic AI (ChatGPT, Gemini…)</div>
+        <ul class="bullet-list">
+          <li>Answers anything — broad, general knowledge</li>
+          <li>No knowledge of your course, chapter, or students</li>
+          <li>Open-ended dialogue — no structure, no workflow</li>
+          <li>Students can ask it to write their essay for them</li>
+        </ul>
       </div>
-      <ul class="bullet-list" style="margin-top:.35em">
-        <li>The AI doesn't just present content — it <strong>explains, quizzes, re-explains</strong>, adapting to each student in real time</li>
-        <li>Static textbooks give every student the same page. AI-augmented materials give every student <strong>their own conversation</strong></li>
-        <li>The learning gains are real. The technology is ready.</li>
-      </ul>
+      <div class="card" style="border-color:rgba(184,76,42,.35)">
+        <div class="card-title" style="color:var(--primary)">Customised Chatbot</div>
+        <ul class="bullet-list">
+          <li>Guided by a <strong>system prompt</strong> — instructions the educator writes once at the backend</li>
+          <li>Knows the specific content, follows a pedagogical sequence</li>
+          <li>Presents a <strong>menu of options</strong> — structured interaction, not open chat</li>
+          <li>Can refuse off-topic requests entirely</li>
+        </ul>
+      </div>
     </div>
     <div class="col">
-      <div class="stat-block">
-        <div class="stat-num">11%</div>
-        <div class="stat-label">Average learning improvement with AI-augmented textbooks — Google DeepMind, 2024</div>
+      <div class="card-title" style="margin-bottom:.4em">How It Works</div>
+      <div class="flow" style="flex-direction:column;gap:.35em">
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.55em .8em">
+          <span style="color:var(--primary);font-weight:800;font-size:1.1em">1</span>
+          <span class="fs-label"><strong>Educator writes a system prompt</strong> — defines the AI's role, knowledge, workflow, and tone. Plain English. No code.</span>
+        </div>
+        <div class="loop-arrow-down">↓</div>
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.55em .8em">
+          <span style="color:var(--primary);font-weight:800;font-size:1.1em">2</span>
+          <span class="fs-label"><strong>Chatbot is deployed</strong> — students access via a shared link. They see only the menu; the system prompt is hidden.</span>
+        </div>
+        <div class="loop-arrow-down">↓</div>
+        <div class="flow-step highlight" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.55em .8em">
+          <span style="color:var(--primary);font-weight:800;font-size:1.1em">3</span>
+          <span class="fs-label"><strong>Students interact</strong> — structured guided learning, shaped entirely by the educator's design choices.</span>
+        </div>
       </div>
-      <div class="card" style="border-color:rgba(184,76,42,.3)">
-        <div class="card-title">⚠ The Catch</div>
-        <p style="font-family:var(--sans);font-size:.77em;line-height:1.5;color:var(--text)">Google's result required a large engineering team. A language teacher at HKBU — or anywhere — cannot replicate it alone. The gap between research promise and classroom reality is not about the technology. It is about <strong>who has been empowered to use it</strong>.</p>
+      <div class="highlight-box" style="margin-top:.55em">
+        <div class="hb-label">The Shift</div>
+        <p>From <strong>consuming AI</strong> → to <strong>designing AI behaviour</strong>. The educator becomes the architect.</p>
       </div>
     </div>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>3 / 13</span></div>
 </div>
 
-<!-- ═══ 4. THE GAP ═══ -->
+<!-- ═══ 4. CASE STUDY — WORDCHOICE ═══ -->
 <div class="slide" data-slide="4">
-  <div class="eyebrow">Why the Gap Persists</div>
-  <div class="slide-title">Two Barriers Educators Face:<br><em>Technical</em> and <em>Structural</em></div>
-  <div class="spacer"></div>
-  <div class="cols">
-    <div class="col">
-      <div class="card" style="border-color:rgba(184,76,42,.3)">
-        <div class="card-title">Barrier 1 — Technical</div>
-        <ul class="bullet-list">
-          <li>Building AI tools requires API integrations, prompt engineering, hosting infrastructure</li>
-          <li>Ed-tech platforms offer generic AI — not tutors that understand <strong>your specific course material</strong></li>
-          <li>Most educators cannot bridge this gap without developer support</li>
-        </ul>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card" style="border-color:rgba(184,76,42,.3)">
-        <div class="card-title">Barrier 2 — Structural (the Black Box Problem)</div>
-        <ul class="bullet-list">
-          <li>Commercial platforms like Poe, ChatGPT give <strong>no access to conversation data</strong></li>
-          <li>Teachers cannot see what students discussed with the AI or where they struggled</li>
-          <li>Without data, there is no feedback loop — AI tutoring becomes a <strong>one-way, disposable tool</strong></li>
-          <li>Currently: teachers ask students to screenshot chat logs manually</li>
-        </ul>
-      </div>
-      <div class="highlight-box">
-        <div class="hb-label">Our Argument</div>
-        <p>Both barriers must be solved together. A no-code tool that still hides the data <strong>solves half the problem</strong>.</p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>4 / 13</span></div>
-</div>
-
-<!-- ═══ 5. PHILOSOPHY ═══ -->
-<div class="slide" data-slide="5">
-  <div class="eyebrow">Theoretical Foundation</div>
-  <div class="slide-title">AI Is an <em>Imitation</em><br>of Human Intellectual Behaviour</div>
-  <div class="spacer"></div>
-  <div class="cols">
-    <div class="col">
-      <p style="font-family:var(--sans);font-size:.8em;line-height:1.65;color:var(--text);margin-bottom:.6em">
-        If AI fundamentally imitates human intellectual behaviour, then the correct design sequence is:
-      </p>
-      <div class="flow" style="flex-direction:column;gap:.4em;margin-bottom:.5em">
-        <div class="flow-step" style="flex:none;flex-direction:row;justify-content:flex-start;gap:.7em;text-align:left">
-          <div class="fs-icon">1️⃣</div><div class="fs-label"><strong>Observe</strong> how the expert teacher actually teaches — what sequence, what feedback, what judgements</div>
-        </div>
-        <div class="loop-arrow-down">↓</div>
-        <div class="flow-step highlight" style="flex:none;flex-direction:row;justify-content:flex-start;gap:.7em;text-align:left">
-          <div class="fs-icon">2️⃣</div><div class="fs-label"><strong>Encode</strong> that pedagogical method into the AI — not just content knowledge, but teaching logic</div>
-        </div>
-        <div class="loop-arrow-down">↓</div>
-        <div class="flow-step" style="flex:none;flex-direction:row;justify-content:flex-start;gap:.7em;text-align:left">
-          <div class="fs-icon">3️⃣</div><div class="fs-label"><strong>Deploy</strong> at scale — the AI becomes the teacher's intellectual method, not a generic chatbot</div>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card" style="border-color:rgba(184,76,42,.3)">
-        <div class="card-title">What Most Ed-Tech Gets Wrong</div>
-        <ul class="bullet-list">
-          <li>Starts with AI capability, then asks how to fit it into education</li>
-          <li>Results in generic AI assistants with no domain pedagogy</li>
-          <li>The educator becomes a <strong>passive consumer</strong></li>
-        </ul>
-      </div>
-      <div class="highlight-box">
-        <div class="hb-label">Our Reversal</div>
-        <p>Start with <strong>the teacher's method</strong>. The AI's job is to execute that method — faithfully, at scale, and with every student simultaneously.</p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>5 / 13</span></div>
-</div>
-
-<!-- ═══ 6. CASE STUDY ═══ -->
-<div class="slide" data-slide="6">
-  <div class="eyebrow">Case Study — poe.com/wordchoice</div>
+  <div class="eyebrow">Part 1 — 2024 · Case Study — poe.com/wordchoice</div>
   <div class="slide-title">Teaching <em>Word Choice</em>:<br>A Full Pedagogy in Plain Text</div>
   <div class="spacer"></div>
   <div class="cols">
@@ -403,23 +351,23 @@ For each verb, check its object.
 Use the structured feedback template:
   verdict · explanation · confidence %
 
-<span class="comment">// Safety reminder (every response)</span>
+<span class="comment">// Safety reminder</span>
 Always remind: <span class="string">"I am powered by AI
 and can make mistakes — consult your
 human teacher."</span></div>
       <p style="font-family:var(--sans);font-size:.66em;color:var(--muted);margin-top:.45em">
         This is <strong>not vibe coding</strong> — no code is generated.<br>
-        This is <strong>natural language orchestration</strong>: plain English directing AI behaviour directly.<br>
+        This is <strong>natural language orchestration</strong>: plain English directing AI behaviour.<br>
         <span style="color:var(--primary)">Try it live → poe.com/wordchoice</span>
       </p>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>6 / 13</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>4 / 13</span></div>
 </div>
 
-<!-- ═══ 7. TWO PATHWAYS ═══ -->
-<div class="slide" data-slide="7">
-  <div class="eyebrow">Two Pathways — From the 2024 Article</div>
+<!-- ═══ 5. TWO PATHWAYS ═══ -->
+<div class="slide" data-slide="5">
+  <div class="eyebrow">Part 1 — 2024 · Two Pathways</div>
   <div class="slide-title">Customising Chatbots:<br><em>Platform-Based</em> vs <em>API-Based</em></div>
   <div class="spacer"></div>
   <div class="cols">
@@ -435,8 +383,8 @@ human teacher."</span></div>
         <div style="margin-top:.55em;display:flex;gap:.4em;flex-wrap:wrap">
           <span class="badge badge-green">✓ Accessible</span>
           <span class="badge badge-green">✓ No code</span>
-          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ No data access</span>
-          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ Limited prompts</span>
+          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ No student data</span>
+          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ Black box</span>
         </div>
       </div>
     </div>
@@ -444,69 +392,179 @@ human teacher."</span></div>
       <div class="card" style="border-color:rgba(184,76,42,.35);margin-bottom:.6em">
         <div class="card-title" style="color:#b84c2a">Pathway 2 — API-Based (Bespoke Platform)</div>
         <ul class="bullet-list">
-          <li>Build a custom platform using provider APIs (OpenAI, Gemini…)</li>
-          <li>Unlimited system prompt length — encode full pedagogical logic</li>
-          <li>Complete control over UX, data storage, and student access</li>
-          <li>Full visibility into student conversation logs</li>
+          <li>Custom platform built on provider APIs (OpenAI, Gemini…)</li>
+          <li>Unlimited system prompt — encode full pedagogical logic</li>
+          <li>Full control: UX, data storage, student access</li>
+          <li>Complete visibility into student conversation logs</li>
         </ul>
         <div style="margin-top:.55em;display:flex;gap:.4em;flex-wrap:wrap">
           <span class="badge badge-green">✓ Full data</span>
           <span class="badge badge-green">✓ No limits</span>
-          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ Needs a developer</span>
+          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ Needs developer</span>
           <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ Higher cost</span>
         </div>
       </div>
     </div>
   </div>
   <div class="highlight-box">
-    <div class="hb-label">The Gap This Work Closes</div>
-    <p>In 2024, Pathway 1 was the only accessible option for most educators. The goal of SmartTextbook is to make <strong>Pathway 2 as easy as Pathway 1</strong> — without needing a programmer or a budget.</p>
+    <div class="hb-label">Where We Were in 2024</div>
+    <p>Pathway 1 was accessible but left educators blind to their students' learning. Pathway 2 solved that — but required a programmer and months of development. <strong>Fast forward two years.</strong></p>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>5 / 13</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TRANSITION                                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<!-- ═══ 6. FAST FORWARD ═══ -->
+<div class="slide dark-bg" data-slide="6">
+  <div class="spacer"></div>
+  <div class="eyebrow" style="letter-spacing:.2em">Fast Forward</div>
+  <div class="slide-title" style="font-size:2.8em;line-height:1.1">
+    2024 → <em>2026</em>
+  </div>
+  <div class="accent-bar"></div>
+  <div style="font-family:var(--sans);font-size:.88em;color:rgba(255,255,255,.6);max-width:520px;line-height:1.7;margin-top:.3em">
+    Three new ideas arrived that changed how we think about this problem.
+  </div>
+  <div class="spacer"></div>
+  <div style="display:flex;gap:1.5em">
+    <div style="font-family:var(--sans);font-size:.78em;color:rgba(255,255,255,.5)">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em;font-size:.85em;text-transform:uppercase;letter-spacing:.08em">Idea 1</div>
+      Google's research on<br>AI-augmented textbooks
+    </div>
+    <div style="font-family:var(--sans);font-size:.78em;color:rgba(255,255,255,.5)">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em;font-size:.85em;text-transform:uppercase;letter-spacing:.08em">Idea 2</div>
+      Chatbot customisation<br>embedded in the textbook itself
+    </div>
+    <div style="font-family:var(--sans);font-size:.78em;color:rgba(255,255,255,.5)">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em;font-size:.85em;text-transform:uppercase;letter-spacing:.08em">Idea 3</div>
+      Bring Your Own Key —<br>zero cost, full data ownership
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>6 / 13</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PART 2 · 2026 — THE NEW PROJECT                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<!-- ═══ 7. GOOGLE RESEARCH ═══ -->
+<div class="slide" data-slide="7">
+  <div class="eyebrow">Part 2 — 2026 · Idea 1 — The Evidence</div>
+  <div class="slide-title">Google's Research:<br><em>AI-Augmented Textbooks Work</em></div>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="blockquote">
+        "Students using AI-augmented textbooks showed an average <strong>11% improvement</strong> in learning outcomes compared to traditional materials."
+        <cite>— Google DeepMind, <em>Learn Your Way</em>, 2024</cite>
+      </div>
+      <ul class="bullet-list" style="margin-top:.35em">
+        <li>The AI doesn't just present content — it <strong>explains, quizzes, re-explains</strong>, adapting to each student in real time</li>
+        <li>Static textbooks give every student the same page. AI-augmented materials give every student <strong>their own conversation</strong></li>
+        <li>The learning gains are real, measurable, and significant</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="stat-block">
+        <div class="stat-num">11%</div>
+        <div class="stat-label">Average learning improvement with AI-augmented textbooks — Google DeepMind, 2024</div>
+      </div>
+      <div class="card" style="border-color:rgba(184,76,42,.3);margin-top:.6em">
+        <div class="card-title">The Connection to 2024</div>
+        <p style="font-family:var(--sans);font-size:.77em;line-height:1.55;color:var(--text)">In 2024 we showed that educators can customise chatbots. Google's research shows that <strong>AI inside a textbook produces measurable learning gains</strong>. The natural question: what if we combined these two ideas?</p>
+      </div>
+    </div>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>7 / 13</span></div>
 </div>
 
-<!-- ═══ 8. PLATFORM ═══ -->
+<!-- ═══ 8. THREE NEW IDEAS ═══ -->
 <div class="slide" data-slide="8">
-  <div class="eyebrow">From Poe to SmartTextbook</div>
-  <div class="slide-title">The Evolution:<br><em>Same Idea, Solved Problems</em></div>
+  <div class="eyebrow">Part 2 — 2026 · Ideas 2 &amp; 3</div>
+  <div class="slide-title">Chatbot Customisation<br><em>Inside the Textbook — for Free</em></div>
   <div class="spacer"></div>
   <div class="cols">
     <div class="col">
-      <div class="card" style="margin-bottom:.6em">
-        <div class="card-title">2024 — Poe.com Approach</div>
+      <div class="card" style="border-color:rgba(184,76,42,.35);margin-bottom:.6em">
+        <div class="card-title" style="color:var(--primary)">Idea 2 — Chatbot in Context</div>
         <ul class="bullet-list">
-          <li>Write a system prompt → deploy a custom chatbot</li>
-          <li>Students access via a shared link</li>
-          <li class="no" style="color:#991b1b">✗ No access to student conversation data</li>
-          <li class="no" style="color:#991b1b">✗ Data owned by the platform, not the educator</li>
-          <li class="no" style="color:#991b1b">✗ No feedback loop — chatbot is a one-shot tool</li>
+          <li>In 2024: the chatbot was <em>separate</em> from course materials — students brought their own text</li>
+          <li>New idea: the AI tutor is <strong>automatically grounded in the chapter</strong> — it knows exactly what students just read</li>
+          <li>Every lesson generated by SmartTextbook comes with a <strong>built-in content-aware AI tutor</strong></li>
+          <li>The educator's pedagogical design is baked in — not bolted on</li>
         </ul>
-      </div>
-      <div class="highlight-box">
-        <div class="hb-label">The Insight</div>
-        <p>The customisation idea was right. The <strong>infrastructure was wrong</strong>. What if we kept the no-code simplicity — and built the missing data layer ourselves?</p>
       </div>
     </div>
     <div class="col">
-      <div class="card" style="border-color:rgba(184,76,42,.3)">
-        <div class="card-title">2026 — SmartTextbook</div>
+      <div class="card" style="border-color:rgba(184,76,42,.35);margin-bottom:.6em">
+        <div class="card-title" style="color:var(--primary)">Idea 3 — Bring Your Own Key (BYOK)</div>
         <ul class="bullet-list">
-          <li>Paste any chapter → one teaching instruction → full lesson package generated in seconds</li>
-          <li>Lesson includes: summary · glossary · quiz · mind map · AI tutor</li>
-          <li class="yes" style="color:#166534">✓ All student conversations stored and owned by educator</li>
-          <li class="yes" style="color:#166534">✓ BYOK — use your own API key, zero platform cost</li>
-          <li class="yes" style="color:#166534">✓ Open source — fully transparent, self-hostable</li>
+          <li>In 2024: Pathway 2 required institutional budget for API costs</li>
+          <li>New model: each educator connects their <strong>own API key</strong> — Gemini, OpenAI, DeepSeek, or any provider</li>
+          <li><strong>Zero cost to the platform</strong> — you pay only for what you use, directly to your provider</li>
+          <li>Google Gemini offers a <strong>free tier</strong> — making this accessible to anyone</li>
         </ul>
+      </div>
+      <div class="highlight-box">
+        <div class="hb-label">What This Combination Unlocks</div>
+        <p>Pathway 2 power (data ownership, custom tutors) at Pathway 1 accessibility (no code, no budget). That is SmartTextbook.</p>
       </div>
     </div>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>8 / 13</span></div>
 </div>
 
-<!-- ═══ 8. COMPARISON ═══ -->
+<!-- ═══ 9. PLATFORM ═══ -->
 <div class="slide" data-slide="9">
-  <div class="eyebrow">Platform Comparison</div>
-  <div class="slide-title">Why <em>Own Platform</em><br>vs. Commercial Alternatives?</div>
+  <div class="eyebrow">Part 2 — 2026 · The Platform</div>
+  <div class="slide-title">SmartTextbook:<br><em>From Chapter to AI Experience</em></div>
+  <div class="spacer"></div>
+  <div style="margin-bottom:.85em">
+    <div class="flow">
+      <div class="flow-step"><div class="fs-icon">📄</div><div class="fs-label">Paste chapter text</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="fs-icon">✍️</div><div class="fs-label">One teaching instruction</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="fs-icon">⚡</div><div class="fs-label">Full lesson generated</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight"><div class="fs-icon">🎓</div><div class="fs-label">Students learn with AI tutor</div></div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <div class="card-title">Each Lesson Includes</div>
+        <ul class="bullet-list">
+          <li>Structured lesson summary</li>
+          <li>Key concepts glossary</li>
+          <li>Adaptive quiz (5, 10, or 15 questions)</li>
+          <li>AI-generated mind map</li>
+          <li>Content-aware AI tutor — grounded in chapter, shaped by educator's method</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-title">Design Principles</div>
+        <ul class="bullet-list">
+          <li><strong>BYOK</strong> — your API key, stored in-browser only</li>
+          <li><strong>Provider-agnostic</strong> — Gemini (free), OpenAI, DeepSeek, Grok, Kimi…</li>
+          <li><strong>Open source</strong> — fully transparent, self-hostable</li>
+          <li><strong>Audience-aware</strong> — same chapter, different lesson depth for different learners</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>9 / 13</span></div>
+</div>
+
+<!-- ═══ 10. COMPARISON ═══ -->
+<div class="slide" data-slide="10">
+  <div class="eyebrow">Part 2 — 2026 · Why Own Platform</div>
+  <div class="slide-title">How <em>SmartTextbook</em> Compares<br>to Existing Approaches</div>
   <div class="spacer"></div>
   <table class="compare-table">
     <thead>
@@ -520,9 +578,9 @@ human teacher."</span></div>
     <tbody>
       <tr>
         <td><strong>Content grounding</strong></td>
-        <td class="no">✗ Generic knowledge only</td>
+        <td class="no">✗ Generic knowledge</td>
         <td class="yes">✓ Via system prompt</td>
-        <td class="yes">✓ Auto-grounded to chapter text</td>
+        <td class="yes">✓ Auto-grounded to chapter</td>
       </tr>
       <tr>
         <td><strong>Pedagogical workflow</strong></td>
@@ -534,19 +592,13 @@ human teacher."</span></div>
         <td><strong>Student chat logs</strong></td>
         <td class="no">✗ No access</td>
         <td class="no">✗ No access</td>
-        <td class="yes">✓ Stored, searchable, analysable</td>
+        <td class="yes">✓ Stored, owned by educator</td>
       </tr>
       <tr>
-        <td><strong>AI analysis of logs</strong></td>
-        <td class="no">✗</td>
-        <td class="no">✗</td>
-        <td class="yes">✓ AI reads AI — automated insights</td>
-      </tr>
-      <tr>
-        <td><strong>No-code setup</strong></td>
-        <td class="yes">✓</td>
-        <td class="yes">✓ Mostly</td>
-        <td class="yes">✓ One natural language instruction</td>
+        <td><strong>Cost to educator</strong></td>
+        <td class="yes">✓ Free tier</td>
+        <td class="yes">✓ Free tier</td>
+        <td class="yes">✓ BYOK — pay provider only</td>
       </tr>
       <tr>
         <td><strong>Data ownership</strong></td>
@@ -556,12 +608,12 @@ human teacher."</span></div>
       </tr>
     </tbody>
   </table>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>9 / 13</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>10 / 13</span></div>
 </div>
 
-<!-- ═══ 9. CLOSED LOOP ═══ -->
-<div class="slide" data-slide="10">
-  <div class="eyebrow">The Feedback Loop</div>
+<!-- ═══ 11. CLOSED LOOP ═══ -->
+<div class="slide" data-slide="11">
+  <div class="eyebrow">Part 2 — 2026 · The Feedback Loop</div>
   <div class="slide-title">Data Closes the Loop:<br><em>AI Reads AI</em> to Improve Teaching</div>
   <div class="spacer"></div>
   <div class="cols">
@@ -585,62 +637,27 @@ human teacher."</span></div>
     </div>
     <div class="col">
       <div class="highlight-box" style="margin-bottom:.6em">
-        <div class="hb-label">Priority Order (When Data Arrives)</div>
-        <p><strong>First:</strong> Improve the AI prompt itself — if the tutor gave poor explanations, fix the system<br><strong>Then:</strong> Identify individual students — who struggled? Who is ready for the next task?</p>
+        <div class="hb-label">Priority Order</div>
+        <p><strong>First:</strong> Improve the AI prompt itself — fix the system for every student at once.<br><strong>Then:</strong> Identify individuals — who struggled? Who needs follow-up?</p>
       </div>
       <div class="card">
-        <div class="card-title">Why This Matters</div>
+        <div class="card-title">This Is What Poe Cannot Do</div>
         <ul class="bullet-list">
-          <li>AI tutoring without data is a one-way tool — used once, then forgotten</li>
-          <li>With data, it becomes an <strong>iterative teaching system</strong> that improves every cycle</li>
-          <li>The teacher becomes a <strong>system designer</strong>, not just a content provider</li>
+          <li>Without data, AI tutoring is used once and forgotten</li>
+          <li>With data, it becomes an <strong>iterative teaching system</strong></li>
+          <li>The teacher becomes a <strong>system designer</strong> — not just a content provider</li>
         </ul>
       </div>
-    </div>
-  </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>10 / 13</span></div>
-</div>
-
-<!-- ═══ 10. THREE BARRIERS ═══ -->
-<div class="slide" data-slide="11">
-  <div class="eyebrow">Broader Impact</div>
-  <div class="slide-title">Our Platform Addresses<br><em>All Three</em> Adoption Barriers</div>
-  <div class="spacer"></div>
-  <div class="barrier-grid">
-    <div class="barrier-item">
-      <div class="bi-num">01</div>
-      <div class="bi-title">Ease of Use</div>
-      <div class="bi-barrier">❌ Tools too complex</div><br>
-      <div class="bi-answer">✓ One natural language instruction — zero code</div>
-    </div>
-    <div class="barrier-item">
-      <div class="bi-num">02</div>
-      <div class="bi-title">Incentive</div>
-      <div class="bi-barrier">❌ Why invest the time?</div><br>
-      <div class="bi-answer">✓ 11% learning gain evidence — and data to prove your own impact</div>
-    </div>
-    <div class="barrier-item">
-      <div class="bi-num">03</div>
-      <div class="bi-title">Student Motivation</div>
-      <div class="bi-barrier">❌ Students don't engage</div><br>
-      <div class="bi-answer">✓ Active AI dialogue beats passive reading — structured, not open-ended</div>
-    </div>
-  </div>
-  <div style="margin-top:.8em">
-    <div class="highlight-box">
-      <div class="hb-label">The Deeper Argument</div>
-      <p>The bottleneck shifts from <strong>technology → pedagogy</strong>. The right question becomes: <em>what is good teaching?</em> — not <em>how do I configure the AI?</em> That is the power educators have always had, returned to them.</p>
     </div>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>11 / 13</span></div>
 </div>
 
-<!-- ═══ 11. LIVE DEMO ═══ -->
+<!-- ═══ 12. LIVE DEMO ═══ -->
 <div class="slide" data-slide="12" style="padding:32px 44px;overflow:auto">
-  <div class="eyebrow">Live Demo — Try It Now</div>
+  <div class="eyebrow">Part 2 — 2026 · Live Demo</div>
   <div class="slide-title" style="font-size:1.5em;margin-bottom:.5em">Experience SmartTextbook<br><em>in this slide</em></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1em;flex:1">
-    <!-- Left: input form -->
     <div style="display:flex;flex-direction:column;gap:.65em">
       <div class="card" style="padding:.75em 1em">
         <div class="card-title">Step 1 — Choose Provider &amp; Enter Key</div>
@@ -656,12 +673,11 @@ human teacher."</span></div>
         <p style="font-family:var(--sans);font-size:.58em;color:var(--muted);margin-top:.35em">Key stored in this page only — never sent anywhere except your chosen provider.</p>
       </div>
       <div class="card" style="padding:.75em 1em;flex:1">
-        <div class="card-title">Step 2 — Paste a Short Passage (or use the sample)</div>
+        <div class="card-title">Step 2 — Paste a Passage (or use the sample)</div>
         <textarea id="demo-text" rows="5" style="width:100%;padding:.4em .6em;border:1.5px solid var(--border);border-radius:8px;font-family:var(--serif);font-size:.72em;line-height:1.55;resize:none;background:var(--bg);color:var(--text)">Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy — usually from the sun — into chemical energy stored in glucose. The process takes place mainly in the chloroplasts, using carbon dioxide from the air and water from the soil. Oxygen is released as a by-product. The overall equation is: 6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂.</textarea>
         <button id="demo-btn" onclick="runDemo()" style="margin-top:.55em;width:100%;padding:.5em;background:var(--primary);color:#fff;border:none;border-radius:8px;font-family:var(--sans);font-size:.75em;font-weight:700;cursor:pointer">⚡ Generate Lesson Summary</button>
       </div>
     </div>
-    <!-- Right: output -->
     <div class="card" style="padding:.75em 1em;display:flex;flex-direction:column;overflow:hidden">
       <div class="card-title">Output</div>
       <div id="demo-output" style="flex:1;overflow-y:auto;font-family:var(--sans);font-size:.74em;line-height:1.6;color:var(--text);white-space:pre-wrap;min-height:120px">
@@ -672,20 +688,20 @@ human teacher."</span></div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>12 / 13</span></div>
 </div>
 
-<!-- ═══ 12. Q&A ═══ -->
+<!-- ═══ 13. Q&A ═══ -->
 <div class="slide dark-bg" data-slide="13">
   <div class="spacer"></div>
   <div class="eyebrow">Thank You</div>
   <div class="slide-title" style="font-size:2.3em">Questions &amp; Discussion</div>
   <div class="accent-bar"></div>
-  <div style="font-family:var(--sans);font-size:.8em;color:rgba(255,255,255,.55);max-width:500px;line-height:1.65;margin-top:.2em">
+  <div style="font-family:var(--sans);font-size:.8em;color:rgba(255,255,255,.55);max-width:520px;line-height:1.65;margin-top:.2em">
     "AI's job in education is not to replace the teacher's knowledge —<br>it is to scale the teacher's <em>method</em>."
   </div>
   <div class="spacer"></div>
   <div style="display:flex;gap:2.5em;margin-bottom:.8em">
     <div style="font-family:var(--sans);font-size:.7em;color:rgba(255,255,255,.45)">
-      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Research Claim</div>
-      Any educator can encode their pedagogical method<br>into a content-aware AI tutor — without writing code
+      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">2024 → 2026</div>
+      Chatbot customisation → AI-augmented textbook<br>Platform-based → BYOK API platform<br>Black box → educator-owned data
     </div>
     <div style="font-family:var(--sans);font-size:.7em;color:rgba(255,255,255,.45)">
       <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Platform</div>
@@ -698,6 +714,7 @@ human teacher."</span></div>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>13 / 13</span></div>
 </div>
+
 
 </div><!-- /deck -->
 
