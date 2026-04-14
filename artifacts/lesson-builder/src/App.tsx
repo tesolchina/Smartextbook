@@ -29,9 +29,10 @@ const queryClient = new QueryClient({
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={CertLookup} />
+      <Route path="/" component={Landing} />
       <Route path="/about" component={Landing} />
       <Route path="/app" component={Home} />
+      <Route path="/cert-lookup" component={CertLookup} />
       <Route path="/lessons/:id" component={LessonView} />
       <Route path="/shared/:id" component={SharedLesson} />
       <Route path="/course/:id" component={CourseView} />
