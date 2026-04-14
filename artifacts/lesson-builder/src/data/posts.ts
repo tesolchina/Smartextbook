@@ -44,11 +44,11 @@ export const POSTS: Post[] = [
         role: "Lecturer in English & Innovation Officer",
         institution: "The Language Centre, Hong Kong Baptist University",
         abstract:
-          `Traditional educational materials remain static and fail to provide personalised learning experiences. While Google\u2019s \u201cLearn Your Way\u201d research demonstrated 11% learning improvements through AI-augmented textbooks, such innovations remain inaccessible due to technical barriers. This talk presents LessonBuilder \u2014 a platform that enables educators to transform static content into intelligent, interactive experiences without programming knowledge, using natural language to create content-aware AI tutors.`,
+          `Traditional educational materials remain static and fail to provide personalised learning experiences. While Google\u2019s \u201cLearn Your Way\u201d research demonstrated 11% learning improvements through AI-augmented textbooks, such innovations remain inaccessible due to technical barriers. This talk presents SmartTextbook \u2014 a platform that enables educators to transform static content into intelligent, interactive experiences without programming knowledge, using natural language to create content-aware AI tutors.`,
       },
     ],
     summary:
       "How do you give every student a personalised tutor grounded in the exact materials you teach \u2014 without writing a single line of code? This talk demonstrates a no-code workflow for transforming static textbook chapters into AI-augmented lessons with summaries, glossaries, quizzes, mind maps, and a built-in AI tutor.",
-    tags: ["AI in Education", "No-Code", "BYOK", "LessonBuilder"],
+    tags: ["AI in Education", "No-Code", "BYOK", "SmartTextbook"],
   },
 ];

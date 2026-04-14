@@ -17,7 +17,7 @@ export default function TalkPage() {
           <div className="w-7 h-7 rounded-lg bg-[#b84c2a] flex items-center justify-center">
             <BookOpenText className="w-4 h-4 text-white" />
           </div>
-          <span className="font-serif font-bold text-white text-base">LessonBuilder</span>
+          <span className="font-serif font-bold text-white text-base">SmartTextbook</span>
         </div>
         <a
           href={slidesUrl}

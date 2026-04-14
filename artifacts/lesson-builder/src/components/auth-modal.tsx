@@ -201,7 +201,7 @@ export function AuthModal({ open, onClose, defaultTab = "login" }: AuthModalProp
                   </button>
                 )}
                 <div className="w-8 h-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center text-base">📖</div>
-                <span className="font-serif font-bold text-lg ml-1.5">LessonBuilder</span>
+                <span className="font-serif font-bold text-lg ml-1.5">SmartTextbook</span>
               </div>
               <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
                 <X className="w-4 h-4" />

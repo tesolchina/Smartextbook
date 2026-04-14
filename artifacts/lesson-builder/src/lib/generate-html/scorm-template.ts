@@ -18,7 +18,7 @@ export function generateLessonHtml(lesson: StoredLesson, tutor: TutorConfig): st
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtml(lesson.title)} — LessonBuilder</title>
+<title>${escapeHtml(lesson.title)} — SmartTextbook</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#faf9f7;--card:#fff;--border:#e8e4de;--text:#1a1714;--muted:#6b6560;--primary:#b84c2a;--accent:#c97b3a;--radius:14px;--font-serif:'Georgia',serif;--font-sans:system-ui,-apple-system,sans-serif}
@@ -415,7 +415,7 @@ function showError(msg) {
 async function testKey(key, mdl, bUrl, prov) {
   try {
     const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key };
-    if (prov === 'openrouter') { headers['HTTP-Referer'] = 'https://lessonbuilder.app'; headers['X-Title'] = 'LessonBuilder'; }
+    if (prov === 'openrouter') { headers['HTTP-Referer'] = 'https://smartextbook.replit.com'; headers['X-Title'] = 'SmartTextbook'; }
     const res = await fetch(bUrl + '/chat/completions', {
       method: 'POST', headers,
       body: JSON.stringify({ model: mdl, messages: [{ role: 'user', content: 'Say OK.' }], max_tokens: 5 })
@@ -553,7 +553,7 @@ Rules:
 
   try {
     const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey };
-    if (provider === 'openrouter') { headers['HTTP-Referer'] = 'https://lessonbuilder.app'; headers['X-Title'] = 'LessonBuilder'; }
+    if (provider === 'openrouter') { headers['HTTP-Referer'] = 'https://smartextbook.replit.com'; headers['X-Title'] = 'SmartTextbook'; }
 
     const res = await fetch(baseUrl + '/chat/completions', {
       method: 'POST', headers,
@@ -637,7 +637,7 @@ async function sendMessage() {
 
   try {
     const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey };
-    if (provider === 'openrouter') { headers['HTTP-Referer'] = 'https://lessonbuilder.app'; headers['X-Title'] = 'LessonBuilder'; }
+    if (provider === 'openrouter') { headers['HTTP-Referer'] = 'https://smartextbook.replit.com'; headers['X-Title'] = 'SmartTextbook'; }
 
     const messages = [
       { role: 'system', content: TUTOR.systemPrompt },

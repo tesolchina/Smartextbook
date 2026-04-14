@@ -15,7 +15,7 @@ const SLIDES = [
     icon: <FileText className="w-10 h-10 text-primary" />,
     label: "Step 1 — Input",
     title: "Paste a chapter or fetch a URL",
-    body: "Give LessonBuilder any text — a textbook chapter, Wikipedia article, research paper, or any webpage. Paste it directly or drop in a link to fetch the content automatically.",
+    body: "Give SmartTextbook any text — a textbook chapter, Wikipedia article, research paper, or any webpage. Paste it directly or drop in a link to fetch the content automatically.",
     accent: "from-primary/20 to-accent/10",
     mockup: <PasteMockup />,
   },
@@ -102,7 +102,7 @@ export default function Landing() {
             <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
               <BookOpenText className="w-5 h-5" />
             </div>
-            <span className="font-serif font-bold text-xl tracking-tight">LessonBuilder</span>
+            <span className="font-serif font-bold text-xl tracking-tight">SmartTextbook</span>
           </div>
           <nav className="flex items-center gap-3">
             <a href="#how-to-start"
@@ -141,7 +141,7 @@ export default function Landing() {
               <span className="text-primary italic">into a living lesson.</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-              Paste a textbook chapter or URL — LessonBuilder generates an AI-powered summary, key-concept glossary, interactive quiz, and Mind Map. Share lessons publicly, collect student comments, and get AI-generated Learning Reports. Fully BYOK, no data stored.
+              Paste a textbook chapter or URL — SmartTextbook generates an AI-powered summary, key-concept glossary, interactive quiz, and Mind Map. Share lessons publicly, collect student comments, and get AI-generated Learning Reports. Fully BYOK, no data stored.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/app"
@@ -246,7 +246,7 @@ export default function Landing() {
           <GraduationCap className="w-10 h-10 text-primary mx-auto mb-5" />
           <h2 className="text-3xl font-serif font-black mb-3">Built by</h2>
           <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            LessonBuilder was created as an open educational tool and is freely available to use, fork, and remix.
+            SmartTextbook was created as an open educational tool and is freely available to use, fork, and remix.
           </p>
 
           {/* Dr. Simon Wang credit card */}
@@ -261,7 +261,7 @@ export default function Landing() {
                 <p className="text-sm font-semibold text-primary mb-0.5">Lecturer in English & Innovation Officer</p>
                 <p className="text-sm text-muted-foreground mb-4">The Language Centre, Hong Kong Baptist University</p>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-                  Simon built LessonBuilder with Replit to help language learners and educators transform dense reading material into structured, interactive study experiences — inspired by Google's "Learn Your Way" research.
+                  Simon built SmartTextbook with Replit to help language learners and educators transform dense reading material into structured, interactive study experiences — inspired by Google's "Learn Your Way" research.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <a href="https://github.com/tesolchina/Smartextbook" target="_blank" rel="noopener noreferrer"
@@ -364,7 +364,7 @@ export default function Landing() {
             <div>
               <p className="text-sm font-bold text-foreground mb-1">Your key never leaves your device</p>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                LessonBuilder is a static front-end app. Your API key is stored in your browser's local storage and sent <strong>directly</strong> from your browser to your chosen AI provider. We have no server-side access to your key, your content, or your lessons.
+                SmartTextbook is a static front-end app. Your API key is stored in your browser's local storage and sent <strong>directly</strong> from your browser to your chosen AI provider. We have no server-side access to your key, your content, or your lessons.
               </p>
             </div>
           </div>

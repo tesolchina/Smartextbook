@@ -96,7 +96,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base md:text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
-              Paste a chapter or drop a URL — LessonBuilder generates a concise summary, a glossary of key concepts, an interactive quiz, and a Mind Map. Share lessons publicly, collect student comments, and generate AI-powered Learning Reports.
+              Paste a chapter or drop a URL — SmartTextbook generates a concise summary, a glossary of key concepts, an interactive quiz, and a Mind Map. Share lessons publicly, collect student comments, and generate AI-powered Learning Reports.
             </p>
 
             {!isConfigured && (
@@ -210,7 +210,7 @@ function EmptyLibrary({ onCreateClick }: { onCreateClick: () => void }) {
             num: "01",
             icon: <KeyRound className="w-5 h-5" />,
             title: "Set your API key",
-            desc: "LessonBuilder is BYOK — bring a key from Google Gemini (free), DeepSeek, OpenRouter, OpenAI, Kimi, or Grok.",
+            desc: "SmartTextbook is BYOK — bring a key from Google Gemini (free), DeepSeek, OpenRouter, OpenAI, Kimi, or Grok.",
             action: isConfigured ? null : (
               <button onClick={openSettings} className="mt-3 text-xs font-bold text-primary hover:underline inline-flex items-center gap-1">
                 Set API key →

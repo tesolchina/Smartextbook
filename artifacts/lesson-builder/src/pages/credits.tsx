@@ -139,7 +139,7 @@ export default function Credits() {
                 Standing on the<br /><span className="text-primary italic">shoulders of giants.</span>
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                LessonBuilder was inspired by cutting-edge research in AI-powered education and a community of open-source builders who share the vision of making learning more accessible and effective.
+                SmartTextbook was inspired by cutting-edge research in AI-powered education and a community of open-source builders who share the vision of making learning more accessible and effective.
               </p>
             </motion.div>
           </div>
@@ -221,7 +221,7 @@ export default function Credits() {
               <Lightbulb className="w-8 h-8 text-accent" /> Primary Inspiration
             </h2>
             <p className="text-muted-foreground mb-10 max-w-2xl">
-              The core ideas behind LessonBuilder come directly from Google Research's work on AI-augmented textbooks.
+              The core ideas behind SmartTextbook come directly from Google Research's work on AI-augmented textbooks.
             </p>
 
             <div className="space-y-6">
@@ -371,7 +371,7 @@ export default function Credits() {
           <div className="container max-w-2xl mx-auto px-4">
             <h2 className="text-3xl font-serif font-bold mb-4">Built for the community</h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              LessonBuilder is open source. If you're inspired by any of these projects or want to contribute,
+              SmartTextbook is open source. If you're inspired by any of these projects or want to contribute,
               we'd love to have you involved.
             </p>
             <a

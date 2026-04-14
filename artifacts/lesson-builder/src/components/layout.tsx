@@ -16,7 +16,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <BookOpenText className="w-5 h-5" />
             </div>
             <span className="font-serif font-bold text-xl tracking-tight text-foreground">
-              LessonBuilder
+              SmartTextbook
             </span>
           </Link>
 

@@ -418,7 +418,7 @@ human teacher."</span></div>
 
 <!-- ═══ 7. PLATFORM ═══ -->
 <div class="slide" data-slide="7">
-  <div class="eyebrow">From Poe to LessonBuilder</div>
+  <div class="eyebrow">From Poe to SmartTextbook</div>
   <div class="slide-title">The Evolution:<br><em>Same Idea, Solved Problems</em></div>
   <div class="spacer"></div>
   <div class="cols">
@@ -440,7 +440,7 @@ human teacher."</span></div>
     </div>
     <div class="col">
       <div class="card" style="border-color:rgba(184,76,42,.3)">
-        <div class="card-title">2026 — LessonBuilder</div>
+        <div class="card-title">2026 — SmartTextbook</div>
         <ul class="bullet-list">
           <li>Paste any chapter → one teaching instruction → full lesson package generated in seconds</li>
           <li>Lesson includes: summary · glossary · quiz · mind map · AI tutor</li>
@@ -465,7 +465,7 @@ human teacher."</span></div>
         <th>Feature</th>
         <th>Generic AI (ChatGPT etc.)</th>
         <th>Bot Platforms (Poe etc.)</th>
-        <th>LessonBuilder ✦</th>
+        <th>SmartTextbook ✦</th>
       </tr>
     </thead>
     <tbody>
@@ -589,7 +589,7 @@ human teacher."</span></div>
 <!-- ═══ 11. LIVE DEMO ═══ -->
 <div class="slide" data-slide="11" style="padding:32px 44px;overflow:auto">
   <div class="eyebrow">Live Demo — Try It Now</div>
-  <div class="slide-title" style="font-size:1.5em;margin-bottom:.5em">Experience LessonBuilder<br><em>in this slide</em></div>
+  <div class="slide-title" style="font-size:1.5em;margin-bottom:.5em">Experience SmartTextbook<br><em>in this slide</em></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1em;flex:1">
     <!-- Left: input form -->
     <div style="display:flex;flex-direction:column;gap:.65em">
@@ -749,7 +749,7 @@ Keep everything concise and clear for a university student.`;
     const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key };
     if (provId === 'openrouter') {
       headers['HTTP-Referer'] = 'https://lessonbuilder.app';
-      headers['X-Title'] = 'LessonBuilder Demo';
+      headers['X-Title'] = 'SmartTextbook Demo';
     }
     const res = await fetch(endpoint, {
       method: 'POST',
