@@ -195,7 +195,7 @@ body:hover #controls { opacity: 1; }
 
 <!-- ═══ 1. TITLE ═══ -->
 <div class="slide dark-bg active" data-slide="1">
-  <div class="eyebrow">Academic Lecture · April 2026</div>
+  <div class="eyebrow">TeachingMatters Seminar · April 15, 2026</div>
   <div class="slide-title">
     Democratising AI-Augmented<br>Textbook Creation Through<br>
     <em>No-Code Chatbot Customisation</em>
@@ -203,7 +203,7 @@ body:hover #controls { opacity: 1; }
   <div class="accent-bar"></div>
   <div style="font-family:var(--sans);font-size:.82em;color:rgba(255,255,255,.8)">
     <strong style="color:var(--accent)">Simon Wang</strong><br>
-    SmartTextbook Research Group
+    Language Centre, Hong Kong Baptist University
   </div>
   <div class="spacer"></div>
   <div style="display:flex;gap:.65em;flex-wrap:wrap">
@@ -212,31 +212,39 @@ body:hover #controls { opacity: 1; }
     <span class="badge badge-orange">Open Source</span>
     <span class="badge badge-orange">Learning Analytics</span>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>1 / 12</span></div>
+  <div class="slide-footer"><span>Simon Wang · HKBU Language Centre · 2026</span><span>1 / 12</span></div>
 </div>
 
-<!-- ═══ 2. PROBLEM ═══ -->
+<!-- ═══ 2. ORIGIN ═══ -->
 <div class="slide" data-slide="2">
-  <div class="eyebrow">The Problem</div>
-  <div class="slide-title">Textbooks Are <em>Static</em>.<br>Learners Are Not.</div>
+  <div class="eyebrow">Where This Started</div>
+  <div class="slide-title">A Question Asked in<br><em>August 2024</em></div>
   <div class="spacer"></div>
   <div class="cols">
     <div class="col">
-      <ul class="bullet-list">
-        <li>Traditional materials are <strong>fixed</strong> — same content, same sequence, same depth for every student</li>
-        <li>Modern learners need <strong>personalised pacing</strong>, immediate feedback, and adaptive pathways</li>
-        <li>Educators know this — but have <strong>no accessible tools</strong> to act on it</li>
-        <li>The result: disengagement, knowledge gaps, and a <strong>"one-size-fits-none" experience</strong></li>
+      <div class="blockquote">
+        "Where to start with generative AI chatbot customisation?"
+        <cite>— Simon Wang, <em>Times Higher Education Campus</em>, August 2024</cite>
+      </div>
+      <ul class="bullet-list" style="margin-top:.5em">
+        <li>The article explored how educators could <strong>customise AI chatbots</strong> for their own teaching — without coding</li>
+        <li>At the time, the best available tool was <strong>Poe.com</strong> — a platform for building and sharing custom chatbots</li>
+        <li>The idea worked. Students engaged. But a critical problem emerged.</li>
       </ul>
     </div>
     <div class="col">
-      <div class="stat-block">
-        <div class="stat-num">📚</div>
-        <div class="stat-label">Most textbooks in use today predate generative AI — and were never designed for personalised learning</div>
+      <div class="card" style="border-color:rgba(184,76,42,.3)">
+        <div class="card-title">The Problem Poe Couldn't Solve</div>
+        <ul class="bullet-list">
+          <li>Teachers could <strong>build</strong> a chatbot — but couldn't <strong>see</strong> what happened when students used it</li>
+          <li>All conversation data stayed inside Poe — the educator saw nothing</li>
+          <li>No logs. No patterns. No feedback loop.</li>
+          <li>The chatbot was a <strong>black box</strong> — used once, then forgotten</li>
+        </ul>
       </div>
-      <div class="card">
-        <div class="card-title">The Core Paradox</div>
-        <p style="font-family:var(--sans);font-size:.78em;line-height:1.55;color:var(--text)">AI can now generate <strong>bespoke learning experiences</strong> — yet 95% of classroom content remains static PDFs and printed books.</p>
+      <div class="highlight-box" style="margin-top:.6em">
+        <div class="hb-label">The Question That Drove This Work</div>
+        <p>What if educators could customise AI tutors <strong>and</strong> own the conversation data their students produce?</p>
       </div>
     </div>
   </div>
@@ -246,7 +254,7 @@ body:hover #controls { opacity: 1; }
 <!-- ═══ 3. EVIDENCE ═══ -->
 <div class="slide" data-slide="3">
   <div class="eyebrow">The Evidence</div>
-  <div class="slide-title"><em>AI Works</em> — But Remains<br>Out of Reach for Educators</div>
+  <div class="slide-title">Research Confirms It —<br><em>AI-Augmented Textbooks Work</em></div>
   <div class="spacer"></div>
   <div class="cols">
     <div class="col">
@@ -254,10 +262,10 @@ body:hover #controls { opacity: 1; }
         "Students using AI-augmented textbooks showed an average <strong>11% improvement</strong> in learning outcomes compared to traditional materials."
         <cite>— Google DeepMind, <em>Learn Your Way</em>, 2024</cite>
       </div>
-      <ul class="bullet-list" style="margin-top:.2em">
-        <li>AI tutors explain, quiz, re-explain — adapting to each student's confusion in real time</li>
-        <li>The learning gains are <strong>real and measurable</strong></li>
-        <li>But Google's implementation required a <strong>large engineering team</strong></li>
+      <ul class="bullet-list" style="margin-top:.35em">
+        <li>The AI doesn't just present content — it <strong>explains, quizzes, re-explains</strong>, adapting to each student in real time</li>
+        <li>Static textbooks give every student the same page. AI-augmented materials give every student <strong>their own conversation</strong></li>
+        <li>The learning gains are real. The technology is ready.</li>
       </ul>
     </div>
     <div class="col">
@@ -267,7 +275,7 @@ body:hover #controls { opacity: 1; }
       </div>
       <div class="card" style="border-color:rgba(184,76,42,.3)">
         <div class="card-title">⚠ The Catch</div>
-        <p style="font-family:var(--sans);font-size:.77em;line-height:1.5;color:var(--text)">A language teacher in Auckland cannot replicate what Google built. The gap between research promise and classroom reality remains vast — not because the technology isn't ready, but because <strong>educators haven't been empowered</strong> to use it.</p>
+        <p style="font-family:var(--sans);font-size:.77em;line-height:1.5;color:var(--text)">Google's result required a large engineering team. A language teacher at HKBU — or anywhere — cannot replicate it alone. The gap between research promise and classroom reality is not about the technology. It is about <strong>who has been empowered to use it</strong>.</p>
       </div>
     </div>
   </div>
@@ -399,41 +407,35 @@ Option 4 → <span class="string">review</span> full paragraph</div>
 
 <!-- ═══ 7. PLATFORM ═══ -->
 <div class="slide" data-slide="7">
-  <div class="eyebrow">Our Platform — LessonBuilder</div>
-  <div class="slide-title">From <em>Static Chapter</em><br>to Interactive AI Experience</div>
+  <div class="eyebrow">From Poe to LessonBuilder</div>
+  <div class="slide-title">The Evolution:<br><em>Same Idea, Solved Problems</em></div>
   <div class="spacer"></div>
-  <div style="margin-bottom:.9em">
-    <div class="flow">
-      <div class="flow-step"><div class="fs-icon">📄</div><div class="fs-label">Paste text, URL, or upload PDF</div></div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step"><div class="fs-icon">✍️</div><div class="fs-label">Type one teaching instruction</div></div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step"><div class="fs-icon">⚡</div><div class="fs-label">AI generates full lesson package</div></div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step highlight"><div class="fs-icon">🎓</div><div class="fs-label">Students learn with content-aware AI tutor</div></div>
-    </div>
-  </div>
   <div class="cols">
     <div class="col">
-      <div class="card">
-        <div class="card-title">What the Platform Generates</div>
+      <div class="card" style="margin-bottom:.6em">
+        <div class="card-title">2024 — Poe.com Approach</div>
         <ul class="bullet-list">
-          <li>Structured lesson summary</li>
-          <li>Key concepts glossary</li>
-          <li>Adaptive quiz (5, 10, or 15 questions)</li>
-          <li>AI-generated concept mind map</li>
-          <li>Shareable lesson with built-in content-aware AI tutor</li>
+          <li>Write a system prompt → deploy a custom chatbot</li>
+          <li>Students access via a shared link</li>
+          <li class="no" style="color:#991b1b">✗ No access to student conversation data</li>
+          <li class="no" style="color:#991b1b">✗ Data owned by the platform, not the educator</li>
+          <li class="no" style="color:#991b1b">✗ No feedback loop — chatbot is a one-shot tool</li>
         </ul>
+      </div>
+      <div class="highlight-box">
+        <div class="hb-label">The Insight</div>
+        <p>The customisation idea was right. The <strong>infrastructure was wrong</strong>. What if we kept the no-code simplicity — and built the missing data layer ourselves?</p>
       </div>
     </div>
     <div class="col">
-      <div class="card">
-        <div class="card-title">Design Principles</div>
+      <div class="card" style="border-color:rgba(184,76,42,.3)">
+        <div class="card-title">2026 — LessonBuilder</div>
         <ul class="bullet-list">
-          <li><strong>BYOK</strong> — educator supplies their own API key, stored only in-browser</li>
-          <li><strong>Open source</strong> — fully transparent, self-hostable</li>
-          <li><strong>Provider-agnostic</strong> — OpenAI, Gemini, Grok, DeepSeek, Mistral…</li>
-          <li><strong>Learner profiling</strong> — same chapter, different lesson for Year 12 vs PhD student</li>
+          <li>Paste any chapter → one teaching instruction → full lesson package generated in seconds</li>
+          <li>Lesson includes: summary · glossary · quiz · mind map · AI tutor</li>
+          <li class="yes" style="color:#166534">✓ All student conversations stored and owned by educator</li>
+          <li class="yes" style="color:#166534">✓ BYOK — use your own API key, zero platform cost</li>
+          <li class="yes" style="color:#166534">✓ Open source — fully transparent, self-hostable</li>
         </ul>
       </div>
     </div>
