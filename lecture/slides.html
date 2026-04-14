@@ -160,6 +160,10 @@ body {
 .loop-node .ln-label { font-family: var(--sans); font-size: .62em; font-weight: 700; line-height: 1.3; color: var(--text); }
 .loop-arrow-down { text-align: center; color: var(--primary); font-size: .9em; line-height: 1; }
 
+/* inline link */
+.slide a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
+.slide a:hover { opacity: .75; }
+
 /* footer */
 .slide-footer {
   position: absolute; bottom: 14px; left: 52px; right: 52px;
@@ -314,21 +318,23 @@ body:hover #controls { opacity: 1; }
 
 <!-- ═══ 4. CASE STUDY — WORDCHOICE ═══ -->
 <div class="slide" data-slide="4">
-  <div class="eyebrow">Part 1 — 2024 · Case Study — poe.com/wordchoice</div>
-  <div class="slide-title">Teaching <em>Word Choice</em>:<br>A Full Pedagogy in Plain Text</div>
-  <div class="spacer"></div>
-  <div class="cols">
-    <div class="col">
-      <div class="card-title" style="margin-bottom:.35em">Student Menu (type <code style="background:#e8e4de;padding:.1em .3em;border-radius:4px">*menu*</code> to begin)</div>
-      <div style="display:flex;flex-direction:column;gap:.3em;margin-bottom:.55em">
-        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.5em .75em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.7em">1</span><span class="fs-label">Learn about word choice &amp; collocation — 3 MC questions, one at a time, with feedback</span></div>
-        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.5em .75em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.7em">2</span><span class="fs-label">Check collocation of an individual word — lists appropriate &amp; inappropriate combinations</span></div>
-        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.5em .75em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.7em">3</span><span class="fs-label">Check if a word combination is appropriate — verdict + better alternative if needed</span></div>
-        <div class="flow-step highlight" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.5em .75em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.7em">4</span><span class="fs-label">Review word choices in a full paragraph — sentence by sentence, structured feedback</span></div>
+  <div class="eyebrow">Part 1 — 2024 · Case Study</div>
+  <div class="slide-title"><em>Programming</em> a Chatbot<br>in Plain English</div>
+  <div class="spacer" style="flex:.3"></div>
+  <div class="cols" style="gap:1.4em">
+    <div class="col" style="flex:1">
+      <div style="font-family:var(--sans);font-size:.64em;font-weight:800;color:var(--muted);margin-bottom:.3em">
+        The wordchoice bot — <a href="https://poe.com/wordchoice" target="_blank">poe.com/wordchoice</a>
       </div>
-      <div class="highlight-box">
-        <div class="hb-label">Structured Feedback Template (Option 4)</div>
-        <p style="font-family:monospace;font-size:.72em;line-height:1.6;color:var(--text)">
+      <div style="display:flex;flex-direction:column;gap:.25em;margin-bottom:.45em">
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.55em;padding:.42em .65em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.68em;min-width:10px">1</span><span class="fs-label">Learn about word choice &amp; collocation — 3 MC questions, one at a time, with feedback</span></div>
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.55em;padding:.42em .65em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.68em;min-width:10px">2</span><span class="fs-label">Check collocation of a word — appropriate &amp; inappropriate combinations listed</span></div>
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.55em;padding:.42em .65em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.68em;min-width:10px">3</span><span class="fs-label">Check if a word combination is appropriate — verdict + better alternative</span></div>
+        <div class="flow-step highlight" style="flex:none;text-align:left;flex-direction:row;gap:.55em;padding:.42em .65em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.68em;min-width:10px">4</span><span class="fs-label">Review word choices in a paragraph — sentence by sentence, structured feedback</span></div>
+      </div>
+      <div style="background:#f8f6f3;border:1.5px solid var(--border);border-radius:10px;padding:.55em .8em">
+        <div style="font-family:var(--sans);font-size:.6em;font-weight:800;color:var(--muted);margin-bottom:.25em">Output template (Option 4)</div>
+        <p style="font-family:monospace;font-size:.68em;line-height:1.55;color:var(--text)">
           word combination: word 1 <em>(pos)</em> + word 2 <em>(pos)</em><br>
           verdict: appropriate / not appropriate<br>
           explanation &amp; example: …<br>
@@ -336,33 +342,44 @@ body:hover #controls { opacity: 1; }
         </p>
       </div>
     </div>
-    <div class="col">
-      <div class="card-title" style="margin-bottom:.35em">The System Prompt (Excerpt)</div>
-      <div class="prompt-box">
+    <div class="col" style="flex:1.15">
+      <div style="font-family:var(--sans);font-size:.64em;font-weight:800;color:var(--muted);margin-bottom:.3em">The system prompt — written entirely in plain English</div>
+      <div class="prompt-box" style="font-size:.61em;line-height:1.5">
 <span class="comment">// Role</span>
-You are an experienced lecturer in English.
-Your job is to help students improve their
-<span class="string">word choice</span> in writing.
+You are an experienced English lecturer.
+Help students improve their <span class="string">word choice</span> and collocation.
 
-<span class="comment">// Workflow trigger</span>
-When user types <span class="keyword">*menu*</span>, present the
-options ONLY — no extra information.
+<span class="comment">// Menu trigger</span>
+When user types <span class="keyword">*menu*</span>, show the 4 options ONLY.
+Do not add any extra text.
+
+<span class="comment">// Option 1 — quiz</span>
+Ask 3 multiple-choice questions one at a time.
+Wait for the answer before showing the next question.
+Give brief feedback after each answer.
 
 <span class="comment">// Option 4 — paragraph review</span>
-Check one sentence at a time.
-For each verb, check its object.
-Use the structured feedback template:
-  verdict · explanation · confidence %
+Ask the student to paste their paragraph.
+Review sentence by sentence. For each sentence,
+check verb-object combinations and key word choices.
+Use this template for every combination found:
+  word combination · verdict · explanation · confidence %
 
-<span class="comment">// Safety reminder</span>
-Always remind: <span class="string">"I am powered by AI
-and can make mistakes — consult your
-human teacher."</span></div>
-      <p style="font-family:var(--sans);font-size:.66em;color:var(--muted);margin-top:.45em">
-        This is <strong>not vibe coding</strong> — no code is generated.<br>
-        This is <strong>natural language orchestration</strong>: plain English directing AI behaviour.<br>
-        <span style="color:var(--primary)">Try it live → poe.com/wordchoice</span>
-      </p>
+<span class="comment">// Safety — always include at the end</span>
+<span class="string">"I am powered by AI and can make mistakes.
+Please consult your teacher for verification."</span>
+</div>
+    </div>
+  </div>
+  <div class="spacer" style="flex:.2"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65em">
+    <div style="background:linear-gradient(135deg,#fff8f5,#fdf0e8);border:1.5px solid rgba(184,76,42,.2);border-radius:10px;padding:.6em .85em">
+      <div style="font-family:var(--sans);font-size:.6em;font-weight:800;color:var(--primary);margin-bottom:.2em">Natural Language Programming</div>
+      <p style="font-family:var(--sans);font-size:.7em;line-height:1.5;color:var(--text)">No code is written. The educator <strong>programs the AI's behaviour</strong> entirely in plain English — specifying roles, workflows, output formats, and guardrails. This is orchestration, not conversation.</p>
+    </div>
+    <div style="background:#f0f4ff;border:1.5px solid rgba(30,64,175,.15);border-radius:10px;padding:.6em .85em">
+      <div style="font-family:var(--sans);font-size:.6em;font-weight:800;color:#1e40af;margin-bottom:.2em">A Precursor of Vibe Coding</div>
+      <p style="font-family:var(--sans);font-size:.7em;line-height:1.5;color:var(--text)">Vibe coding asks AI to <strong>write programming code</strong> from a description — more powerful. But this came first: using natural language to <strong>direct AI behaviour directly</strong>, without generating code at all.</p>
     </div>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>4 / 15</span></div>
