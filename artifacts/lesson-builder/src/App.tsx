@@ -13,6 +13,7 @@ import CertificatePage from "@/pages/certificate";
 import CreateCourse from "@/pages/create-course";
 import CertLookup from "@/pages/cert-lookup";
 import Credits from "@/pages/credits";
+import TalkPage from "@/pages/talk";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/cert/:id" component={CertificatePage} />
       <Route path="/create-course" component={CreateCourse} />
       <Route path="/credits" component={Credits} />
+      <Route path="/talk" component={TalkPage} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -6,6 +6,7 @@ import {
   ChevronLeft, ChevronRight, Github, ExternalLink, ArrowRight,
   FileText, Lightbulb, GraduationCap, Network, Share2, BarChart2,
   CalendarDays, MapPin, Users, Video, ChevronDown, ChevronUp,
+  Key, Zap, Globe, CheckCircle2, Presentation,
 } from "lucide-react";
 import { POSTS, type Post } from "@/data/posts";
 
@@ -104,6 +105,10 @@ export default function Landing() {
             <span className="font-serif font-bold text-xl tracking-tight">LessonBuilder</span>
           </div>
           <nav className="flex items-center gap-3">
+            <a href="#how-to-start"
+              className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+              <Key className="w-4 h-4" /> Get Started
+            </a>
             <a href="#workshops"
               className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
               <CalendarDays className="w-4 h-4" /> Workshops
@@ -287,6 +292,85 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── How to Start (BYOK guide) ── */}
+      <section className="py-20 bg-card border-b border-border" id="how-to-start">
+        <div className="container max-w-4xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-4">
+              <Key className="w-3.5 h-3.5" /> Bring Your Own Key
+            </span>
+            <h2 className="text-3xl md:text-4xl font-serif font-black mb-3">Start in 3 minutes — free</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              No account. No subscription. You supply an API key from any major AI provider — it stays in your browser and goes directly to the model.
+            </p>
+          </div>
+
+          {/* Steps */}
+          <div className="grid md:grid-cols-3 gap-6 mb-10">
+            {[
+              {
+                step: "01",
+                icon: <Globe className="w-6 h-6" />,
+                title: "Pick a provider",
+                desc: "Google Gemini has a generous free tier — perfect for getting started. DeepSeek is extremely low-cost. OpenRouter gives you access to 300+ models with one key.",
+                providers: ["Gemini (free)", "DeepSeek (cheap)", "OpenRouter", "OpenAI", "Kimi", "Grok"],
+                link: { label: "Get a free Gemini key →", url: "https://aistudio.google.com/apikey" },
+              },
+              {
+                step: "02",
+                icon: <Key className="w-6 h-6" />,
+                title: "Set your API key",
+                desc: "Open the app and click \"Set API Key\" in the top-right corner. Paste your key, choose a model, and hit Save. The key is stored only in your browser — never on our servers.",
+                link: { label: "Open the app →", url: "/app", internal: true },
+              },
+              {
+                step: "03",
+                icon: <Zap className="w-6 h-6" />,
+                title: "Generate your first lesson",
+                desc: "Paste any textbook chapter or a URL. Add one teaching instruction (optional). Hit Generate — in seconds you'll have a summary, glossary, quiz, mind map, and AI tutor.",
+                link: { label: "Watch the demo talk →", url: "/talk", internal: true },
+              },
+            ].map((item) => (
+              <div key={item.step} className="bg-background border border-border rounded-3xl p-6 relative overflow-hidden">
+                <div className="absolute top-4 right-5 font-serif text-5xl font-black text-primary/8 leading-none select-none">{item.step}</div>
+                <div className="w-11 h-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                  {item.icon}
+                </div>
+                <h3 className="font-serif font-black text-lg mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3">{item.desc}</p>
+                {"providers" in item && item.providers && (
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {item.providers.map((p) => (
+                      <span key={p} className="inline-block px-2 py-0.5 rounded-full bg-primary/8 text-primary text-[11px] font-bold">{p}</span>
+                    ))}
+                  </div>
+                )}
+                {item.link.internal ? (
+                  <Link href={item.link.url} className="text-sm font-bold text-primary hover:underline inline-flex items-center gap-1">
+                    {item.link.label} <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                ) : (
+                  <a href={item.link.url} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-primary hover:underline inline-flex items-center gap-1">
+                    {item.link.label} <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Privacy assurance */}
+          <div className="bg-green-500/8 border border-green-500/20 rounded-2xl p-5 flex items-start gap-4">
+            <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-bold text-foreground mb-1">Your key never leaves your device</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                LessonBuilder is a static front-end app. Your API key is stored in your browser's local storage and sent <strong>directly</strong> from your browser to your chosen AI provider. We have no server-side access to your key, your content, or your lessons.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Workshops & Blog ── */}
       <section className="py-20 bg-background border-b border-border" id="workshops">
         <div className="container max-w-5xl mx-auto px-4">
@@ -299,6 +383,27 @@ export default function Landing() {
               Talks, seminars, and reflections on AI in education — by Simon Wang and collaborators.
             </p>
           </div>
+          {/* Talk slides link */}
+          <div className="bg-card border border-primary/20 rounded-3xl p-6 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <Presentation className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-0.5">Slide Deck</p>
+              <h3 className="font-serif font-black text-lg leading-tight mb-1">
+                Democratising AI-Augmented Textbook Creation Through No-Code Chatbot Customisation
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                The full 12-slide presentation by Simon Wang — includes a live interactive demo you can try directly in the slide.
+              </p>
+            </div>
+            <Link href="/talk"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all hover:-translate-y-0.5 shadow-md shadow-primary/20 shrink-0">
+              View Slides <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
           <div className="grid gap-6">
             {POSTS.map((post) => <PostCard key={post.slug} post={post} />)}
           </div>
@@ -322,7 +427,9 @@ export default function Landing() {
       <footer className="py-6 border-t border-border bg-background text-center text-xs text-muted-foreground">
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <Link href="/app" className="hover:text-foreground transition-colors">App</Link>
+          <a href="#how-to-start" className="hover:text-foreground transition-colors">Get Started</a>
           <a href="#workshops" className="hover:text-foreground transition-colors">Workshops</a>
+          <Link href="/talk" className="hover:text-foreground transition-colors">Talk Slides</Link>
           <Link href="/credits" className="hover:text-foreground transition-colors">Credits</Link>
           <a href="https://github.com/tesolchina/Smartextbook" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Github className="w-3 h-3" /> GitHub
