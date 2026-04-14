@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Library, KeyRound, BookOpen, Upload } from "lucide-react";
+import { Plus, Library, KeyRound, BookOpen, Upload, Share2, Download, Info } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { CreateLessonForm } from "@/components/create-lesson-form";
 import { LessonCard } from "@/components/lesson-card";
@@ -146,8 +146,12 @@ export default function Home() {
               <Library className="w-6 h-6 text-muted-foreground" /> Your Library
             </h2>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground hidden md:block mr-1">
-                Saved in this browser only
+              <span className="text-xs text-muted-foreground hidden md:block mr-1 flex items-center gap-1 group relative cursor-default">
+                <Info className="w-3 h-3 shrink-0" />
+                Saved in this browser
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 px-3 py-2 rounded-xl bg-foreground text-background text-[11px] leading-snug font-normal opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl z-50 text-left">
+                  Lessons are stored in your browser. To access across devices: use <strong>Share</strong> to create a permanent cloud link, or <strong>Export JSON</strong> to download a backup file.
+                </span>
               </span>
               <button
                 onClick={handleImportClick}
@@ -194,23 +198,89 @@ export default function Home() {
 }
 
 function EmptyLibrary({ onCreateClick }: { onCreateClick: () => void }) {
+  const { isConfigured, settings } = useSettings();
+  const { openSettings } = useSettingsModal();
+
   return (
-    <div className="text-center py-20 bg-card rounded-2xl border border-border border-dashed">
-      <img
-        src={`${import.meta.env.BASE_URL}images/empty-lessons.png`}
-        alt="No lessons yet"
-        className="w-36 h-36 mx-auto mb-5 object-contain opacity-70"
-      />
-      <h3 className="text-xl font-serif font-bold mb-1.5">No lessons yet</h3>
-      <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
-        Create your first lesson from any textbook chapter, article, or web page. Get a summary, glossary, Mind Map, and quiz — then share publicly to collect student comments and generate a Learning Report.
-      </p>
-      <button
-        onClick={onCreateClick}
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm"
-      >
-        <Plus className="w-4 h-4" /> Create a Lesson
-      </button>
+    <div className="bg-card rounded-2xl border border-border border-dashed overflow-hidden">
+      {/* Step hints */}
+      <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
+        {[
+          {
+            num: "01",
+            icon: <KeyRound className="w-5 h-5" />,
+            title: "Set your API key",
+            desc: "LessonBuilder is BYOK — bring a key from Google Gemini (free), DeepSeek, OpenRouter, OpenAI, Kimi, or Grok.",
+            action: isConfigured ? null : (
+              <button onClick={openSettings} className="mt-3 text-xs font-bold text-primary hover:underline inline-flex items-center gap-1">
+                Set API key →
+              </button>
+            ),
+            done: isConfigured,
+          },
+          {
+            num: "02",
+            icon: <Plus className="w-5 h-5" />,
+            title: "Generate a lesson",
+            desc: "Paste any textbook chapter or URL. One teaching instruction is all you need — AI handles the rest.",
+            action: (
+              <button onClick={onCreateClick} className="mt-3 text-xs font-bold text-primary hover:underline inline-flex items-center gap-1">
+                Create first lesson →
+              </button>
+            ),
+            done: false,
+          },
+          {
+            num: "03",
+            icon: <Share2 className="w-5 h-5" />,
+            title: "Share with students",
+            desc: "Hit Share to create a cloud-stored public link. Students can read, quiz, and comment — from any device.",
+            action: null,
+            done: false,
+          },
+        ].map((step) => (
+          <div key={step.num} className="p-6 relative">
+            <div className="absolute top-4 right-5 font-serif text-4xl font-black text-primary/7 leading-none select-none">{step.num}</div>
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 ${step.done ? "bg-green-500/15 text-green-600" : "bg-primary/10 text-primary"}`}>
+              {step.icon}
+            </div>
+            <h4 className="font-bold text-sm mb-1 flex items-center gap-1.5">
+              {step.title}
+              {step.done && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-600">Done</span>}
+            </h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+            {step.action}
+          </div>
+        ))}
+      </div>
+
+      {/* Main empty CTA */}
+      <div className="text-center py-12 border-t border-border px-4">
+        <img
+          src={`${import.meta.env.BASE_URL}images/empty-lessons.png`}
+          alt="No lessons yet"
+          className="w-28 h-28 mx-auto mb-4 object-contain opacity-60"
+        />
+        <h3 className="text-lg font-serif font-bold mb-1">Your library is empty</h3>
+        <p className="text-xs text-muted-foreground mb-5 max-w-xs mx-auto">
+          {isConfigured
+            ? `Using ${settings.provider} · ${settings.model}. Ready to generate your first lesson.`
+            : "Set an API key above, then create your first lesson."}
+        </p>
+        <div className="flex items-center justify-center gap-3 flex-wrap">
+          <button
+            onClick={onCreateClick}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm"
+          >
+            <Plus className="w-4 h-4" /> Create a Lesson
+          </button>
+          <Link href="/about#how-to-start"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-border text-sm font-semibold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+          >
+            <Info className="w-3.5 h-3.5" /> How to Start
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

@@ -11,7 +11,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <div className="h-screen overflow-hidden flex flex-col bg-background text-foreground selection:bg-primary/20">
       <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="container max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group outline-none">
+          <Link href="/app" className="flex items-center gap-2.5 group outline-none">
             <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
               <BookOpenText className="w-5 h-5" />
             </div>

@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "0XdtTjH4YTpTd2jgJ9h2J"
+uri = "file://lecture/product-review-response.md"
+type = "text"
+title = "LessonBuilder 产品评估回应与改进计划"
