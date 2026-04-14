@@ -362,44 +362,54 @@ body:hover #controls { opacity: 1; }
 
 <!-- ═══ 6. CASE STUDY ═══ -->
 <div class="slide" data-slide="6">
-  <div class="eyebrow">Case Study — Natural Language Orchestration</div>
-  <div class="slide-title">Teaching <em>Word Choice</em>:<br>Encoding a Pedagogy in Plain Text</div>
+  <div class="eyebrow">Case Study — poe.com/wordchoice</div>
+  <div class="slide-title">Teaching <em>Word Choice</em>:<br>A Full Pedagogy in Plain Text</div>
   <div class="spacer"></div>
   <div class="cols">
     <div class="col">
-      <div class="card-title" style="margin-bottom:.4em">The Teaching Method (Human Version)</div>
-      <div class="flow" style="flex-direction:column;gap:.3em;margin-bottom:.6em">
-        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em"><span>📋</span><span class="fs-label">Diagnose understanding — MC questions, one at a time, with feedback before moving on</span></div>
-        <div class="loop-arrow-down">↓</div>
-        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em"><span>🔍</span><span class="fs-label">Guided practice — check individual words & combinations on demand</span></div>
-        <div class="loop-arrow-down">↓</div>
-        <div class="flow-step highlight" style="flex:none;text-align:left;flex-direction:row;gap:.6em"><span>✍️</span><span class="fs-label">Real-context application — review word choices in the student's own paragraph</span></div>
+      <div class="card-title" style="margin-bottom:.35em">Student Menu (type <code style="background:#e8e4de;padding:.1em .3em;border-radius:4px">*menu*</code> to begin)</div>
+      <div style="display:flex;flex-direction:column;gap:.3em;margin-bottom:.55em">
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.5em .75em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.7em">1</span><span class="fs-label">Learn about word choice &amp; collocation — 3 MC questions, one at a time, with feedback</span></div>
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.5em .75em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.7em">2</span><span class="fs-label">Check collocation of an individual word — lists appropriate &amp; inappropriate combinations</span></div>
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.5em .75em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.7em">3</span><span class="fs-label">Check if a word combination is appropriate — verdict + better alternative if needed</span></div>
+        <div class="flow-step highlight" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.5em .75em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.7em">4</span><span class="fs-label">Review word choices in a full paragraph — sentence by sentence, structured feedback</span></div>
       </div>
       <div class="highlight-box">
-        <div class="hb-label">The Result</div>
-        <p>A structured feedback template <code style="background:#e8e4de;padding:.1em .3em;border-radius:4px;font-size:.9em">{verdict · explanation · confidence %}</code> designed by the teacher, executed by AI, received by every student simultaneously.</p>
+        <div class="hb-label">Structured Feedback Template (Option 4)</div>
+        <p style="font-family:monospace;font-size:.72em;line-height:1.6;color:var(--text)">
+          word combination: word 1 <em>(pos)</em> + word 2 <em>(pos)</em><br>
+          verdict: appropriate / not appropriate<br>
+          explanation &amp; example: …<br>
+          confidence level: 10%–100%
+        </p>
       </div>
     </div>
     <div class="col">
-      <div class="card-title" style="margin-bottom:.4em">The System Prompt (Excerpt)</div>
+      <div class="card-title" style="margin-bottom:.35em">The System Prompt (Excerpt)</div>
       <div class="prompt-box">
-<span class="comment">// Role definition</span>
+<span class="comment">// Role</span>
 You are an experienced lecturer in English.
-Your job is to help students improve
-their <span class="string">word choice</span> in writing.
+Your job is to help students improve their
+<span class="string">word choice</span> in writing.
 
-<span class="comment">// Workflow control</span>
-When user types <span class="keyword">*menu*</span>, present
+<span class="comment">// Workflow trigger</span>
+When user types <span class="keyword">*menu*</span>, present the
 options ONLY — no extra information.
 
-<span class="comment">// Pedagogical sequence</span>
-Option 1 → <span class="string">diagnose</span> (MC, one at a time)
-Option 2 → <span class="string">check</span> individual word
-Option 3 → <span class="string">validate</span> word combination
-Option 4 → <span class="string">review</span> full paragraph</div>
-      <p style="font-family:var(--sans);font-size:.68em;color:var(--muted);margin-top:.5em">
-        This is <strong>not vibe coding</strong> (which generates <em>code</em> via natural language).<br>
-        This is <strong>natural language orchestration</strong> — directing AI behaviour directly, without any code generation step.
+<span class="comment">// Option 4 — paragraph review</span>
+Check one sentence at a time.
+For each verb, check its object.
+Use the structured feedback template:
+  verdict · explanation · confidence %
+
+<span class="comment">// Safety reminder (every response)</span>
+Always remind: <span class="string">"I am powered by AI
+and can make mistakes — consult your
+human teacher."</span></div>
+      <p style="font-family:var(--sans);font-size:.66em;color:var(--muted);margin-top:.45em">
+        This is <strong>not vibe coding</strong> — no code is generated.<br>
+        This is <strong>natural language orchestration</strong>: plain English directing AI behaviour directly.<br>
+        <span style="color:var(--primary)">Try it live → poe.com/wordchoice</span>
       </p>
     </div>
   </div>
