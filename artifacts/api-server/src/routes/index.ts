@@ -11,9 +11,11 @@ import checkLessonRouter from "./check-lesson";
 import learningReportRouter from "./learning-report";
 import coursesRouter from "./courses";
 import certificatesRouter from "./certificates";
+import authRouter from "./auth";
 
 const router: IRouter = Router();
 
+router.use(authRouter);
 router.use(healthRouter);
 router.use(generateLessonRouter);
 router.use(generateMindmapRouter);

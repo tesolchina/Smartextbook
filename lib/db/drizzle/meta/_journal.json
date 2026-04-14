@@ -22,6 +22,13 @@
       "when": 1774631200843,
       "tag": "0002_lame_omega_sentinel",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1776167814619,
+      "tag": "0003_yellow_captain_britain",
+      "breakpoints": true
     }
   ]
 }
