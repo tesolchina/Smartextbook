@@ -5,7 +5,9 @@ import {
   BookOpenText, Sparkles, ListTodo, MessageSquare, Download,
   ChevronLeft, ChevronRight, Github, ExternalLink, ArrowRight,
   FileText, Lightbulb, GraduationCap, Network, Share2, BarChart2,
+  CalendarDays, MapPin, Users, Video, ChevronDown, ChevronUp,
 } from "lucide-react";
+import { POSTS, type Post } from "@/data/posts";
 
 const SLIDES = [
   {
@@ -102,6 +104,10 @@ export default function Landing() {
             <span className="font-serif font-bold text-xl tracking-tight">LessonBuilder</span>
           </div>
           <nav className="flex items-center gap-3">
+            <a href="#workshops"
+              className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+              <CalendarDays className="w-4 h-4" /> Workshops
+            </a>
             <a href="https://github.com/tesolchina/Smartextbook" target="_blank" rel="noopener noreferrer"
               className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
               <Github className="w-4 h-4" /> GitHub
@@ -281,6 +287,24 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── Workshops & Blog ── */}
+      <section className="py-20 bg-background border-b border-border" id="workshops">
+        <div className="container max-w-5xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-4">
+              <CalendarDays className="w-3.5 h-3.5" /> Workshops &amp; Blog
+            </span>
+            <h2 className="text-3xl md:text-4xl font-serif font-black mb-3">Events &amp; Writing</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Talks, seminars, and reflections on AI in education — by Simon Wang and collaborators.
+            </p>
+          </div>
+          <div className="grid gap-6">
+            {POSTS.map((post) => <PostCard key={post.slug} post={post} />)}
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA footer ── */}
       <section className="py-20 bg-card text-center">
         <div className="container max-w-2xl mx-auto px-4">
@@ -298,6 +322,7 @@ export default function Landing() {
       <footer className="py-6 border-t border-border bg-background text-center text-xs text-muted-foreground">
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <Link href="/app" className="hover:text-foreground transition-colors">App</Link>
+          <a href="#workshops" className="hover:text-foreground transition-colors">Workshops</a>
           <Link href="/credits" className="hover:text-foreground transition-colors">Credits</Link>
           <a href="https://github.com/tesolchina/Smartextbook" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Github className="w-3 h-3" /> GitHub
@@ -485,5 +510,121 @@ function ReplitIcon() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
       <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z" />
     </svg>
+  );
+}
+
+function PostCard({ post }: { post: Post }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const isUpcoming = new Date(post.isoDate) >= new Date(new Date().toDateString());
+
+  return (
+    <div className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm relative">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
+      <div className="p-6 md:p-8">
+        {/* Top row */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${
+            post.type === "workshop"
+              ? "bg-primary/10 text-primary"
+              : "bg-accent/15 text-accent"
+          }`}>
+            {post.type === "workshop" ? <CalendarDays className="w-3 h-3" /> : <FileText className="w-3 h-3" />}
+            {post.type === "workshop" ? "Workshop / Seminar" : "Blog Post"}
+          </span>
+          {isUpcoming && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-700 dark:text-green-400">
+              ● Upcoming
+            </span>
+          )}
+          {post.tags.map((tag) => (
+            <span key={tag} className="px-2.5 py-1 rounded-full text-xs font-semibold bg-secondary text-muted-foreground">
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Event meta */}
+        {post.event && (
+          <p className="text-xs font-bold text-primary uppercase tracking-widest mb-2">{post.event}</p>
+        )}
+        <h3 className="font-serif text-xl md:text-2xl font-black leading-tight mb-3">{post.title}</h3>
+        <p className="text-muted-foreground text-sm leading-relaxed mb-4">{post.summary}</p>
+
+        {/* Details row */}
+        <div className="flex flex-wrap gap-4 mb-4">
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <CalendarDays className="w-4 h-4 shrink-0 text-primary" />
+            <span className="font-semibold">{post.date}</span>
+          </div>
+          {post.venue && (
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              {post.venue === "Zoom" ? <Video className="w-4 h-4 shrink-0 text-primary" /> : <MapPin className="w-4 h-4 shrink-0 text-primary" />}
+              <span>{post.venue}</span>
+            </div>
+          )}
+          {post.speakers && (
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <Users className="w-4 h-4 shrink-0 text-primary" />
+              <span>{post.speakers.map((s) => s.name).join(" · ")}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Zoom info */}
+        {post.zoomUrl && (
+          <div className="bg-secondary rounded-xl p-4 mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Zoom Details</p>
+              <p className="text-sm font-semibold">Meeting ID: {post.meetingId}</p>
+              <p className="text-sm text-muted-foreground">Passcode: <span className="font-mono font-semibold text-foreground">{post.passcode}</span></p>
+            </div>
+            <a
+              href={post.zoomUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all hover:-translate-y-0.5"
+            >
+              <Video className="w-4 h-4" /> Join Zoom
+            </a>
+          </div>
+        )}
+
+        {/* Expand / collapse speaker abstracts */}
+        {post.speakers && post.speakers.length > 0 && (
+          <div>
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors mb-3"
+            >
+              {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              {expanded ? "Hide" : "View"} speaker abstracts
+            </button>
+
+            {expanded && (
+              <div className="space-y-4 border-t border-border pt-4">
+                {post.chair && (
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-bold">Session Chair:</span> {post.chair}
+                  </p>
+                )}
+                {post.speakers.map((speaker) => (
+                  <div key={speaker.name} className="space-y-1.5">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                      <p className="font-serif font-bold text-base">{speaker.name}</p>
+                      <p className="text-xs text-primary font-semibold">{speaker.role}</p>
+                      <p className="text-xs text-muted-foreground">{speaker.institution}</p>
+                    </div>
+                    {speaker.abstract && (
+                      <p className="text-sm text-muted-foreground leading-relaxed">{speaker.abstract}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
