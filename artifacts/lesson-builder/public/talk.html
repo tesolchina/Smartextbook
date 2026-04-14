@@ -15,29 +15,29 @@
   --border: #e8e4de;
   --serif: 'Georgia', 'Times New Roman', serif;
   --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --slide-w: 960px;
+  --slide-w: 960;
+  --slide-h: 540;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
   background: #1a1714;
-  font-family: var(--serif);
-  color: var(--text);
+}
+body {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  padding: 24px 16px;
-  gap: 16px;
+  justify-content: center;
 }
 #deck {
-  width: 100%;
-  max-width: var(--slide-w);
-  aspect-ratio: 16/9;
+  width: calc(var(--slide-w) * 1px);
+  height: calc(var(--slide-h) * 1px);
   position: relative;
   background: var(--bg);
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 24px 80px rgba(0,0,0,.5);
+  box-shadow: 0 24px 80px rgba(0,0,0,.6);
+  transform-origin: center center;
 }
 .slide {
   position: absolute;
@@ -165,19 +165,32 @@ body {
   border-top: 1px solid var(--border); padding-top: 9px;
 }
 
-/* controls */
-#controls { display: flex; align-items: center; gap: 16px; color: #888; font-family: var(--sans); font-size: .82rem; user-select: none; }
-#slide-counter { min-width: 60px; text-align: center; }
-.ctrl-btn { background: #2c2826; border: 1px solid #3d3633; color: #ddd; border-radius: 8px; padding: 6px 18px; cursor: pointer; font-size: .82rem; transition: background .15s; }
-.ctrl-btn:hover { background: #3d3633; }
-.ctrl-btn:disabled { opacity: .35; cursor: default; }
-#progress { width: 100%; max-width: var(--slide-w); height: 3px; background: #2c2826; border-radius: 2px; overflow: hidden; }
+/* controls overlay */
+#controls {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: 10px 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,.7));
+  font-family: var(--sans); font-size: .82rem;
+  user-select: none; z-index: 100;
+  opacity: 0; transition: opacity .25s;
+}
+body:hover #controls { opacity: 1; }
+#slide-counter { min-width: 60px; text-align: center; color: rgba(255,255,255,.7); }
+.ctrl-btn { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #eee; border-radius: 8px; padding: 5px 16px; cursor: pointer; font-size: .82rem; transition: background .15s; backdrop-filter: blur(4px); }
+.ctrl-btn:hover { background: rgba(255,255,255,.22); }
+.ctrl-btn:disabled { opacity: .3; cursor: default; }
+#fullscreen-btn { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #eee; border-radius: 8px; padding: 5px 12px; cursor: pointer; font-size: .82rem; transition: background .15s; backdrop-filter: blur(4px); }
+#fullscreen-btn:hover { background: rgba(255,255,255,.22); }
+#progress {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; background: rgba(255,255,255,.1); z-index: 100;
+}
 #progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px; transition: width .4s ease; }
 </style>
 </head>
 <body>
 
-<div id="progress"><div id="progress-fill"></div></div>
 <div id="deck">
 
 <!-- ═══ 1. TITLE ═══ -->
@@ -626,10 +639,13 @@ Option 4 → <span class="string">review</span> full paragraph</div>
 
 </div><!-- /deck -->
 
+<div id="progress"><div id="progress-fill"></div></div>
+
 <div id="controls">
   <button class="ctrl-btn" id="prev-btn" disabled>← Prev</button>
   <span id="slide-counter">1 / 12</span>
   <button class="ctrl-btn" id="next-btn">Next →</button>
+  <button id="fullscreen-btn" title="Fullscreen (F)">⛶</button>
 </div>
 
 <script>
@@ -640,6 +656,18 @@ const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const counter = document.getElementById('slide-counter');
 const fill    = document.getElementById('progress-fill');
+const deck    = document.getElementById('deck');
+const SLIDE_W = 960;
+const SLIDE_H = 540;
+
+function scaleSlide() {
+  const scaleX = window.innerWidth  / SLIDE_W;
+  const scaleY = window.innerHeight / SLIDE_H;
+  const scale  = Math.min(scaleX, scaleY);
+  deck.style.transform = `scale(${scale})`;
+}
+scaleSlide();
+window.addEventListener('resize', scaleSlide);
 
 function goTo(i) {
   slides[current].classList.remove('active');
@@ -655,9 +683,28 @@ function goTo(i) {
 
 prevBtn.addEventListener('click', () => goTo(current - 1));
 nextBtn.addEventListener('click', () => goTo(current + 1));
+
+const fsBtn = document.getElementById('fullscreen-btn');
+fsBtn.addEventListener('click', toggleFullscreen);
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+    fsBtn.textContent = '✕';
+  } else {
+    document.exitFullscreen();
+    fsBtn.textContent = '⛶';
+  }
+}
+document.addEventListener('fullscreenchange', () => {
+  fsBtn.textContent = document.fullscreenElement ? '✕' : '⛶';
+  scaleSlide();
+});
+
 document.addEventListener('keydown', e => {
   if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
   if (['ArrowLeft','ArrowUp'].includes(e.key))        { e.preventDefault(); goTo(current - 1); }
+  if (e.key === 'f' || e.key === 'F')                { toggleFullscreen(); }
 });
 fill.style.width = (1 / total * 100) + '%';
 
