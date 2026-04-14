@@ -12,10 +12,11 @@ interface AuthState {
 }
 
 interface AuthContextValue extends AuthState {
-  login: (email: string, password: string) => Promise<{ ok: boolean; needsVerification?: boolean; error?: string }>;
-  register: (email: string, password: string, displayName: string) => Promise<{ ok: boolean; emailSent?: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ ok: boolean; needsVerification?: boolean; useCode?: boolean; error?: string }>;
+  sendCode: (email: string) => Promise<{ ok: boolean; emailSent?: boolean; needsVerification?: boolean; notFound?: boolean; error?: string }>;
+  register: (email: string, displayName: string, password?: string) => Promise<{ ok: boolean; emailSent?: boolean; error?: string }>;
   verifyOtp: (email: string, otp: string) => Promise<{ ok: boolean; error?: string }>;
-  resendOtp: (email: string) => Promise<void>;
+  resendOtp: (email: string, purpose?: "verify" | "login") => Promise<{ emailSent?: boolean }>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -39,9 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
+  useEffect(() => { void refresh(); }, [refresh]);
 
   const login = useCallback(async (email: string, password: string) => {
     const res = await fetch("/api/auth/login", {
@@ -50,20 +49,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       credentials: "include",
       body: JSON.stringify({ email, password }),
     });
-    const data = await res.json() as { ok?: boolean; user?: AuthUser; needsVerification?: boolean; error?: string };
+    const data = await res.json() as { ok?: boolean; user?: AuthUser; needsVerification?: boolean; useCode?: boolean; error?: string };
     if (res.ok && data.user) {
       setState({ user: data.user, loading: false });
       return { ok: true };
     }
-    return { ok: false, needsVerification: data.needsVerification, error: data.error };
+    return { ok: false, needsVerification: data.needsVerification, useCode: data.useCode, error: data.error };
   }, []);
 
-  const register = useCallback(async (email: string, password: string, displayName: string) => {
+  const sendCode = useCallback(async (email: string) => {
+    const res = await fetch("/api/auth/send-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json() as { ok?: boolean; emailSent?: boolean; needsVerification?: boolean; notFound?: boolean; error?: string };
+    return {
+      ok: res.ok,
+      emailSent: data.emailSent,
+      needsVerification: data.needsVerification,
+      notFound: data.notFound,
+      error: data.error,
+    };
+  }, []);
+
+  const register = useCallback(async (email: string, displayName: string, password?: string) => {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ email, password, displayName }),
+      body: JSON.stringify({ email, displayName, password }),
     });
     const data = await res.json() as { ok?: boolean; emailSent?: boolean; error?: string };
     if (res.ok) return { ok: true, emailSent: data.emailSent };
@@ -85,12 +99,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { ok: false, error: data.error };
   }, []);
 
-  const resendOtp = useCallback(async (email: string) => {
-    await fetch("/api/auth/resend-otp", {
+  const resendOtp = useCallback(async (email: string, purpose: "verify" | "login" = "verify") => {
+    const res = await fetch("/api/auth/resend-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, purpose }),
     });
+    const data = await res.json() as { emailSent?: boolean };
+    return { emailSent: data.emailSent };
   }, []);
 
   const logout = useCallback(async () => {
@@ -99,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, login, register, verifyOtp, resendOtp, logout, refresh }}>
+    <AuthContext.Provider value={{ ...state, login, sendCode, register, verifyOtp, resendOtp, logout, refresh }}>
       {children}
     </AuthContext.Provider>
   );
