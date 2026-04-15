@@ -6,3 +6,9 @@ id = "0XdtTjH4YTpTd2jgJ9h2J"
 uri = "file://lecture/product-review-response.md"
 type = "text"
 title = "LessonBuilder 产品评估回应与改进计划"
+
+[[outputs]]
+id = "0VR5k3P0kPb4eRySVdSN1"
+uri = "file://docs/gemini-gems-inspiration-report.md"
+type = "text"
+title = "Gemini Gems — Research Report & SmartTextbook Inspiration"
