@@ -313,7 +313,7 @@ export default function Landing() {
                 icon: <Globe className="w-6 h-6" />,
                 title: "Pick a provider",
                 desc: "Google Gemini has a generous free tier — perfect for getting started. DeepSeek is extremely low-cost. OpenRouter gives you access to 300+ models with one key.",
-                providers: ["Gemini (free)", "DeepSeek (cheap)", "OpenRouter", "OpenAI", "Kimi", "Grok"],
+                providers: ["Gemini (free)", "DeepSeek", "OpenRouter", "OpenAI", "Kimi", "Grok"],
                 link: { label: "Get a free Gemini key →", url: "https://aistudio.google.com/apikey" },
               },
               {
