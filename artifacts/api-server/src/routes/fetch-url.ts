@@ -25,28 +25,52 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
     return;
   }
 
-  // ── arXiv: redirect abs → html full text ──────────────────────────────────
-  // arxiv.org/abs/XXXX  →  try arxiv.org/html/XXXX (official HTML full text)
+  // ── arXiv: redirect abs → best available full-text ────────────────────────
+  // Priority: arxiv.org/html/XXXX (official) → ar5iv.org/abs/XXXX (fallback)
   const arxivAbsMatch = parsedUrl.hostname.match(/arxiv\.org$/i) &&
     parsedUrl.pathname.match(/^\/abs\/(.+)/);
+  let isArxivFallback = false; // true when we only have the abstract page
   if (arxivAbsMatch) {
     const paperId = arxivAbsMatch[1];
-    const htmlUrl = `https://arxiv.org/html/${paperId}`;
+    // 1. Try official arXiv HTML version
+    const officialHtml = `https://arxiv.org/html/${paperId}`;
     try {
-      const probe = await fetch(htmlUrl, {
+      const probe = await fetch(officialHtml, {
         method: "HEAD",
         headers: { "User-Agent": "Mozilla/5.0 (compatible; LessonBuilder/1.0)" },
         signal: AbortSignal.timeout(8_000),
       });
       if (probe.ok) {
-        url = htmlUrl;
-        parsedUrl = new URL(htmlUrl);
+        url = officialHtml;
+        parsedUrl = new URL(officialHtml);
+      } else {
+        throw new Error("no html version");
       }
     } catch {
-      // HTML version unavailable — fall through to abstract page
+      // 2. Try ar5iv.org (community HTML renderer for older papers)
+      const ar5ivUrl = `https://ar5iv.org/abs/${paperId}`;
+      try {
+        const ar5ivProbe = await fetch(ar5ivUrl, {
+          method: "HEAD",
+          headers: { "User-Agent": "Mozilla/5.0 (compatible; LessonBuilder/1.0)" },
+          signal: AbortSignal.timeout(10_000),
+        });
+        if (ar5ivProbe.ok) {
+          url = ar5ivUrl;
+          parsedUrl = new URL(ar5ivUrl);
+        } else {
+          isArxivFallback = true; // will only get abstract
+        }
+      } catch {
+        isArxivFallback = true; // will only get abstract
+      }
     }
   }
   // ─────────────────────────────────────────────────────────────────────────
+
+  // arXiv pages can be slow — give them more time
+  const isArxivRequest = /arxiv\.org|ar5iv\.org/i.test(parsedUrl.hostname);
+  const fetchTimeout = isArxivRequest ? 30_000 : 15_000;
 
   try {
     const response = await fetch(parsedUrl.toString(), {
@@ -55,7 +79,7 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
         Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.5",
       },
-      signal: AbortSignal.timeout(15_000),
+      signal: AbortSignal.timeout(fetchTimeout),
     });
 
     if (!response.ok) {
@@ -113,20 +137,30 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
 
     let content = "";
 
-    // ── arXiv HTML full-text page: extract sections/paragraphs specifically ──
+    // ── arXiv / ar5iv HTML full-text: LaTeX-to-HTML extraction ──────────────
     const isArxivHtml = /arxiv\.org/i.test(parsedUrl.hostname) &&
       parsedUrl.pathname.startsWith("/html/");
-    if (isArxivHtml) {
-      const ltxMain = $(".ltx_page_main, .ltx_document, #content").first();
+    const isAr5iv = /ar5iv\.org/i.test(parsedUrl.hostname);
+    if (isArxivHtml || isAr5iv) {
+      const ltxMain = $(".ltx_page_main, .ltx_document, #content, main").first();
       const root = ltxMain.length ? ltxMain : $("body");
-      // Remove navigation, references, and author note noise
-      root.find(".ltx_bibliography, .ltx_appendix, .ltx_note, nav, header, footer, .ltx_authors").remove();
+      // Remove bibliography, appendix, footnotes, author blocks, and nav noise
+      root.find(
+        ".ltx_bibliography, .ltx_appendix, .ltx_note, .ltx_authors, " +
+        ".ltx_dates, .ltx_acknowledgements, " +
+        "nav, header, footer, .ar5iv-footer, .ar5iv-header"
+      ).remove();
       content = root
-        .find("h1, h2, h3, h4, h5, h6, p.ltx_p, p, .ltx_title, .ltx_abstract p")
+        .find("h1, h2, h3, h4, h5, h6, p.ltx_p, p, .ltx_title, .ltx_abstract p, li.ltx_item")
         .map((_i, el) => $(el).text().trim())
         .get()
         .filter((t) => t.length > 15)
         .join("\n\n");
+    }
+
+    // If we only have the abstract page (no HTML version found), add a note
+    if (isArxivFallback && !content) {
+      // abstract page only — extract what we can and add a note
     }
 
     const article = $("article").first();
@@ -158,10 +192,19 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
       content = jsonLdContent;
     }
 
-    content = content.replace(/\n{3,}/g, "\n\n").trim().slice(0, 50_000);
+    // Higher content cap for arXiv/ar5iv since papers can be long
+    const contentCap = isArxivRequest ? 100_000 : 50_000;
+    content = content.replace(/\n{3,}/g, "\n\n").trim().slice(0, contentCap);
 
     if (!content || content.length < 100) {
-      if (isSPA) {
+      if (isArxivFallback) {
+        res.status(422).json({
+          error:
+            "This arXiv paper doesn't have an HTML version yet. " +
+            "To get the full text, open the paper on arxiv.org, click 'Download PDF', " +
+            "then use the 'Upload PDF' option in the lesson builder.",
+        });
+      } else if (isSPA) {
         res.status(422).json({
           error:
             "This page is a JavaScript-rendered app and its content cannot be fetched directly. Please open the page in your browser, select all the text, and paste it manually.",
@@ -172,10 +215,18 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
       return;
     }
 
-    res.json({ title: title.slice(0, 200), content, url });
+    // Attach a note if we could only retrieve the abstract
+    const note = isArxivFallback
+      ? "\n\n[Note: This paper has no HTML version on arXiv. Only the abstract was retrieved. For the full text, download the PDF and use the 'Upload PDF' option.]"
+      : "";
+
+    res.json({ title: title.slice(0, 200), content: content + note, url });
   } catch (err: unknown) {
     if (err instanceof Error && err.name === "TimeoutError") {
-      res.status(422).json({ error: "The URL took too long to respond (15 s timeout)" });
+      const timeoutMsg = isArxivRequest
+        ? "arXiv took too long to respond (30 s timeout). The paper may be temporarily unavailable — try again in a moment."
+        : "The URL took too long to respond (15 s timeout)";
+      res.status(422).json({ error: timeoutMsg });
       return;
     }
     res.status(422).json({ error: `Failed to fetch URL: ${err instanceof Error ? err.message : String(err)}` });
