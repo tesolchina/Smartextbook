@@ -147,6 +147,14 @@ body {
 .prompt-box .comment { color: #6a9955; }
 .prompt-box .keyword { color: #569cd6; }
 .prompt-box .string  { color: #ce9178; }
+/* demo walkthrough steps */
+.demo-step { display:flex; gap:.65em; align-items:flex-start; background:var(--card); border:1.5px solid var(--border); border-radius:10px; padding:.5em .75em; }
+.demo-step.highlight { border-color:rgba(184,76,42,.3); background:linear-gradient(135deg,#fff8f5,#fdf2ec); }
+.ds-num { font-family:var(--serif); font-size:1.4em; font-weight:900; color:rgba(184,76,42,.25); line-height:1; min-width:1.1em; }
+.ds-label { font-family:var(--sans); font-size:.72em; font-weight:700; color:var(--text); margin-bottom:.1em; }
+.ds-detail { font-family:var(--sans); font-size:.65em; color:var(--muted); line-height:1.45; }
+.ds-link { color:var(--primary); text-decoration:underline; text-underline-offset:2px; }
+.ds-link:hover { opacity:.8; }
 /* chat bubbles */
 .cb-bubble { font-family: var(--sans); font-size: .7em; border-radius: 10px; padding: .45em .7em; max-width: 90%; line-height: 1.5; color: var(--text); }
 .cb-bubble-bot  { background: rgba(184,76,42,.08); align-self: flex-start; border-bottom-left-radius: 3px; }
@@ -250,7 +258,7 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
     <span class="badge badge-orange">Open Source</span>
     <span class="badge badge-orange">BYOK</span>
   </div>
-  <div class="slide-footer"><span>Simon Wang · Lecturer in English &amp; Innovation Officer · HKBU Language Centre</span><span>1 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · Lecturer in English &amp; Innovation Officer · HKBU Language Centre</span><span>1 / 19</span></div>
 </div>
 
 <!-- ═══ 2. NATURE 2023 ═══ -->
@@ -291,7 +299,7 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>2 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>2 / 19</span></div>
 </div>
 
 <!-- ═══ 3. ORIGIN — 2024 ARTICLE ═══ -->
@@ -331,7 +339,7 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>3 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>3 / 19</span></div>
 </div>
 
 <!-- ═══ 3. WHAT IS CHATBOT CUSTOMISATION ═══ -->
@@ -384,7 +392,7 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>4 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>4 / 19</span></div>
 </div>
 
 <!-- ═══ 4. CASE STUDY — WORDCHOICE ═══ -->
@@ -453,7 +461,7 @@ Please consult your teacher for verification."</span>
       <p style="font-family:var(--sans);font-size:.7em;line-height:1.5;color:var(--text)">Vibe coding asks AI to <strong>write programming code</strong> from a description — more powerful. But this came first: using natural language to <strong>direct AI behaviour directly</strong>, without generating code at all.</p>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>5 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>5 / 19</span></div>
 </div>
 
 <!-- ═══ NEW: CHATBOT DEMO ═══ -->
@@ -515,7 +523,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
     </div>
 
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>6 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>6 / 19</span></div>
 </div>
 
 <!-- ═══ 5. TWO PATHWAYS ═══ -->
@@ -563,7 +571,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
     <div class="hb-label">Where We Were in 2024</div>
     <p>Pathway 1 was accessible but left educators blind to their students' learning. Pathway 2 solved that — but required a programmer and months of development. <strong>Fast forward two years.</strong></p>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>7 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>7 / 19</span></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════ -->
@@ -605,7 +613,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
     &nbsp;·&nbsp;
     <a href="https://simonwillison.net/2025/Feb/6/vibe-coding/" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:underline">simonwillison.net/2025/Feb/6/vibe-coding/</a>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>8 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>8 / 19</span></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════ -->
@@ -642,7 +650,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
     <div class="hb-label">SmartTextbook addresses all three</div>
     <p>Embedded AI tutor + chapter-to-lesson pipeline + <strong>BYOK</strong> (Bring Your Own Key) — each student uses their own free API key.</p>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>9 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>9 / 19</span></div>
 </div>
 
 <!-- ═══ 8. GOOGLE RESEARCH ═══ -->
@@ -675,7 +683,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>10 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>10 / 19</span></div>
 </div>
 
 <!-- ═══ 8. THREE NEW IDEAS ═══ -->
@@ -711,14 +719,20 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>11 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>11 / 19</span></div>
 </div>
 
 <!-- ═══ 9. PLATFORM ═══ -->
 <div class="slide" data-slide="9">
   <div class="eyebrow">Part 2 — 2026 · The Platform</div>
-  <div class="slide-title">SmartTextbook:<br><em>From Chapter to AI Experience</em></div>
-  <div class="spacer"></div>
+  <div style="display:flex;align-items:baseline;gap:1.2em;flex-wrap:wrap;margin-bottom:.2em">
+    <div class="slide-title" style="margin-bottom:0">SmartTextbook:<br><em>From Chapter to AI Experience</em></div>
+    <a href="https://smartextbook.replit.app/app" target="_blank"
+       style="font-family:var(--sans);font-size:.65em;font-weight:700;background:var(--primary);color:#fff;padding:.28em .8em;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0">
+      ↗ smartextbook.replit.app/app
+    </a>
+  </div>
+  <div class="spacer" style="flex:.2"></div>
   <div style="margin-bottom:.85em">
     <div class="flow">
       <div class="flow-step"><div class="fs-icon">📄</div><div class="fs-label">Paste chapter text</div></div>
@@ -755,7 +769,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>12 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>12 / 19</span></div>
 </div>
 
 <!-- ═══ 10. COMPARISON ═══ -->
@@ -805,7 +819,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       </tr>
     </tbody>
   </table>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>13 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>13 / 19</span></div>
 </div>
 
 <!-- ═══ 11. CLOSED LOOP ═══ -->
@@ -847,13 +861,19 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>14 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>14 / 19</span></div>
 </div>
 
 <!-- ═══ 12. LIVE DEMO ═══ -->
-<div class="slide" data-slide="12" style="padding:32px 44px;overflow:auto">
+<div class="slide" data-slide="12" style="padding:28px 40px;overflow:auto">
   <div class="eyebrow">Part 2 — 2026 · Live Demo</div>
-  <div class="slide-title" style="font-size:1.5em;margin-bottom:.5em">Experience SmartTextbook<br><em>in this slide</em></div>
+  <div style="display:flex;align-items:baseline;gap:1.2em;margin-bottom:.4em;flex-wrap:wrap">
+    <div class="slide-title" style="font-size:1.45em;margin-bottom:0">Experience SmartTextbook<br><em>in this slide</em></div>
+    <a href="https://smartextbook.replit.app/app" target="_blank"
+       style="font-family:var(--sans);font-size:.68em;font-weight:700;background:var(--primary);color:#fff;padding:.32em .85em;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0">
+      ↗ smartextbook.replit.app/app
+    </a>
+  </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1em;flex:1">
     <div style="display:flex;flex-direction:column;gap:.65em">
       <div class="card" style="padding:.75em 1em">
@@ -882,7 +902,103 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>15 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>15 / 19</span></div>
+</div>
+
+<!-- ═══ NEW: DEMO WALKTHROUGH ═══ -->
+<div class="slide" data-slide="12b" style="padding:26px 38px">
+  <div class="eyebrow">Part 2 — 2026 · Demo Guide</div>
+  <div style="display:flex;align-items:center;gap:1.4em;margin-bottom:.55em;flex-wrap:wrap">
+    <div class="slide-title" style="font-size:1.4em;margin-bottom:0">The Demo — <em>Follow Along</em></div>
+    <a href="https://smartextbook.replit.app/app" target="_blank"
+       style="font-family:var(--sans);font-size:.75em;font-weight:800;background:var(--primary);color:#fff;padding:.35em 1em;border-radius:9px;text-decoration:none;letter-spacing:.01em">
+      ↗ smartextbook.replit.app/app
+    </a>
+    <span style="font-family:var(--sans);font-size:.62em;color:var(--muted);font-style:italic">No account needed · works on mobile</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85em">
+
+    <!-- Left: Step-by-step -->
+    <div style="display:flex;flex-direction:column;gap:.38em">
+
+      <div class="demo-step">
+        <div class="ds-num">1</div>
+        <div>
+          <div class="ds-label">Open the app</div>
+          <div class="ds-detail">
+            <a href="https://smartextbook.replit.app/app" target="_blank" class="ds-link">smartextbook.replit.app/app</a>
+            — click <strong>New Lesson</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-step">
+        <div class="ds-num">2</div>
+        <div>
+          <div class="ds-label">Enter your free API key</div>
+          <div class="ds-detail">
+            Get one at <a href="https://aistudio.google.com/apikey" target="_blank" class="ds-link">aistudio.google.com/apikey</a>
+            — Gemini Flash is completely free
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-step">
+        <div class="ds-num">3</div>
+        <div>
+          <div class="ds-label">Paste a chapter passage</div>
+          <div class="ds-detail">Any paragraph from a textbook or lecture notes — one instruction sets the pedagogical tone</div>
+        </div>
+      </div>
+
+      <div class="demo-step">
+        <div class="ds-num">4</div>
+        <div>
+          <div class="ds-label">Choose settings &amp; generate</div>
+          <div class="ds-detail">Audience level · Quiz length · Teaching method → click <strong>Generate Lesson</strong></div>
+        </div>
+      </div>
+
+      <div class="demo-step highlight">
+        <div class="ds-num" style="color:var(--primary)">5</div>
+        <div>
+          <div class="ds-label">Your lesson — ready in seconds</div>
+          <div class="ds-detail">Summary · Glossary · Adaptive quiz · Mind map · AI tutor grounded in your chapter</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Key links + what you'll see -->
+    <div style="display:flex;flex-direction:column;gap:.5em">
+
+      <div class="card" style="padding:.55em .8em">
+        <div class="card-title" style="margin-bottom:.3em;font-size:.73em">Key links for this demo</div>
+        <table style="width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.65em">
+          <tr><td style="padding:.22em 0;color:var(--muted);width:38%">Platform</td>
+              <td><a href="https://smartextbook.replit.app/app" target="_blank" class="ds-link">smartextbook.replit.app/app</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">Free API key</td>
+              <td><a href="https://aistudio.google.com/apikey" target="_blank" class="ds-link">aistudio.google.com/apikey</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">Chatbot demo</td>
+              <td><a href="https://poe.com/wordchoice" target="_blank" class="ds-link">poe.com/wordchoice</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">Edit system prompt</td>
+              <td><a href="https://poe.com/edit_bot?bot=wordchoice" target="_blank" class="ds-link">poe.com/edit_bot?bot=wordchoice</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">Google DeepMind paper</td>
+              <td><a href="https://arxiv.org/abs/2410.09990" target="_blank" class="ds-link">arXiv:2410.09990</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">THE Campus article</td>
+              <td><a href="https://timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation" target="_blank" class="ds-link">THE Campus, Aug 2024</a></td></tr>
+        </table>
+      </div>
+
+      <div class="highlight-box" style="padding:.45em .8em">
+        <div class="hb-label" style="margin-bottom:.2em">No time for a live demo?</div>
+        <p style="font-size:.78em;line-height:1.45">This slide stays as a reference. Scan the link above, paste any paragraph, and the full lesson — including an AI tutor — is generated in under 30 seconds.</p>
+      </div>
+
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>16 / 19</span></div>
 </div>
 
 <!-- ═══ 13. SCORM & xAPI ═══ -->
@@ -935,7 +1051,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
     <div class="hb-label">Key Distinction</div>
     <p>SCORM answers <strong>"did they complete it?"</strong> &nbsp;·&nbsp; xAPI answers <strong>"how did they actually learn?"</strong> — the difference between a checkbox and a learning dataset.</p>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>16 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>17 / 19</span></div>
 </div>
 
 <!-- ═══ 14. BLUEPRINT ═══ -->
@@ -981,7 +1097,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>17 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>18 / 19</span></div>
 </div>
 
 <!-- ═══ 15. Q&A ═══ -->
@@ -1015,7 +1131,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       Lecturer in English &amp; Innovation Officer<br>The Language Centre, HKBU
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>18 / 18</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>19 / 19</span></div>
 </div>
 
 
@@ -1030,7 +1146,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
 
 <div id="controls">
   <button class="ctrl-btn" id="prev-btn" disabled>← Prev</button>
-  <span id="slide-counter">1 / 18</span>
+  <span id="slide-counter">1 / 19</span>
   <button class="ctrl-btn" id="next-btn">Next →</button>
   <button id="fullscreen-btn" title="Fullscreen (F)">⛶</button>
 </div>
