@@ -278,8 +278,8 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
 
 <!-- ═══ 2. NATURE 2023 ═══ -->
 <div class="slide" data-slide="2">
-  <div class="eyebrow">Part 1 — February 2023 · First Contribution to the Conversation</div>
-  <div class="slide-title">The Question That<br><em>Started Everything</em></div>
+  <div class="eyebrow">Part 1 — February 2023 · Raised Three Years Ago, Still Relevant Today</div>
+  <div class="slide-title">The Question on<br><em>Access to AI</em></div>
   <div class="cols" style="gap:1.4em;align-items:flex-start;flex:1;margin-top:.5em;min-height:0">
     <div class="col" style="flex:1.05">
       <a href="https://www.nature.com/articles/d41586-023-00553-9" target="_blank" style="display:block;text-decoration:none">
@@ -437,7 +437,10 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
       </div>
     </div>
     <div class="col" style="flex:1.15">
-      <div style="font-family:var(--sans);font-size:.64em;font-weight:800;color:var(--muted);margin-bottom:.3em">The system prompt — written entirely in plain English</div>
+      <div style="display:flex;align-items:baseline;gap:.6em;margin-bottom:.3em;flex-wrap:wrap">
+        <span style="font-family:var(--sans);font-size:.64em;font-weight:800;color:var(--muted)">The system prompt — written entirely in plain English</span>
+        <a href="https://poe.com/edit_bot?bot=wordchoice" target="_blank" style="font-family:var(--sans);font-size:.58em;font-weight:700;background:var(--primary);color:#fff;padding:.2em .55em;border-radius:5px;text-decoration:none;flex-shrink:0">✎ Edit in Poe</a>
+      </div>
       <div class="prompt-box" style="font-size:.61em;line-height:1.5">
 <span class="comment">// Role</span>
 You are an experienced English lecturer.
@@ -463,6 +466,37 @@ Use this template for every combination found:
 <span class="string">"I am powered by AI and can make mistakes.
 Please consult your teacher for verification."</span>
 </div>
+      <details style="margin-top:.3em" onclick="event.stopPropagation()">
+        <summary style="font-family:var(--sans);font-size:.6em;font-weight:700;color:var(--primary);cursor:pointer;user-select:none;list-style:none">▼ Show full system prompt</summary>
+        <div class="prompt-box" style="font-size:.57em;line-height:1.5;max-height:140px;overflow-y:auto;margin-top:.25em">
+You are an experienced lecturer in English. Your job is to help students improve their word choice in their writing. When the user type <span class="keyword">*menu*</span> you should present the following options ONLY; do not add any other info at this stage.
+1. Learn about the importance of word choice and collocation
+2. Check the collocation of individual words
+3. Check the appropriateness of a word combination
+4. Review word choices of a paragraph
+
+<span class="comment">// Option 1 — 3 multiple-choice questions, one at a time, with feedback</span>
+When the user selects 1, offer 3 MC questions on: importance of word choice to achieve idiomaticity · collocation concept · how checking collocation improves writing. Present one question at a time; give feedback before moving on. Present the menu again at the end.
+
+<span class="comment">// Option 2 — word lookup</span>
+When the user selects 2, ask for an individual word; list common appropriate combinations AND inappropriate usage (miscollocation). Present menu again at the end.
+
+<span class="comment">// Option 3 — word combination check</span>
+When the user selects 3, ask for one word combination. If appropriate, write a sentence using it. If not, explain and suggest a better alternative. Present menu again at the end.
+
+<span class="comment">// Option 4 — paragraph review template</span>
+When the user selects 4, ask for a paragraph. Check one sentence at a time — for each verb, check its object; for each key word, check its combinations. Use this template:
+{
+  word combination: word 1 (POS) + word 2 (POS)
+  verdict: appropriate / not appropriate
+  explanation and example: …
+  confidence level: 10%–100%
+}
+Present menu again at the end.
+
+<span class="string">Always remind the user: "I am powered by AI and can make mistakes. Consult your teacher for verification."</span>
+        </div>
+      </details>
     </div>
   </div>
   <div class="spacer" style="flex:.2"></div>
@@ -625,9 +659,9 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
     </div>
   </div>
   <div style="margin-top:.75em;font-family:var(--sans);font-size:.6em;color:rgba(255,255,255,.28);line-height:1.5">
-    <a href="https://x.com/karpathy/status/1886192184808149016" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:underline">x.com/karpathy/status/1886192184808149016</a>
+    <a href="https://x.com/karpathy/status/1886192184808149016" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:underline">Karpathy on "Vibe Coding" (X, Feb 2025)</a>
     &nbsp;·&nbsp;
-    <a href="https://simonwillison.net/2025/Feb/6/vibe-coding/" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:underline">simonwillison.net/2025/Feb/6/vibe-coding/</a>
+    <a href="https://simonwillison.net/tags/vibe-coding/" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:underline">simonwillison.net — vibe coding</a>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>8 / 19</span></div>
 </div>
@@ -679,8 +713,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       <div class="blockquote">
         "Students using AI-augmented textbooks showed an average <strong>11% improvement</strong> in learning outcomes compared to traditional materials."
         <cite>— Google DeepMind, <em>Learn Your Way</em>, 2024<br>
-        <a href="https://deepmind.google/research/publications/learn-your-way/" target="_blank" style="font-family:var(--sans);font-size:.85em;opacity:.7">deepmind.google/research/publications/learn-your-way</a>
-        · <a href="https://arxiv.org/abs/2410.09990" target="_blank" style="font-family:var(--sans);font-size:.85em;opacity:.7">arXiv:2410.09990</a></cite>
+        <a href="https://deepmind.google/research/publications/learn-your-way/" target="_blank" style="font-family:var(--sans);font-size:.85em;opacity:.7">deepmind.google/research/publications/learn-your-way</a></cite>
       </div>
       <ul class="bullet-list" style="margin-top:.35em">
         <li>The AI doesn't just present content — it <strong>explains, quizzes, re-explains</strong>, adapting to each student in real time</li>
@@ -1013,7 +1046,7 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
           <tr><td style="padding:.22em 0;color:var(--muted)">Edit system prompt</td>
               <td><a href="https://poe.com/edit_bot?bot=wordchoice" target="_blank" class="ds-link">poe.com/edit_bot?bot=wordchoice</a></td></tr>
           <tr><td style="padding:.22em 0;color:var(--muted)">Google DeepMind paper</td>
-              <td><a href="https://arxiv.org/abs/2410.09990" target="_blank" class="ds-link">arXiv:2410.09990</a></td></tr>
+              <td><a href="https://deepmind.google/research/publications/learn-your-way/" target="_blank" class="ds-link">Learn Your Way (DeepMind, 2024)</a></td></tr>
           <tr><td style="padding:.22em 0;color:var(--muted)">THE Campus article</td>
               <td><a href="https://timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation" target="_blank" class="ds-link">THE Campus, Aug 2024</a></td></tr>
         </table>
@@ -1129,34 +1162,46 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
 </div>
 
 <!-- ═══ 15. Q&A ═══ -->
-<div class="slide dark-bg" data-slide="15">
-  <div class="spacer"></div>
-  <div class="eyebrow">Thank You</div>
-  <div class="slide-title" style="font-size:2.3em">Questions &amp; Discussion</div>
-  <div class="accent-bar"></div>
-  <div style="font-family:var(--sans);font-size:.8em;color:rgba(255,255,255,.55);max-width:520px;line-height:1.65;margin-top:.2em">
-    "AI's job in education is not to replace the teacher's knowledge —<br>it is to scale the teacher's <em>method</em>."
-  </div>
-  <div class="spacer"></div>
-  <div style="display:flex;gap:2.5em;margin-bottom:.8em">
-    <div style="font-family:var(--sans);font-size:.7em;color:rgba(255,255,255,.45)">
-      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">2024 → 2026</div>
-      Chatbot customisation → AI-augmented textbook<br>Platform-based → BYOK API platform<br>Black box → educator-owned data
+<div class="slide dark-bg" data-slide="15" style="padding:36px 48px">
+  <div style="display:grid;grid-template-columns:1fr auto;gap:1.8em;flex:1;align-items:start">
+    <div>
+      <div class="eyebrow">Thank You</div>
+      <div class="slide-title" style="font-size:2em">Questions &amp; Discussion</div>
+      <div class="accent-bar"></div>
+      <div style="font-family:var(--sans);font-size:.76em;color:rgba(255,255,255,.5);max-width:480px;line-height:1.65;margin-top:.2em;margin-bottom:1em">
+        "AI's job in education is not to replace the teacher's knowledge —<br>it is to scale the teacher's <em>method</em>."
+      </div>
+      <div style="display:flex;gap:1.8em;flex-wrap:wrap">
+        <div style="font-family:var(--sans);font-size:.68em;color:rgba(255,255,255,.45)">
+          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">2024 → 2026</div>
+          Chatbot customisation → AI-augmented textbook<br>Platform-based → BYOK API platform<br>Black box → educator-owned data
+        </div>
+        <div style="font-family:var(--sans);font-size:.68em;color:rgba(255,255,255,.45)">
+          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Platform</div>
+          Open-source · BYOK · Provider-agnostic<br>Data-owned · No registration required<br>
+          <a href="https://smartextbook.replit.app" target="_blank" style="color:rgba(255,255,255,.5);text-decoration:underline">smartextbook.replit.app</a>
+        </div>
+        <div style="font-family:var(--sans);font-size:.68em;color:rgba(255,255,255,.45)">
+          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Key Sources</div>
+          <a href="https://www.nature.com/articles/d41586-023-00553-9" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">Nature Correspondence 2023</a><br>
+          <a href="https://timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">THE Campus 2024</a><br>
+          <a href="https://deepmind.google/research/publications/learn-your-way/" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">Google DeepMind: Learn Your Way</a>
+        </div>
+        <div style="font-family:var(--sans);font-size:.68em;color:rgba(255,255,255,.45)">
+          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Simon Wang</div>
+          Lecturer in English &amp; Innovation Officer<br>The Language Centre, HKBU<br>
+          <a href="mailto:simonwang@hkbu.edu.hk" style="color:rgba(255,255,255,.5);text-decoration:underline">simonwang@hkbu.edu.hk</a><br>
+          <a href="https://lc.hkbu.edu.hk/main/simonwang/" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline;font-size:.92em">lc.hkbu.edu.hk/main/simonwang/</a>
+        </div>
+      </div>
+      <div style="margin-top:1em">
+        <button onclick="goTo(0)" style="font-family:var(--sans);font-size:.68em;font-weight:700;background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:.4em 1.1em;cursor:pointer">↩ Back to Start</button>
+      </div>
     </div>
-    <div style="font-family:var(--sans);font-size:.7em;color:rgba(255,255,255,.45)">
-      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Platform</div>
-      Open-source · BYOK · Provider-agnostic<br>Data-owned by educator · No registration required<br>
-      <a href="https://smartextbook.replit.app" target="_blank" style="color:rgba(255,255,255,.5);text-decoration:underline;font-size:.95em">smartextbook.replit.app</a>
-    </div>
-    <div style="font-family:var(--sans);font-size:.7em;color:rgba(255,255,255,.45)">
-      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Key Sources</div>
-      <a href="https://www.nature.com/articles/d41586-023-00553-9" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">Nature Correspondence 2023</a><br>
-      <a href="https://timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">THE Campus 2024</a><br>
-      <a href="https://arxiv.org/abs/2410.09990" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">Google DeepMind: arXiv 2410.09990</a>
-    </div>
-    <div style="font-family:var(--sans);font-size:.7em;color:rgba(255,255,255,.45)">
-      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Simon Wang</div>
-      Lecturer in English &amp; Innovation Officer<br>The Language Centre, HKBU
+    <!-- QR code -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:.4em;flex-shrink:0">
+      <img src="/wechat-qr.jpg" alt="WeChat group QR — Gen AI CoP 2" style="width:158px;height:158px;border-radius:10px;object-fit:cover;box-shadow:0 4px 16px rgba(0,0,0,.4)" />
+      <div style="font-family:var(--sans);font-size:.58em;color:rgba(255,255,255,.4);text-align:center;line-height:1.4">WeChat group<br>Gen AI CoP 2</div>
     </div>
   </div>
   <div class="slide-footer"><span>Simon Wang · 2026</span><span>19 / 19</span></div>
@@ -1278,6 +1323,9 @@ document.addEventListener('webkitfullscreenchange', () => {
 });
 
 document.addEventListener('keydown', e => {
+  // Don't hijack keyboard when user is typing in any input or editable element
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || document.activeElement?.isContentEditable) return;
   if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
   if (['ArrowLeft','ArrowUp'].includes(e.key))        { e.preventDefault(); goTo(current - 1); }
   if (e.key === 'f' || e.key === 'F')                { toggleFullscreen(); }
@@ -1300,6 +1348,42 @@ document.addEventListener('touchend', e => {
 
 fill.style.width = (1 / total * 100) + '%';
 
+// ─── Simple markdown renderer ─────────────────────────────────
+function renderMd(text) {
+  if (!text) return '';
+  // Escape HTML first
+  let s = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Code blocks ```...```
+  s = s.replace(/```[\s\S]*?```/g, m => '<pre style="background:#1e1e1e;color:#d4d4d4;border-radius:7px;padding:.4em .7em;font-size:.9em;overflow-x:auto;margin:.3em 0">' + m.slice(3,-3) + '</pre>');
+  // Inline code
+  s = s.replace(/`([^`]+)`/g, '<code style="background:#f0f0f0;border-radius:4px;padding:.1em .3em;font-size:.92em">$1</code>');
+  // Bold **text**
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  // Italic *text* or _text_
+  s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  s = s.replace(/_([^_]+)_/g, '<em>$1</em>');
+  // Headings
+  s = s.replace(/^#{3,}\s+(.+)$/gm, '<h5 style="font-family:var(--sans);font-size:.88em;font-weight:800;margin:.5em 0 .15em;color:var(--text)">$1</h5>');
+  s = s.replace(/^#{2}\s+(.+)$/gm,  '<h4 style="font-family:var(--sans);font-size:.95em;font-weight:800;margin:.6em 0 .2em;color:var(--text)">$1</h4>');
+  s = s.replace(/^#{1}\s+(.+)$/gm,  '<h3 style="font-family:var(--sans);font-size:1.05em;font-weight:900;margin:.7em 0 .2em;color:var(--text)">$1</h3>');
+  // Unordered lists (- or *)
+  s = s.replace(/^[\-\*]\s+(.+)$/gm, '<li style="margin:.18em 0;padding-left:.3em">$1</li>');
+  s = s.replace(/(<li[^>]*>.*<\/li>\n?)+/g, m => '<ul style="padding-left:1.2em;margin:.2em 0">' + m + '</ul>');
+  // Ordered lists
+  s = s.replace(/^\d+\.\s+(.+)$/gm, '<li style="margin:.18em 0;padding-left:.3em">$1</li>');
+  // Horizontal rule
+  s = s.replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:.5em 0">');
+  // Paragraphs (double newlines)
+  s = s.split(/\n\n+/).map(para => {
+    para = para.trim();
+    if (!para) return '';
+    if (para.startsWith('<h') || para.startsWith('<ul') || para.startsWith('<pre') || para.startsWith('<hr')) return para;
+    return '<p style="margin:.3em 0;line-height:1.6">' + para.replace(/\n/g, '<br>') + '</p>';
+  }).join('\n');
+  return s;
+}
+// ─────────────────────────────────────────────────────────────
+
 // ─── Chatbot slide demo ───────────────────────────────────────
 const cbHistory = [];
 
@@ -1313,7 +1397,10 @@ function cbAddBubble(role, text) {
   if (!box) return;
   const div = document.createElement('div');
   div.className = `cb-bubble ${role === 'user' ? 'cb-bubble-user' : 'cb-bubble-bot'}`;
-  div.innerHTML = `<strong class="cb-role">${role === 'user' ? 'You' : 'Bot'}</strong>${text.replace(/\n/g,'<br>')}`;
+  const body = role === 'user'
+    ? text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')
+    : renderMd(text);
+  div.innerHTML = `<strong class="cb-role">${role === 'user' ? 'You' : 'Bot'}</strong>${body}`;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 }
@@ -1416,7 +1503,9 @@ Keep everything concise and clear for a university student.`;
     if (!res.ok) {
       out.textContent = '❌ Error: ' + (data?.error?.message || JSON.stringify(data));
     } else {
-      out.textContent = data.choices?.[0]?.message?.content ?? '(No response)';
+      const raw = data.choices?.[0]?.message?.content ?? '(No response)';
+      out.style.whiteSpace = 'normal';
+      out.innerHTML = renderMd(raw);
     }
   } catch(e) {
     out.textContent = '❌ ' + e.message;
