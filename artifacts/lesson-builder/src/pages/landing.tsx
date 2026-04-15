@@ -398,7 +398,7 @@ export default function Landing() {
                 The full 12-slide presentation by Simon Wang — includes a live interactive demo you can try directly in the slide.
               </p>
             </div>
-            <Link href="/talk"
+            <Link href="/talk15Apr"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all hover:-translate-y-0.5 shadow-md shadow-primary/20 shrink-0">
               View Slides <ArrowRight className="w-4 h-4" />
             </Link>
@@ -429,7 +429,7 @@ export default function Landing() {
           <Link href="/app" className="hover:text-foreground transition-colors">App</Link>
           <a href="#how-to-start" className="hover:text-foreground transition-colors">Get Started</a>
           <a href="#workshops" className="hover:text-foreground transition-colors">Workshops</a>
-          <Link href="/talk" className="hover:text-foreground transition-colors">Talk Slides</Link>
+          <Link href="/talk15Apr" className="hover:text-foreground transition-colors">Talk Slides</Link>
           <Link href="/credits" className="hover:text-foreground transition-colors">Credits</Link>
           <a href="https://github.com/tesolchina/Smartextbook" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Github className="w-3 h-3" /> GitHub
