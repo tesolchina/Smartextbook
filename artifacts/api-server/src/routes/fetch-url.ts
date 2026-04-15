@@ -11,7 +11,7 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
     return;
   }
 
-  const { url } = parsed.data;
+  let { url } = parsed.data;
 
   let parsedUrl: URL;
   try {
@@ -24,6 +24,29 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
     res.status(400).json({ error: "Invalid URL" });
     return;
   }
+
+  // ── arXiv: redirect abs → html full text ──────────────────────────────────
+  // arxiv.org/abs/XXXX  →  try arxiv.org/html/XXXX (official HTML full text)
+  const arxivAbsMatch = parsedUrl.hostname.match(/arxiv\.org$/i) &&
+    parsedUrl.pathname.match(/^\/abs\/(.+)/);
+  if (arxivAbsMatch) {
+    const paperId = arxivAbsMatch[1];
+    const htmlUrl = `https://arxiv.org/html/${paperId}`;
+    try {
+      const probe = await fetch(htmlUrl, {
+        method: "HEAD",
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; LessonBuilder/1.0)" },
+        signal: AbortSignal.timeout(8_000),
+      });
+      if (probe.ok) {
+        url = htmlUrl;
+        parsedUrl = new URL(htmlUrl);
+      }
+    } catch {
+      // HTML version unavailable — fall through to abstract page
+    }
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   try {
     const response = await fetch(parsedUrl.toString(), {
@@ -90,13 +113,29 @@ router.post("/fetch-url", async (req, res): Promise<void> => {
 
     let content = "";
 
+    // ── arXiv HTML full-text page: extract sections/paragraphs specifically ──
+    const isArxivHtml = /arxiv\.org/i.test(parsedUrl.hostname) &&
+      parsedUrl.pathname.startsWith("/html/");
+    if (isArxivHtml) {
+      const ltxMain = $(".ltx_page_main, .ltx_document, #content").first();
+      const root = ltxMain.length ? ltxMain : $("body");
+      // Remove navigation, references, and author note noise
+      root.find(".ltx_bibliography, .ltx_appendix, .ltx_note, nav, header, footer, .ltx_authors").remove();
+      content = root
+        .find("h1, h2, h3, h4, h5, h6, p.ltx_p, p, .ltx_title, .ltx_abstract p")
+        .map((_i, el) => $(el).text().trim())
+        .get()
+        .filter((t) => t.length > 15)
+        .join("\n\n");
+    }
+
     const article = $("article").first();
     const main = $("main").first();
     const contentDiv = $("#content, .content, .post-content, .entry-content, .article-body, .post-body").first();
 
     const primaryEl = article.length ? article : main.length ? main : contentDiv.length ? contentDiv : null;
 
-    if (primaryEl && primaryEl.length) {
+    if (!content && primaryEl && primaryEl.length) {
       content = primaryEl
         .find("h1, h2, h3, h4, h5, h6, p, li, blockquote, pre, td")
         .map((_i, el) => $(el).text().trim())
