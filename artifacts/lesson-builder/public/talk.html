@@ -81,8 +81,8 @@ body {
 .stat-label { font-family: var(--sans); font-size: .63em; opacity: .88; line-height: 1.4; margin-top: .3em; }
 
 .bullet-list { list-style: none; display: flex; flex-direction: column; gap: .5em; }
-.bullet-list li { display: flex; gap: .65em; font-family: var(--sans); font-size: .8em; line-height: 1.5; color: var(--text); }
-.bullet-list li::before { content: '▸'; color: var(--primary); font-size: .85em; margin-top: .12em; flex-shrink: 0; }
+.bullet-list li { position: relative; padding-left: 1.1em; font-family: var(--sans); font-size: .8em; line-height: 1.5; color: var(--text); }
+.bullet-list li::before { content: '▸'; color: var(--primary); font-size: .85em; position: absolute; left: 0; top: .1em; }
 
 .blockquote {
   border-left: 4px solid var(--primary); padding: .55em 1.1em;
