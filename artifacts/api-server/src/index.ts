@@ -36,39 +36,46 @@ async function runMigrations(): Promise<void> {
       )
     `);
 
-    const { rows: existingRows } = await client.query<{ id: number }>(
-      `SELECT id FROM drizzle.__drizzle_migrations ORDER BY created_at DESC LIMIT 1`
+    const journal = JSON.parse(
+      fs.readFileSync(path.join(migrationsFolder, "meta/_journal.json"), "utf8")
+    ) as { entries: Array<{ tag: string; when: number }> };
+
+    const { rows: trackedRows } = await client.query<{ hash: string }>(
+      `SELECT hash FROM drizzle.__drizzle_migrations`
     );
+    const trackedHashes = new Set(trackedRows.map((r) => r.hash));
 
-    if (existingRows.length === 0) {
-      const { rows: tableRows } = await client.query<{ count: string }>(
-        `SELECT COUNT(*) as count FROM information_schema.tables
-         WHERE table_schema = 'public' AND table_type = 'BASE TABLE'`
+    for (const entry of journal.entries) {
+      const sqlContent = fs.readFileSync(
+        path.join(migrationsFolder, `${entry.tag}.sql`),
+        "utf8"
       );
+      const hash = crypto.createHash("sha256").update(sqlContent).digest("hex");
 
-      const existingTableCount = parseInt(tableRows[0]?.count ?? "0", 10);
+      if (trackedHashes.has(hash)) continue;
 
-      if (existingTableCount > 0) {
-        const journal = JSON.parse(
-          fs.readFileSync(path.join(migrationsFolder, "meta/_journal.json"), "utf8")
-        ) as { entries: Array<{ tag: string; when: number }> };
+      const createTableMatches = [...sqlContent.matchAll(/CREATE TABLE\s+"([^"]+)"/gi)];
+      const tableNames = createTableMatches.map((m) => m[1]).filter(Boolean) as string[];
 
-        for (const entry of journal.entries) {
-          const sqlContent = fs.readFileSync(
-            path.join(migrationsFolder, `${entry.tag}.sql`),
-            "utf8"
-          );
-          const hash = crypto.createHash("sha256").update(sqlContent).digest("hex");
+      if (tableNames.length > 0) {
+        const { rows: existRows } = await client.query<{ count: string }>(
+          `SELECT COUNT(*) as count FROM information_schema.tables
+           WHERE table_schema = 'public' AND table_name = ANY($1::text[])`,
+          [tableNames]
+        );
+        const found = parseInt(existRows[0]?.count ?? "0", 10);
+
+        if (found === tableNames.length) {
           await client.query(
             `INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
             [hash, entry.when]
           );
+          logger.info(
+            { tag: entry.tag, tables: tableNames },
+            "Skipped migration: tables already exist, marked as applied."
+          );
+          continue;
         }
-
-        logger.info(
-          { count: journal.entries.length },
-          "Seeded migration tracking: marked all migrations as applied (tables already existed from prior push/migration)."
-        );
       }
     }
   } finally {
