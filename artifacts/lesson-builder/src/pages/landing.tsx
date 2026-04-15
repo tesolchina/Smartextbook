@@ -328,7 +328,7 @@ export default function Landing() {
                 icon: <Zap className="w-6 h-6" />,
                 title: "Generate your first lesson",
                 desc: "Paste any textbook chapter or a URL. Add one teaching instruction (optional). Hit Generate — in seconds you'll have a summary, glossary, quiz, mind map, and AI tutor.",
-                link: { label: "Watch the demo talk →", url: "/talk", internal: true },
+                link: { label: "Watch the demo talk →", url: "/talk15Apr", internal: true },
               },
             ].map((item) => (
               <div key={item.step} className="bg-background border border-border rounded-3xl p-6 relative overflow-hidden">

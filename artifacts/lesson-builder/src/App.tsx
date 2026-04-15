@@ -40,6 +40,7 @@ function Router() {
       <Route path="/create-course" component={CreateCourse} />
       <Route path="/credits" component={Credits} />
       <Route path="/talk" component={TalkPage} />
+      <Route path="/talk15Apr" component={TalkPage} />
       <Route component={NotFound} />
     </Switch>
   );

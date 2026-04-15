@@ -3,7 +3,7 @@ import { BookOpenText, ExternalLink, ArrowLeft } from "lucide-react";
 
 export default function TalkPage() {
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-  const slidesUrl = `${base}/talk.html`;
+  const slidesUrl = `${base}/talk15Apr.html`;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#1a1714]">

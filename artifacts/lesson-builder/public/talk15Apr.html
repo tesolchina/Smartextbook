@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Democratising AI-Augmented Textbook Creation — Simon Wang</title>
+<style>
+:root {
+  --primary: #b84c2a;
+  --accent: #c97b3a;
+  --bg: #faf9f7;
+  --card: #fff;
+  --text: #1a1714;
+  --muted: #6b6560;
+  --border: #e8e4de;
+  --serif: 'Georgia', 'Times New Roman', serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --slide-w: 960;
+  --slide-h: 540;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #1a1714;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#deck {
+  width: calc(var(--slide-w) * 1px);
+  height: calc(var(--slide-h) * 1px);
+  position: relative;
+  background: var(--bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,.6);
+  transform-origin: center center;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 44px 52px;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity .4s ease, transform .4s ease;
+  pointer-events: none;
+}
+.slide.active { opacity: 1; transform: none; pointer-events: auto; }
+.slide.exit   { opacity: 0; transform: translateX(-40px); }
+
+/* ── type ── */
+.eyebrow {
+  font-family: var(--sans); font-size: .62em; font-weight: 700;
+  letter-spacing: .07em; word-spacing: -.05em; text-transform: uppercase; color: var(--primary); margin-bottom: .6em;
+}
+.slide-title { font-family: var(--serif); font-size: 2em; font-weight: 900; line-height: 1.2; color: var(--text); }
+.slide-title em { color: var(--primary); font-style: normal; }
+.slide-sub { font-family: var(--sans); font-size: .8em; color: var(--muted); margin-top: .7em; line-height: 1.6; }
+
+/* ── layout ── */
+.cols { display: flex; gap: 1.8em; flex: 1; align-items: flex-start; }
+.col  { flex: 1; display: flex; flex-direction: column; gap: .65em; }
+.spacer { flex: 1; }
+
+/* ── components ── */
+.card { background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 1em 1.2em; }
+.card-title { font-family: var(--sans); font-size: .68em; font-weight: 800; letter-spacing: .01em; color: var(--muted); margin-bottom: .45em; }
+
+.stat-block {
+  background: linear-gradient(135deg, var(--primary) 0%, #8b2a14 100%);
+  border-radius: 12px; padding: 1em 1.2em; color: white;
+}
+.stat-num   { font-family: var(--serif); font-size: 2.6em; font-weight: 900; line-height: 1; }
+.stat-label { font-family: var(--sans); font-size: .63em; opacity: .88; line-height: 1.4; margin-top: .3em; }
+
+.bullet-list { list-style: none; display: flex; flex-direction: column; gap: .5em; }
+.bullet-list li { position: relative; padding-left: 1.1em; font-family: var(--sans); font-size: .8em; line-height: 1.5; color: var(--text); }
+.bullet-list li::before { content: '▸'; color: var(--primary); font-size: .85em; position: absolute; left: 0; top: .1em; }
+
+.blockquote {
+  border-left: 4px solid var(--primary); padding: .55em 1.1em;
+  font-family: var(--serif); font-size: .88em; font-style: italic; color: var(--text);
+  line-height: 1.6; background: #fdf7f4; border-radius: 0 10px 10px 0;
+}
+.blockquote cite { display: block; font-style: normal; font-family: var(--sans); font-size: .7em; color: var(--muted); margin-top: .5em; }
+
+.highlight-box {
+  background: linear-gradient(135deg, #fff8f5, #fdf0e8);
+  border: 1.5px solid rgba(184,76,42,.2); border-radius: 12px; padding: .85em 1.05em;
+}
+.highlight-box .hb-label { font-family: var(--sans); font-size: .65em; font-weight: 800; letter-spacing: .01em; color: var(--primary); margin-bottom: .35em; }
+.highlight-box p { font-family: var(--sans); font-size: .77em; line-height: 1.55; color: var(--text); }
+.highlight-box p strong { color: var(--primary); }
+
+/* flow */
+.flow { display: flex; align-items: stretch; gap: .4em; }
+.flow-step { flex: 1; background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: .65em .8em; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .25em; }
+.flow-step.highlight { border-color: rgba(184,76,42,.5); background: #fff8f5; }
+.fs-icon  { font-size: 1.3em; }
+.fs-label { font-family: var(--sans); font-size: .62em; font-weight: 600; line-height: 1.3; color: var(--text); }
+.flow-arrow { color: var(--muted); font-size: .85em; flex-shrink: 0; align-self: center; }
+
+/* table */
+.compare-table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: .76em; }
+.compare-table th { text-align: left; font-weight: 800; font-size: .75em; letter-spacing: .01em; color: var(--muted); padding: .4em .7em; border-bottom: 2px solid var(--border); }
+.compare-table td { padding: .5em .7em; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.4; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table .yes { color: #166534; font-weight: 700; }
+.compare-table .no  { color: #991b1b; font-weight: 700; }
+
+/* pill */
+.badge { display: inline-block; padding: .22em .7em; border-radius: 99px; font-family: var(--sans); font-size: .62em; font-weight: 700; }
+.badge-orange { background: #fff0e6; color: #b84c2a; }
+.badge-green  { background: #edfcf2; color: #166534; }
+.badge-blue   { background: #eff6ff; color: #1e40af; }
+.badge-purple { background: #f5f3ff; color: #5b21b6; }
+
+/* barrier grid */
+.barrier-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .65em; flex: 1; }
+.barrier-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: .85em 1em; }
+.barrier-item .bi-num { font-family: var(--serif); font-size: 1.8em; font-weight: 900; color: rgba(184,76,42,.18); line-height: 1; margin-bottom: .2em; }
+.barrier-item .bi-title { font-family: var(--sans); font-size: .72em; font-weight: 800; color: var(--text); margin-bottom: .3em; }
+.barrier-item .bi-barrier { font-family: var(--sans); font-size: .68em; color: #991b1b; background: #fef2f2; border-radius: 6px; padding: .25em .5em; margin-bottom: .4em; display: inline-block; }
+.barrier-item .bi-answer { font-family: var(--sans); font-size: .68em; color: #166534; background: #edfcf2; border-radius: 6px; padding: .25em .5em; display: inline-block; }
+
+/* dark title slide */
+.dark-bg { background: linear-gradient(140deg, #1a1714 0%, #2d1f10 100%); }
+.dark-bg .eyebrow  { color: var(--accent); }
+.dark-bg .slide-title { color: #f5ede4; font-size: 1.65em; }
+.dark-bg .slide-sub   { color: rgba(255,255,255,.5); }
+.dark-bg .slide-footer { border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.3); }
+.accent-bar { width: 56px; height: 4px; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px; margin: .9em 0; }
+
+/* prompt box */
+.prompt-box {
+  background: #1e1e1e; border-radius: 10px; padding: .75em 1em;
+  font-family: 'Courier New', monospace; font-size: .68em; color: #d4d4d4;
+  line-height: 1.6; white-space: pre-wrap; border: 1px solid #333;
+}
+.prompt-box .comment { color: #6a9955; }
+.prompt-box .keyword { color: #569cd6; }
+.prompt-box .string  { color: #ce9178; }
+/* demo walkthrough steps */
+.demo-step { display:flex; gap:.65em; align-items:flex-start; background:var(--card); border:1.5px solid var(--border); border-radius:10px; padding:.5em .75em; }
+.demo-step.highlight { border-color:rgba(184,76,42,.3); background:linear-gradient(135deg,#fff8f5,#fdf2ec); }
+.ds-num { font-family:var(--serif); font-size:1.4em; font-weight:900; color:rgba(184,76,42,.25); line-height:1; min-width:1.1em; }
+.ds-label { font-family:var(--sans); font-size:.72em; font-weight:700; color:var(--text); margin-bottom:.1em; }
+.ds-detail { font-family:var(--sans); font-size:.65em; color:var(--muted); line-height:1.45; }
+.ds-link { color:var(--primary); text-decoration:underline; text-underline-offset:2px; }
+.ds-link:hover { opacity:.8; }
+/* chat bubbles */
+.cb-bubble { font-family: var(--sans); font-size: .7em; border-radius: 10px; padding: .45em .7em; max-width: 90%; line-height: 1.5; color: var(--text); }
+.cb-bubble-bot  { background: rgba(184,76,42,.08); align-self: flex-start; border-bottom-left-radius: 3px; }
+.cb-bubble-user { background: rgba(30,64,175,.07); align-self: flex-end; border-bottom-right-radius: 3px; }
+.cb-bubble strong.cb-role { display:block; font-size:.82em; margin-bottom:.1em; }
+.cb-bubble-bot  strong.cb-role { color: var(--primary); }
+.cb-bubble-user strong.cb-role { color: #1e40af; }
+
+/* loop diagram */
+.loop-row { display: flex; align-items: center; gap: .5em; justify-content: center; }
+.loop-node {
+  background: var(--card); border: 1.5px solid var(--border); border-radius: 10px;
+  padding: .6em .9em; text-align: center; min-width: 110px;
+}
+.loop-node.active { border-color: var(--primary); background: #fff8f5; }
+.loop-node .ln-icon { font-size: 1.2em; margin-bottom: .2em; }
+.loop-node .ln-label { font-family: var(--sans); font-size: .62em; font-weight: 700; line-height: 1.3; color: var(--text); }
+.loop-arrow-down { text-align: center; color: var(--primary); font-size: .9em; line-height: 1; }
+
+/* inline link */
+.slide a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
+.slide a:hover { opacity: .75; }
+
+/* footer */
+.slide-footer {
+  position: absolute; bottom: 14px; left: 52px; right: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--sans); font-size: .58em; color: var(--muted);
+  border-top: 1px solid var(--border); padding-top: 9px;
+}
+
+/* controls overlay */
+#controls {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: 10px 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,.7));
+  font-family: var(--sans); font-size: .82rem;
+  user-select: none; z-index: 100;
+  opacity: 0; transition: opacity .25s;
+}
+body:hover #controls, body:focus-within #controls { opacity: 1; }
+/* Always show controls on touch devices */
+@media (pointer: coarse) {
+  #controls { opacity: 1 !important; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+}
+#slide-counter { min-width: 60px; text-align: center; color: rgba(255,255,255,.7); }
+
+/* Portrait mobile bar */
+#portrait-hint {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 300; background: rgba(20,12,8,.97);
+  border-top: 1px solid rgba(184,76,42,.35);
+  color: #fff; padding: 10px 16px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  font-family: system-ui, sans-serif; font-size: .85rem;
+  pointer-events: auto; backdrop-filter: blur(10px);
+  align-items: center; gap: 10px;
+}
+#portrait-hint.ph-show { display: flex; }
+#ph-fs-btn {
+  background: var(--primary); border: none; color: #fff;
+  border-radius: 8px; padding: 9px 15px; font-size: .85rem;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+}
+#ph-prev, #ph-next {
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+  color: #eee; border-radius: 8px; padding: 9px 18px;
+  cursor: pointer; font-size: .88rem; flex-shrink: 0;
+}
+#ph-prev:disabled, #ph-next:disabled { opacity: .3; cursor: default; }
+
+.ctrl-btn { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #eee; border-radius: 8px; padding: 5px 16px; cursor: pointer; font-size: .82rem; transition: background .15s; backdrop-filter: blur(4px); }
+.ctrl-btn:hover { background: rgba(255,255,255,.22); }
+.ctrl-btn:disabled { opacity: .3; cursor: default; }
+#fullscreen-btn { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #eee; border-radius: 8px; padding: 5px 12px; cursor: pointer; font-size: .82rem; transition: background .15s; backdrop-filter: blur(4px); }
+#fullscreen-btn:hover { background: rgba(255,255,255,.22); }
+@media (pointer: coarse) {
+  .ctrl-btn { padding: 9px 20px; font-size: .88rem; }
+  #fullscreen-btn { padding: 9px 14px; font-size: .88rem; }
+  #controls { gap: 14px; padding: 10px 20px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+}
+#progress {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; background: rgba(255,255,255,.1); z-index: 100;
+}
+#progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px; transition: width .4s ease; }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PART 1 · 2024 — CHATBOT CUSTOMISATION              -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<!-- ═══ 1. TITLE ═══ -->
+<div class="slide dark-bg active" data-slide="1">
+  <div class="eyebrow">TeachingMatters Seminar · April 15, 2026</div>
+  <div class="slide-title">
+    Democratising AI-Augmented<br>Textbook Creation Through<br>
+    <em>No-Code Chatbot Customisation</em>
+  </div>
+  <div class="accent-bar"></div>
+  <div style="font-family:var(--sans);font-size:.82em;color:rgba(255,255,255,.8)">
+    <strong style="color:var(--accent)">Simon Wang</strong><br>
+    Lecturer in English and Innovation Officer<br>
+    The Language Centre, Hong Kong Baptist University
+  </div>
+  <div class="spacer"></div>
+  <div style="display:flex;gap:.65em;flex-wrap:wrap">
+    <span class="badge badge-orange">AI in Education</span>
+    <span class="badge badge-orange">Natural Language Orchestration</span>
+    <span class="badge badge-orange">Open Source</span>
+    <span class="badge badge-orange">BYOK</span>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · Lecturer in English &amp; Innovation Officer · HKBU Language Centre</span><span>1 / 19</span></div>
+</div>
+
+<!-- ═══ 2. NATURE 2023 ═══ -->
+<div class="slide" data-slide="2">
+  <div class="eyebrow">Part 1 — February 2023 · Raised Three Years Ago, Still Relevant Today</div>
+  <div class="slide-title">The Question on<br><em>Access to AI</em></div>
+  <div class="cols" style="gap:1.4em;align-items:flex-start;flex:1;margin-top:.5em;min-height:0">
+    <div class="col" style="flex:1.05">
+      <a href="https://www.nature.com/articles/d41586-023-00553-9" target="_blank" style="display:block;text-decoration:none">
+        <img src="/nature-article.png" alt="Nature correspondence: OpenAI — explain why some countries are excluded from ChatGPT, by Simon H. Wang, 28 February 2023"
+          style="width:100%;border-radius:10px;border:2px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,.12);display:block" />
+      </a>
+      <p style="font-family:var(--sans);font-size:.58em;color:var(--muted);margin-top:.3em;line-height:1.4">
+        <a href="https://www.nature.com/articles/d41586-023-00553-9" target="_blank"><em>Nature</em> Correspondence · 28 February 2023</a><br>
+        nature.com/articles/d41586-023-00553-9
+      </p>
+    </div>
+    <div class="col" style="flex:1.1;display:flex;flex-direction:column;gap:.35em">
+      <div class="card" style="border-color:rgba(184,76,42,.3);padding:.55em .85em">
+        <div class="card-title" style="margin-bottom:.25em">The Issue — Raised February 2023, Still Relevant</div>
+        <ul class="bullet-list" style="font-size:.78em;gap:.2em">
+          <li>ChatGPT launched November 2022 — <strong>many countries silently excluded</strong> with no explanation from OpenAI</li>
+          <li>The principle of transparency should extend to who gets access — and why</li>
+          <li>Written <strong>early in the conversation</strong>, before most institutions had formed an AI policy</li>
+        </ul>
+      </div>
+      <div style="background:#edfcf2;border:1.5px solid rgba(22,101,52,.15);border-radius:10px;padding:.4em .75em">
+        <div style="font-family:var(--sans);font-size:.58em;font-weight:800;color:#166534;margin-bottom:.15em">Three years later — how technology has responded</div>
+        <ul class="bullet-list" style="font-size:.78em;gap:.18em">
+          <li>Alternative models emerged: <a href="https://www.deepseek.com" target="_blank" style="color:inherit"><strong>DeepSeek</strong></a>, <a href="https://www.llama.com" target="_blank" style="color:inherit">Llama</a>, <a href="https://qwen.readthedocs.io" target="_blank" style="color:inherit">Qwen</a> — geography no longer the barrier</li>
+          <li>API access to <a href="https://platform.openai.com" target="_blank" style="color:inherit">ChatGPT</a>, <a href="https://claude.ai" target="_blank" style="color:inherit">Claude</a> &amp; <a href="https://aistudio.google.com/apikey" target="_blank" style="color:inherit">Gemini</a> now available globally</li>
+          <li>The hard access barrier has been <strong>largely removed</strong></li>
+        </ul>
+      </div>
+      <div class="highlight-box" style="padding:.4em .75em">
+        <div class="hb-label" style="margin-bottom:.2em">The question has shifted — but not gone away</div>
+        <p style="font-size:.8em;line-height:1.45">Access to a model ≠ access to an <strong>educational tool</strong>. Educators from diverse backgrounds still face barriers to <em>use</em> AI effectively. This is what today's talk addresses.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>2 / 19</span></div>
+</div>
+
+<!-- ═══ 3. ORIGIN — 2024 ARTICLE ═══ -->
+<div class="slide" data-slide="3">
+  <div class="eyebrow">Part 1 — 2024 · The Case Study</div>
+  <div class="slide-title">No-Code<br><em>Chatbot Customisation</em></div>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="blockquote">
+        "Where to start with generative AI chatbot customisation?"
+        <cite>— Simon Wang, <em>Times Higher Education Campus</em>, August 2024<br>
+        <a href="https://timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation" target="_blank" style="font-family:var(--sans);font-size:.85em;opacity:.7">timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation</a></cite>
+      </div>
+      <ul class="bullet-list" style="margin-top:.5em">
+        <li>Generic chatbots like ChatGPT are powerful — but not designed for <strong>your course, your students, your method</strong></li>
+        <li>The article asked: can educators build chatbots tailored to their own teaching — <strong>without writing code?</strong></li>
+        <li>The answer turned out to be yes. But it raised a new question.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="card" style="border-color:rgba(184,76,42,.3);margin-bottom:.6em">
+        <div class="card-title">The Key Insight</div>
+        <ul class="bullet-list">
+          <li>AI behaviour can be directed entirely through <strong>plain English instructions</strong> — a "system prompt"</li>
+          <li>A well-written system prompt can encode a teacher's <strong>full pedagogical workflow</strong></li>
+          <li>No programming knowledge required — only pedagogical clarity</li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <div class="hb-label">Try it — the wordchoice bot</div>
+        <p style="margin-bottom:.4em">A working example built entirely through a system prompt — no coding required.</p>
+        <div style="display:flex;gap:.6em;flex-wrap:wrap">
+          <a href="https://poe.com/wordchoice" target="_blank" style="font-family:var(--sans);font-size:.68em;font-weight:700;background:var(--primary);color:#fff;padding:.3em .75em;border-radius:6px;text-decoration:none">▶ Use the bot — poe.com/wordchoice</a>
+          <a href="https://poe.com/edit_bot?bot=wordchoice" target="_blank" style="font-family:var(--sans);font-size:.68em;font-weight:700;background:#fff;color:var(--primary);border:1.5px solid var(--primary);padding:.3em .75em;border-radius:6px;text-decoration:none">✎ See &amp; edit the system prompt</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>3 / 19</span></div>
+</div>
+
+<!-- ═══ 3. WHAT IS CHATBOT CUSTOMISATION ═══ -->
+<div class="slide" data-slide="3">
+  <div class="eyebrow">Part 1 — 2024 · The Core Concept</div>
+  <div class="slide-title">What is<br><em>Chatbot Customisation?</em></div>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card" style="margin-bottom:.6em">
+        <div class="card-title">Generic AI (ChatGPT, Gemini…)</div>
+        <ul class="bullet-list">
+          <li>Answers anything — broad, general knowledge</li>
+          <li>No knowledge of your course, chapter, or students</li>
+          <li>Open-ended dialogue — no structure, no workflow</li>
+          <li>Students can ask it to write their essay for them</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(184,76,42,.35)">
+        <div class="card-title" style="color:var(--primary)">Customised Chatbot</div>
+        <ul class="bullet-list">
+          <li>Guided by a <strong>system prompt</strong> — instructions the educator writes once at the backend</li>
+          <li>Knows the specific content, follows a pedagogical sequence</li>
+          <li>Presents a <strong>menu of options</strong> — structured interaction, not open chat</li>
+          <li>Can refuse off-topic requests entirely</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card-title" style="margin-bottom:.4em">How It Works</div>
+      <div class="flow" style="flex-direction:column;gap:.35em">
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.55em .8em">
+          <span style="color:var(--primary);font-weight:800;font-size:1.1em">1</span>
+          <span class="fs-label"><strong>Educator writes a system prompt</strong> — defines the AI's role, knowledge, workflow, and tone. Plain English. No code.</span>
+        </div>
+        <div class="loop-arrow-down">↓</div>
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.55em .8em">
+          <span style="color:var(--primary);font-weight:800;font-size:1.1em">2</span>
+          <span class="fs-label"><strong>Chatbot is deployed</strong> — students access via a shared link. They see only the menu; the system prompt is hidden.</span>
+        </div>
+        <div class="loop-arrow-down">↓</div>
+        <div class="flow-step highlight" style="flex:none;text-align:left;flex-direction:row;gap:.6em;padding:.55em .8em">
+          <span style="color:var(--primary);font-weight:800;font-size:1.1em">3</span>
+          <span class="fs-label"><strong>Students interact</strong> — structured guided learning, shaped entirely by the educator's design choices.</span>
+        </div>
+      </div>
+      <div class="highlight-box" style="margin-top:.55em">
+        <div class="hb-label">The Shift</div>
+        <p>From <strong>consuming AI</strong> → to <strong>designing AI behaviour</strong>. The educator becomes the architect.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>4 / 19</span></div>
+</div>
+
+<!-- ═══ 4. CASE STUDY — WORDCHOICE ═══ -->
+<div class="slide" data-slide="4">
+  <div class="eyebrow">Part 1 — 2024 · Case Study</div>
+  <div class="slide-title"><em>Programming</em> a Chatbot<br>in Plain English</div>
+  <div class="spacer" style="flex:.3"></div>
+  <div class="cols" style="gap:1.4em">
+    <div class="col" style="flex:1">
+      <div style="font-family:var(--sans);font-size:.64em;font-weight:800;color:var(--muted);margin-bottom:.3em">
+        The wordchoice bot — <a href="https://poe.com/wordchoice" target="_blank">poe.com/wordchoice</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.25em;margin-bottom:.45em">
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.55em;padding:.42em .65em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.68em;min-width:10px">1</span><span class="fs-label">Learn about word choice &amp; collocation — 3 MC questions, one at a time, with feedback</span></div>
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.55em;padding:.42em .65em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.68em;min-width:10px">2</span><span class="fs-label">Check collocation of a word — appropriate &amp; inappropriate combinations listed</span></div>
+        <div class="flow-step" style="flex:none;text-align:left;flex-direction:row;gap:.55em;padding:.42em .65em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.68em;min-width:10px">3</span><span class="fs-label">Check if a word combination is appropriate — verdict + better alternative</span></div>
+        <div class="flow-step highlight" style="flex:none;text-align:left;flex-direction:row;gap:.55em;padding:.42em .65em"><span style="color:var(--primary);font-weight:800;font-family:var(--sans);font-size:.68em;min-width:10px">4</span><span class="fs-label">Review word choices in a paragraph — sentence by sentence, structured feedback</span></div>
+      </div>
+      <div style="background:#f8f6f3;border:1.5px solid var(--border);border-radius:10px;padding:.55em .8em">
+        <div style="font-family:var(--sans);font-size:.6em;font-weight:800;color:var(--muted);margin-bottom:.25em">Output template (Option 4)</div>
+        <p style="font-family:monospace;font-size:.68em;line-height:1.55;color:var(--text)">
+          word combination: word 1 <em>(pos)</em> + word 2 <em>(pos)</em><br>
+          verdict: appropriate / not appropriate<br>
+          explanation &amp; example: …<br>
+          confidence level: 10%–100%
+        </p>
+      </div>
+    </div>
+    <div class="col" style="flex:1.15;display:flex;flex-direction:column;gap:.3em">
+      <div style="display:flex;align-items:center;gap:.6em;flex-wrap:wrap">
+        <span style="font-family:var(--sans);font-size:.64em;font-weight:800;color:var(--muted)">The system prompt — written entirely in plain English</span>
+        <a href="https://poe.com/edit_bot?bot=wordchoice" target="_blank" style="font-family:var(--sans);font-size:.58em;font-weight:700;background:var(--primary);color:#fff;padding:.2em .55em;border-radius:5px;text-decoration:none;flex-shrink:0">✎ Edit in Poe</a>
+      </div>
+
+      <!-- Summary (always visible) -->
+      <div style="background:#f8f6f3;border:1.5px solid var(--border);border-radius:9px;padding:.55em .8em">
+        <div style="font-family:var(--sans);font-size:.6em;font-weight:800;color:var(--muted);margin-bottom:.3em;text-transform:uppercase;letter-spacing:.04em">What the prompt instructs the AI to do</div>
+        <ul style="margin:0;padding-left:1.1em;font-family:var(--sans);font-size:.67em;line-height:1.65;color:var(--text)">
+          <li><strong>Role:</strong> Experienced English lecturer focused on word choice &amp; collocation</li>
+          <li><strong>Menu system:</strong> Typing <code style="background:#eee;padding:.05em .3em;border-radius:4px">*menu*</code> shows 4 options — nothing else</li>
+          <li><strong>Option 1 — Quiz:</strong> 3 MC questions on collocation, one at a time, with feedback</li>
+          <li><strong>Option 2 — Lookup:</strong> List appropriate &amp; inappropriate combinations for a word</li>
+          <li><strong>Option 3 — Check:</strong> Verdict on a word combination + better alternative if wrong</li>
+          <li><strong>Option 4 — Review:</strong> Paragraph checked sentence by sentence using a fixed template</li>
+          <li><strong>Guardrail:</strong> Always ends with an AI disclaimer</li>
+        </ul>
+      </div>
+
+      <!-- Full prompt toggle -->
+      <details onclick="event.stopPropagation()" style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <summary style="font-family:var(--sans);font-size:.62em;font-weight:700;color:var(--primary);cursor:pointer;user-select:none;list-style:none;padding:.15em 0">▶ Show full system prompt</summary>
+        <div class="prompt-box" style="font-size:.57em;line-height:1.55;max-height:160px;overflow-y:auto;margin-top:.25em">
+You are an experienced lecturer in English. Your job is to help students improve their word choice in their writing. When the user type <span class="keyword">*menu*</span> you should present the following options ONLY; do not add any other info at this stage.
+1. Learn about the importance of word choice and collocation
+2. Check the collocation of individual words
+3. Check the appropriateness of a word combination
+4. Review word choices of a paragraph
+
+<span class="comment">// Option 1 — 3 MC questions, one at a time, with feedback</span>
+When the user selects 1, offer 3 MC questions on: importance of word choice to achieve idiomaticity · collocation concept · how checking collocation improves writing. Present one question at a time; give feedback before moving on. Present the menu again at the end.
+
+<span class="comment">// Option 2 — word lookup</span>
+When the user selects 2, ask for an individual word; list common appropriate combinations AND inappropriate usage (miscollocation). Present menu again at the end.
+
+<span class="comment">// Option 3 — word combination check</span>
+When the user selects 3, ask for one word combination. If appropriate, write a sentence using it. If not, explain and suggest a better alternative. Present menu again at the end.
+
+<span class="comment">// Option 4 — paragraph review template</span>
+When the user selects 4, ask for a paragraph. Check one sentence at a time — for each verb, check its object; for each key word, check its combinations. Use this template:
+{
+  word combination: word 1 (POS) + word 2 (POS)
+  verdict: appropriate / not appropriate
+  explanation and example: …
+  confidence level: 10%–100%
+}
+Present menu again at the end.
+
+<span class="string">Always remind the user: "I am powered by AI and can make mistakes. Consult your teacher for verification."</span>
+        </div>
+      </details>
+    </div>
+  </div>
+  <div class="spacer" style="flex:.2"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65em">
+    <div style="background:linear-gradient(135deg,#fff8f5,#fdf0e8);border:1.5px solid rgba(184,76,42,.2);border-radius:10px;padding:.6em .85em">
+      <div style="font-family:var(--sans);font-size:.6em;font-weight:800;color:var(--primary);margin-bottom:.2em">Natural Language Programming</div>
+      <p style="font-family:var(--sans);font-size:.7em;line-height:1.5;color:var(--text)">No code is written. The educator <strong>programs the AI's behaviour</strong> entirely in plain English — specifying roles, workflows, output formats, and guardrails. This is orchestration, not conversation.</p>
+    </div>
+    <div style="background:#f0f4ff;border:1.5px solid rgba(30,64,175,.15);border-radius:10px;padding:.6em .85em">
+      <div style="font-family:var(--sans);font-size:.6em;font-weight:800;color:#1e40af;margin-bottom:.2em">A Precursor of Vibe Coding</div>
+      <p style="font-family:var(--sans);font-size:.7em;line-height:1.5;color:var(--text)">Vibe coding asks AI to <strong>write programming code</strong> from a description — more powerful. But this came first: using natural language to <strong>direct AI behaviour directly</strong>, without generating code at all.</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>5 / 19</span></div>
+</div>
+
+<!-- ═══ NEW: CHATBOT DEMO ═══ -->
+<div class="slide" data-slide="5b" style="padding:26px 38px;overflow:hidden">
+  <div class="eyebrow">Part 1 — 2024 · Try It Now</div>
+  <div class="slide-title" style="font-size:1.4em;margin-bottom:.45em">Customise a Chatbot — <em>Live in this Slide</em></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85em;flex:1;min-height:0">
+
+    <!-- LEFT: System prompt + key -->
+    <div style="display:flex;flex-direction:column;gap:.4em;min-height:0">
+      <div class="card" style="padding:.5em .75em;flex:1;display:flex;flex-direction:column;min-height:0">
+        <div class="card-title" style="margin-bottom:.25em;font-size:.75em">
+          System Prompt
+          <span style="font-weight:400;color:var(--muted);font-size:.85em"> — edit to change the bot's behaviour</span>
+        </div>
+        <textarea id="cb-prompt" style="flex:1;width:100%;padding:.4em .55em;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:.64em;line-height:1.55;resize:none;background:var(--bg);color:var(--text);min-height:0">You are an academic writing coach for university students. Your role is to help them improve their own writing — never to rewrite it for them.
+
+When a student shares a sentence or paragraph:
+1. Give ONE specific, actionable piece of feedback on word choice or sentence structure
+2. Ask ONE guiding question to prompt their own revision
+3. If they share a revised version, acknowledge the improvement and suggest one more refinement
+
+Keep responses concise — 2 short paragraphs. Be encouraging but precise.</textarea>
+      </div>
+      <div class="card" style="padding:.4em .75em">
+        <div style="display:flex;gap:.5em;align-items:center;flex-wrap:wrap">
+          <select id="cb-provider" style="padding:.3em .5em;border:1.5px solid var(--border);border-radius:7px;font-family:var(--sans);font-size:.65em;background:var(--bg);color:var(--text);flex:1">
+            <option value="https://api.deepseek.com/v1|deepseek-chat">DeepSeek Chat ★ HK recommended</option>
+            <option value="https://generativelanguage.googleapis.com/v1beta/openai/|gemini-2.0-flash">Gemini 2.0 Flash (global free)</option>
+            <option value="https://api.openai.com/v1|gpt-4o-mini">OpenAI GPT-4o Mini</option>
+            <option value="https://openrouter.ai/api/v1|google/gemini-2.0-flash-001">OpenRouter (300+ models)</option>
+          </select>
+          <input id="cb-key" type="password" placeholder="API key…" style="padding:.3em .5em;border:1.5px solid var(--border);border-radius:7px;font-family:monospace;font-size:.65em;background:var(--bg);color:var(--text);flex:1.2" />
+        </div>
+        <p style="font-family:var(--sans);font-size:.52em;color:var(--muted);margin-top:.2em;line-height:1.6">
+          Key stays in this page only — never stored or transmitted elsewhere.<br>
+          🇭🇰 <strong>Hong Kong:</strong> <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:var(--primary)">platform.deepseek.com/api_keys</a> (DeepSeek — very low cost, globally accessible)<br>
+          🌐 <strong>Global:</strong> <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--muted)">aistudio.google.com/apikey</a> (Gemini — free tier, not available in HK)
+        </p>
+      </div>
+    </div>
+
+    <!-- RIGHT: Chat -->
+    <div style="display:flex;flex-direction:column;gap:.4em;min-height:0">
+      <div class="card" style="padding:.5em .75em;flex:1;display:flex;flex-direction:column;min-height:0">
+        <div class="card-title" style="margin-bottom:.3em;font-size:.75em">Chat with your bot</div>
+        <div id="cb-messages" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:.35em;padding-right:.15em;min-height:0">
+          <div class="cb-bubble cb-bubble-bot">
+            Hello! Share a sentence or paragraph you're working on, and I'll help you improve it step by step.
+          </div>
+        </div>
+        <div style="display:flex;gap:.4em;margin-top:.4em">
+          <input id="cb-input" type="text"
+            placeholder="e.g. The results were very big and important."
+            style="flex:1;padding:.38em .55em;border:1.5px solid var(--border);border-radius:7px;font-family:var(--sans);font-size:.68em;background:var(--bg);color:var(--text)"
+            onkeydown="if(event.key==='Enter')cbSend()" />
+          <button onclick="cbSend()" style="padding:.38em .85em;background:var(--primary);color:#fff;border:none;border-radius:7px;font-family:var(--sans);font-size:.68em;font-weight:700;cursor:pointer;white-space:nowrap">Send →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>6 / 19</span></div>
+</div>
+
+<!-- ═══ 5. TWO PATHWAYS ═══ -->
+<div class="slide" data-slide="5">
+  <div class="eyebrow">Part 1 — 2024 · Two Pathways</div>
+  <div class="slide-title">Customising Chatbots:<br><em>Platform-Based</em> vs <em>API-Based</em></div>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card" style="margin-bottom:.6em">
+        <div class="card-title" style="color:#1e40af">Pathway 1 — Platform-Based (Low-Code)</div>
+        <ul class="bullet-list">
+          <li>Tools like <strong>Poe.com</strong>, Character.AI, custom GPTs</li>
+          <li>Write a system prompt in plain English → publish a chatbot link</li>
+          <li>Quick to set up — no programming knowledge needed</li>
+          <li>Free or low cost, good for experimenting</li>
+        </ul>
+        <div style="margin-top:.55em;display:flex;gap:.4em;flex-wrap:wrap">
+          <span class="badge badge-green">✓ Accessible</span>
+          <span class="badge badge-green">✓ No code</span>
+          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ No student data</span>
+          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ Black box</span>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="border-color:rgba(184,76,42,.35);margin-bottom:.6em">
+        <div class="card-title" style="color:#b84c2a">Pathway 2 — API-Based (Bespoke Platform)</div>
+        <ul class="bullet-list">
+          <li>Custom platform built on provider APIs (OpenAI, Gemini…)</li>
+          <li>Unlimited system prompt — encode full pedagogical logic</li>
+          <li>Full control: UX, data storage, student access</li>
+          <li>Complete visibility into student conversation logs</li>
+        </ul>
+        <div style="margin-top:.55em;display:flex;gap:.4em;flex-wrap:wrap">
+          <span class="badge badge-green">✓ Full data</span>
+          <span class="badge badge-green">✓ No limits</span>
+          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ Needs developer</span>
+          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ Higher cost</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="highlight-box">
+    <div class="hb-label">Where We Were in 2024</div>
+    <p>Pathway 1 was accessible but left educators blind to their students' learning. Pathway 2 solved that — but required a programmer and months of development. <strong>Fast forward two years.</strong></p>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>7 / 19</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TRANSITION                                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<!-- ═══ 6. FAST FORWARD ═══ -->
+<div class="slide dark-bg" data-slide="6">
+  <div class="spacer" style="flex:.4"></div>
+  <div class="eyebrow">Fast Forward</div>
+  <div class="slide-title" style="font-size:2.4em;line-height:1.1">
+    2024 → <em>2026</em>
+  </div>
+  <div class="accent-bar"></div>
+  <div style="font-family:var(--sans);font-size:.82em;color:rgba(255,255,255,.6);max-width:560px;line-height:1.65;margin-top:.2em">
+    Three new ideas — and one new paradigm — arrived that changed how we think about this problem.
+  </div>
+  <div class="spacer" style="flex:.4"></div>
+  <div style="display:flex;gap:1.2em">
+    <div style="font-family:var(--sans);font-size:.76em;color:rgba(255,255,255,.5);flex:1">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em;font-size:.85em;text-transform:uppercase;letter-spacing:.05em">Idea 1</div>
+      Google's research on<br>AI-augmented textbooks
+    </div>
+    <div style="font-family:var(--sans);font-size:.76em;color:rgba(255,255,255,.5);flex:1">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em;font-size:.85em;text-transform:uppercase;letter-spacing:.05em">Idea 2</div>
+      Chatbot customisation<br>embedded in the textbook itself
+    </div>
+    <div style="font-family:var(--sans);font-size:.76em;color:rgba(255,255,255,.5);flex:1">
+      <div style="color:var(--accent);font-weight:700;margin-bottom:.3em;font-size:.85em;text-transform:uppercase;letter-spacing:.05em">Idea 3</div>
+      Bring Your Own Key —<br>zero cost, full data ownership
+    </div>
+    <div style="font-family:var(--sans);font-size:.76em;flex:1;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:.6em .8em;background:rgba(255,255,255,.04)">
+      <div style="color:var(--primary);font-weight:700;margin-bottom:.3em;font-size:.85em;text-transform:uppercase;letter-spacing:.05em">New Paradigm</div>
+      <span style="color:rgba(255,255,255,.7)"><strong style="color:#f5ede4">Vibe coding</strong> — Andrej Karpathy, Feb 2025<br>directing AI with natural language<br>to write software</span>
+    </div>
+  </div>
+  <div style="margin-top:.75em;font-family:var(--sans);font-size:.6em;color:rgba(255,255,255,.28);line-height:1.5">
+    <a href="https://x.com/karpathy/status/1886192184808149016" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:underline">Karpathy on "Vibe Coding" (X, Feb 2025)</a>
+    &nbsp;·&nbsp;
+    <a href="https://simonwillison.net/tags/vibe-coding/" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:underline">simonwillison.net — vibe coding</a>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>8 / 19</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PART 2 · 2026 — THE NEW PROJECT                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<!-- ═══ NEW: PAIN POINTS ═══ -->
+<div class="slide" data-slide="7b">
+  <div class="eyebrow">Part 2 — 2026 · Three Unsolved Problems</div>
+  <div class="slide-title">Beyond the System Prompt:<br><em>Three Pain Points</em></div>
+  <div class="spacer" style="flex:.3"></div>
+  <div class="barrier-grid">
+    <div class="barrier-item">
+      <div class="bi-num">1</div>
+      <div class="bi-title">Contextualisation</div>
+      <div class="bi-barrier">The pain point</div>
+      <p style="font-family:var(--sans);font-size:.72em;line-height:1.5;color:var(--text);margin-top:.4em">A system prompt customises the chatbot — but the chatbot still sits <strong>outside</strong> the learning experience. How do we integrate the AI tutor into the textbook, the quiz, the feedback loop — as one seamless experience?</p>
+    </div>
+    <div class="barrier-item">
+      <div class="bi-num">2</div>
+      <div class="bi-title">Static Materials</div>
+      <div class="bi-barrier">The pain point</div>
+      <p style="font-family:var(--sans);font-size:.72em;line-height:1.5;color:var(--text);margin-top:.4em">Textbook chapters and lecture slides remain flat PDFs and static decks. How do we enhance them into <strong>multimodal, interactive experiences</strong> — without a team of instructional designers?</p>
+    </div>
+    <div class="barrier-item">
+      <div class="bi-num">3</div>
+      <div class="bi-title">Who Pays for the Tokens?</div>
+      <div class="bi-barrier">The pain point</div>
+      <p style="font-family:var(--sans);font-size:.72em;line-height:1.5;color:var(--text);margin-top:.4em">Every AI conversation costs tokens — computing power. Most educators cannot expense API costs. Most students won't pay. <strong>Who provides the computing power</strong> for AI-assisted learning at scale?</p>
+    </div>
+  </div>
+  <div class="spacer" style="flex:.3"></div>
+  <div class="highlight-box">
+    <div class="hb-label">SmartTextbook addresses all three</div>
+    <p>Embedded AI tutor + chapter-to-lesson pipeline + <strong>BYOK</strong> (Bring Your Own Key) — each student uses their own free API key.</p>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>9 / 19</span></div>
+</div>
+
+<!-- ═══ 8. GOOGLE RESEARCH ═══ -->
+<div class="slide" data-slide="8">
+  <div class="eyebrow">Part 2 — 2026 · Idea 1 — The Evidence</div>
+  <div class="slide-title">Google's Research:<br><em>AI-Augmented Textbooks Work</em></div>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="blockquote">
+        "Students using AI-augmented textbooks showed an average <strong>11% improvement</strong> in learning outcomes compared to traditional materials."
+        <cite>— Google DeepMind, <em>Learn Your Way</em>, 2024<br>
+        <a href="https://deepmind.google/research/publications/learn-your-way/" target="_blank" style="font-family:var(--sans);font-size:.85em;opacity:.7">deepmind.google/research/publications/learn-your-way</a></cite>
+      </div>
+      <ul class="bullet-list" style="margin-top:.35em">
+        <li>The AI doesn't just present content — it <strong>explains, quizzes, re-explains</strong>, adapting to each student in real time</li>
+        <li>Static textbooks give every student the same page. AI-augmented materials give every student <strong>their own conversation</strong></li>
+        <li>The learning gains are real, measurable, and significant</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="stat-block">
+        <div class="stat-num">11%</div>
+        <div class="stat-label">Average learning improvement with AI-augmented textbooks — Google DeepMind, 2024</div>
+      </div>
+      <div class="card" style="border-color:rgba(184,76,42,.3);margin-top:.6em">
+        <div class="card-title">The Connection to 2024</div>
+        <p style="font-family:var(--sans);font-size:.77em;line-height:1.55;color:var(--text)">In 2024 we showed that educators can customise chatbots. Google's research shows that <strong>AI inside a textbook produces measurable learning gains</strong>. The natural question: what if we combined these two ideas?</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>10 / 19</span></div>
+</div>
+
+<!-- ═══ 8. THREE NEW IDEAS ═══ -->
+<div class="slide" data-slide="8">
+  <div class="eyebrow">Part 2 — 2026 · Ideas 2 &amp; 3</div>
+  <div class="slide-title">Chatbot Customisation<br><em>Inside the Textbook — for Free</em></div>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card" style="border-color:rgba(184,76,42,.35);margin-bottom:.6em">
+        <div class="card-title" style="color:var(--primary)">Idea 2 — Chatbot in Context</div>
+        <ul class="bullet-list">
+          <li>In 2024: the chatbot was <em>separate</em> from course materials — students brought their own text</li>
+          <li>New idea: the AI tutor is <strong>automatically grounded in the chapter</strong> — it knows exactly what students just read</li>
+          <li>Every lesson generated by SmartTextbook comes with a <strong>built-in content-aware AI tutor</strong></li>
+          <li>The educator's pedagogical design is baked in — not bolted on</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="border-color:rgba(184,76,42,.35);margin-bottom:.6em">
+        <div class="card-title" style="color:var(--primary)">Idea 3 — Bring Your Own Key (BYOK)</div>
+        <ul class="bullet-list">
+          <li>In 2024: Pathway 2 required institutional budget for API costs</li>
+          <li>New model: each educator connects their <strong>own API key</strong> — <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:inherit">DeepSeek</a>, <a href="https://aistudio.google.com/apikey" target="_blank" style="color:inherit">Gemini</a>, <a href="https://platform.openai.com/api-keys" target="_blank" style="color:inherit">OpenAI</a>, or any provider</li>
+          <li><strong>Zero cost to the platform</strong> — you pay only for what you use, directly to your provider</li>
+          <li>🇭🇰 <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:inherit"><strong>DeepSeek</strong></a> is globally accessible &amp; very low-cost · 🌐 <a href="https://aistudio.google.com/apikey" target="_blank" style="color:inherit">Gemini</a> offers a free tier (not in HK)</li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <div class="hb-label">What This Combination Unlocks</div>
+        <p>Pathway 2 power (data ownership, custom tutors) at Pathway 1 accessibility (no code, no budget). That is SmartTextbook.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>11 / 19</span></div>
+</div>
+
+<!-- ═══ 9. PLATFORM ═══ -->
+<div class="slide" data-slide="9">
+  <div class="eyebrow">Part 2 — 2026 · The Platform</div>
+  <div style="display:flex;align-items:baseline;gap:1.2em;flex-wrap:wrap;margin-bottom:.2em">
+    <div class="slide-title" style="margin-bottom:0">SmartTextbook:<br><em>From Chapter to AI Experience</em></div>
+    <a href="https://smartextbook.replit.app/app" target="_blank"
+       style="font-family:var(--sans);font-size:.65em;font-weight:700;background:var(--primary);color:#fff;padding:.28em .8em;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0">
+      ↗ smartextbook.replit.app/app
+    </a>
+  </div>
+  <div class="spacer" style="flex:.2"></div>
+  <div style="margin-bottom:.85em">
+    <div class="flow">
+      <div class="flow-step"><div class="fs-icon">📄</div><div class="fs-label">Paste chapter text</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="fs-icon">✍️</div><div class="fs-label">One teaching instruction</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="fs-icon">⚡</div><div class="fs-label">Full lesson generated</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight"><div class="fs-icon">🎓</div><div class="fs-label">Students learn with AI tutor</div></div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <div class="card-title">Each Lesson Includes</div>
+        <ul class="bullet-list">
+          <li>Structured lesson summary</li>
+          <li>Key concepts glossary</li>
+          <li>Adaptive quiz (5, 10, or 15 questions)</li>
+          <li>AI-generated mind map</li>
+          <li>Content-aware AI tutor — grounded in chapter, shaped by educator's method</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-title">Design Principles</div>
+        <ul class="bullet-list">
+          <li><strong>BYOK</strong> — your API key, stored in-browser only</li>
+          <li><strong>Provider-agnostic</strong> — Gemini (free), OpenAI, DeepSeek, Grok, Kimi…</li>
+          <li><strong>Open source</strong> — fully transparent, self-hostable</li>
+          <li><strong>Audience-aware</strong> — same chapter, different lesson depth for different learners</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>12 / 19</span></div>
+</div>
+
+<!-- ═══ 10. COMPARISON ═══ -->
+<div class="slide" data-slide="10">
+  <div class="eyebrow">Part 2 — 2026 · Why Own Platform</div>
+  <div class="slide-title">How <em>SmartTextbook</em> Compares<br>to Existing Approaches</div>
+  <div class="spacer"></div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Generic AI (<a href="https://chat.openai.com" target="_blank" style="color:inherit;text-decoration:underline;text-underline-offset:2px">ChatGPT</a> etc.)</th>
+        <th>Bot Platforms (<a href="https://poe.com" target="_blank" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Poe</a> etc.)</th>
+        <th>SmartTextbook ✦</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Content grounding</strong></td>
+        <td class="no">✗ Generic knowledge</td>
+        <td class="yes">✓ Via system prompt</td>
+        <td class="yes">✓ Auto-grounded to chapter</td>
+      </tr>
+      <tr>
+        <td><strong>Pedagogical workflow</strong></td>
+        <td class="no">✗ Open-ended chat</td>
+        <td class="yes">✓ Educator-designed</td>
+        <td class="yes">✓ AI-generated + customisable</td>
+      </tr>
+      <tr>
+        <td><strong>Student chat logs</strong></td>
+        <td class="no">✗ No access</td>
+        <td class="no">✗ No access</td>
+        <td class="yes">✓ Stored, owned by educator</td>
+      </tr>
+      <tr>
+        <td><strong>Cost to educator</strong></td>
+        <td class="yes">✓ Free tier</td>
+        <td class="yes">✓ Free tier</td>
+        <td class="yes">✓ BYOK — pay provider only</td>
+      </tr>
+      <tr>
+        <td><strong>Data ownership</strong></td>
+        <td class="no">✗ Vendor-owned</td>
+        <td class="no">✗ Vendor-owned</td>
+        <td class="yes">✓ Educator-owned, open source</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>13 / 19</span></div>
+</div>
+
+<!-- ═══ 11. CLOSED LOOP ═══ -->
+<div class="slide" data-slide="11">
+  <div class="eyebrow">Part 2 — 2026 · The Feedback Loop</div>
+  <div class="slide-title">Data Closes the Loop:<br><em>AI Reads AI</em> to Improve Teaching</div>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="col" style="flex:1.2">
+      <div style="display:flex;flex-direction:column;gap:.35em;align-items:center;width:100%">
+        <div class="loop-row" style="width:100%">
+          <div class="loop-node active" style="flex:1"><div class="ln-icon">👩‍🏫</div><div class="ln-label">Teacher encodes pedagogy into AI tutor</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="loop-node" style="flex:1"><div class="ln-icon">🎓</div><div class="ln-label">Students learn — conversations stored</div></div>
+        </div>
+        <div style="display:flex;width:100%;justify-content:space-between;padding:0 50px">
+          <div class="loop-arrow-down">↑</div>
+          <div class="loop-arrow-down">↓</div>
+        </div>
+        <div class="loop-row" style="width:100%">
+          <div class="loop-node active" style="flex:1"><div class="ln-icon">✏️</div><div class="ln-label">Teacher improves prompt — then individual follow-up</div></div>
+          <div class="flow-arrow">←</div>
+          <div class="loop-node" style="flex:1"><div class="ln-icon">🤖</div><div class="ln-label">AI analyses chat logs — surfaces patterns</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="highlight-box" style="margin-bottom:.6em">
+        <div class="hb-label">Priority Order</div>
+        <p><strong>First:</strong> Improve the AI prompt itself — fix the system for every student at once.<br><strong>Then:</strong> Identify individuals — who struggled? Who needs follow-up?</p>
+      </div>
+      <div class="card">
+        <div class="card-title">This Is What Poe Cannot Do</div>
+        <ul class="bullet-list">
+          <li>Without data, AI tutoring is used once and forgotten</li>
+          <li>With data, it becomes an <strong>iterative teaching system</strong></li>
+          <li>The teacher becomes a <strong>system designer</strong> — not just a content provider</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>14 / 19</span></div>
+</div>
+
+<!-- ═══ 12. LIVE DEMO ═══ -->
+<div class="slide" data-slide="12" style="padding:28px 40px;overflow:auto">
+  <div class="eyebrow">Part 2 — 2026 · Live Demo</div>
+  <div style="display:flex;align-items:baseline;gap:1.2em;margin-bottom:.4em;flex-wrap:wrap">
+    <div class="slide-title" style="font-size:1.45em;margin-bottom:0">Experience SmartTextbook<br><em>in this slide</em></div>
+    <a href="https://smartextbook.replit.app/app" target="_blank"
+       style="font-family:var(--sans);font-size:.68em;font-weight:700;background:var(--primary);color:#fff;padding:.32em .85em;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0">
+      ↗ smartextbook.replit.app/app
+    </a>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1em;flex:1">
+    <div style="display:flex;flex-direction:column;gap:.65em">
+      <div class="card" style="padding:.75em 1em">
+        <div class="card-title">Step 1 — Choose Provider &amp; Enter Key</div>
+        <select id="demo-provider" style="width:100%;padding:.4em .6em;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:.75em;margin-bottom:.5em;background:var(--bg)">
+          <option value="deepseek|https://api.deepseek.com/v1|deepseek-chat">DeepSeek Chat ★ HK recommended</option>
+          <option value="gemini|https://generativelanguage.googleapis.com/v1beta/openai/|gemini-2.0-flash">Google Gemini (global free tier)</option>
+          <option value="openai|https://api.openai.com/v1|gpt-4o-mini">OpenAI GPT-4o Mini</option>
+          <option value="openrouter|https://openrouter.ai/api/v1|google/gemini-2.0-flash-001">OpenRouter (300+ models)</option>
+          <option value="kimi|https://api.moonshot.cn/v1|moonshot-v1-8k">Kimi / Moonshot AI</option>
+          <option value="grok|https://api.x.ai/v1|grok-3-mini">Grok 3 Mini (xAI)</option>
+        </select>
+        <input id="demo-key" type="password" placeholder="Paste your API key here…" style="width:100%;padding:.4em .6em;border:1.5px solid var(--border);border-radius:8px;font-family:monospace;font-size:.72em;background:var(--bg);color:var(--text)" />
+        <p style="font-family:var(--sans);font-size:.56em;color:var(--muted);margin-top:.35em;line-height:1.6">
+          Key stays in this page only — never sent anywhere except your chosen provider.<br>
+          🇭🇰 <strong>HK:</strong> <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:var(--primary)">platform.deepseek.com/api_keys</a> &nbsp;·&nbsp;
+          🌐 <strong>Global:</strong> <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--muted)">aistudio.google.com/apikey</a> (not in HK)
+        </p>
+      </div>
+      <div class="card" style="padding:.75em 1em;flex:1">
+        <div class="card-title">Step 2 — Paste a Passage (or use the sample)</div>
+        <textarea id="demo-text" rows="5" style="width:100%;padding:.4em .6em;border:1.5px solid var(--border);border-radius:8px;font-family:var(--serif);font-size:.72em;line-height:1.55;resize:none;background:var(--bg);color:var(--text)">Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy — usually from the sun — into chemical energy stored in glucose. The process takes place mainly in the chloroplasts, using carbon dioxide from the air and water from the soil. Oxygen is released as a by-product. The overall equation is: 6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂.</textarea>
+        <button id="demo-btn" onclick="runDemo()" style="margin-top:.55em;width:100%;padding:.5em;background:var(--primary);color:#fff;border:none;border-radius:8px;font-family:var(--sans);font-size:.75em;font-weight:700;cursor:pointer">⚡ Generate Lesson Summary</button>
+      </div>
+    </div>
+    <div class="card" style="padding:.75em 1em;display:flex;flex-direction:column;overflow:hidden">
+      <div class="card-title">Output</div>
+      <div id="demo-output" style="flex:1;overflow-y:auto;font-family:var(--sans);font-size:.74em;line-height:1.6;color:var(--text);white-space:pre-wrap;min-height:120px">
+        <span style="color:var(--muted)">← Fill in your API key and hit Generate. Results appear here in seconds.</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>15 / 19</span></div>
+</div>
+
+<!-- ═══ NEW: DEMO WALKTHROUGH ═══ -->
+<div class="slide" data-slide="12b" style="padding:26px 38px">
+  <div class="eyebrow">Part 2 — 2026 · Demo Guide</div>
+  <div style="display:flex;align-items:center;gap:1.4em;margin-bottom:.55em;flex-wrap:wrap">
+    <div class="slide-title" style="font-size:1.4em;margin-bottom:0">The Demo — <em>Follow Along</em></div>
+    <a href="https://smartextbook.replit.app/app" target="_blank"
+       style="font-family:var(--sans);font-size:.75em;font-weight:800;background:var(--primary);color:#fff;padding:.35em 1em;border-radius:9px;text-decoration:none;letter-spacing:.01em">
+      ↗ smartextbook.replit.app/app
+    </a>
+    <span style="font-family:var(--sans);font-size:.62em;color:var(--muted);font-style:italic">No account needed · works on mobile</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85em">
+
+    <!-- Left: Step-by-step -->
+    <div style="display:flex;flex-direction:column;gap:.38em">
+
+      <div class="demo-step">
+        <div class="ds-num">1</div>
+        <div>
+          <div class="ds-label">Open the app</div>
+          <div class="ds-detail">
+            <a href="https://smartextbook.replit.app/app" target="_blank" class="ds-link">smartextbook.replit.app/app</a>
+            — click <strong>New Lesson</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-step">
+        <div class="ds-num">2</div>
+        <div>
+          <div class="ds-label">Get an API key &amp; choose your provider</div>
+          <div class="ds-detail">
+            🇭🇰 <strong style="color:var(--primary)">HK:</strong>
+            <a href="https://platform.deepseek.com/api_keys" target="_blank" class="ds-link">platform.deepseek.com/api_keys</a>
+            (DeepSeek — globally accessible, very low cost)<br>
+            🌐 <strong>Global:</strong>
+            <a href="https://aistudio.google.com/apikey" target="_blank" class="ds-link" style="color:var(--muted)">aistudio.google.com/apikey</a>
+            (Gemini — free, not available in HK)
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-step">
+        <div class="ds-num">3</div>
+        <div>
+          <div class="ds-label">Paste a chapter passage</div>
+          <div class="ds-detail">Any paragraph from a textbook or lecture notes — one instruction sets the pedagogical tone</div>
+        </div>
+      </div>
+
+      <div class="demo-step">
+        <div class="ds-num">4</div>
+        <div>
+          <div class="ds-label">Choose settings &amp; generate</div>
+          <div class="ds-detail">Audience level · Quiz length · Teaching method → click <strong>Generate Lesson</strong></div>
+        </div>
+      </div>
+
+      <div class="demo-step highlight">
+        <div class="ds-num" style="color:var(--primary)">5</div>
+        <div>
+          <div class="ds-label">Your lesson — ready in seconds</div>
+          <div class="ds-detail">Summary · Glossary · Adaptive quiz · Mind map · AI tutor grounded in your chapter</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Key links + what you'll see -->
+    <div style="display:flex;flex-direction:column;gap:.5em">
+
+      <div class="card" style="padding:.55em .8em">
+        <div class="card-title" style="margin-bottom:.3em;font-size:.73em">Key links for this demo</div>
+        <table style="width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.65em">
+          <tr><td style="padding:.22em 0;color:var(--muted);width:38%">Platform</td>
+              <td><a href="https://smartextbook.replit.app/app" target="_blank" class="ds-link">smartextbook.replit.app/app</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">🇭🇰 API key (HK)</td>
+              <td><a href="https://platform.deepseek.com/api_keys" target="_blank" class="ds-link">platform.deepseek.com/api_keys</a>
+              <span style="color:var(--muted);font-size:.9em"> — DeepSeek</span></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">🌐 API key (global)</td>
+              <td><a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--muted);text-decoration:underline;text-underline-offset:2px">aistudio.google.com/apikey</a>
+              <span style="color:var(--muted);font-size:.9em"> — Gemini free, not in HK</span></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">Chatbot demo</td>
+              <td><a href="https://poe.com/wordchoice" target="_blank" class="ds-link">poe.com/wordchoice</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">Edit system prompt</td>
+              <td><a href="https://poe.com/edit_bot?bot=wordchoice" target="_blank" class="ds-link">poe.com/edit_bot?bot=wordchoice</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">Google DeepMind paper</td>
+              <td><a href="https://deepmind.google/research/publications/learn-your-way/" target="_blank" class="ds-link">Learn Your Way (DeepMind, 2024)</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">THE Campus article</td>
+              <td><a href="https://timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation" target="_blank" class="ds-link">THE Campus, Aug 2024</a></td></tr>
+        </table>
+      </div>
+
+      <div class="highlight-box" style="padding:.45em .8em">
+        <div class="hb-label" style="margin-bottom:.2em">No time for a live demo?</div>
+        <p style="font-size:.78em;line-height:1.45">This slide stays as a reference. Scan the link above, paste any paragraph, and the full lesson — including an AI tutor — is generated in under 30 seconds.</p>
+      </div>
+
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>16 / 19</span></div>
+</div>
+
+<!-- ═══ 13. SCORM & xAPI ═══ -->
+<div class="slide" data-slide="13">
+  <div class="eyebrow">Part 2 — 2026 · Institutional Integration</div>
+  <div class="slide-title">SCORM &amp; xAPI:<br><em>Connecting to Moodle</em></div>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card" style="margin-bottom:.6em">
+        <div class="card-title" style="color:#1e40af">
+          <a href="https://scorm.com/scorm-explained/" target="_blank" style="color:#1e40af;text-decoration:none">SCORM</a> — "Did the student do it?"
+        </div>
+        <ul class="bullet-list">
+          <li>Packages an entire lesson as a <strong>portable ZIP module</strong> — upload once to any LMS</li>
+          <li><a href="https://moodle.org" target="_blank" style="color:inherit">Moodle</a> launches it in an iframe; the module reports back a <code style="background:#eef2ff;padding:.05em .3em;border-radius:3px;font-size:.9em">completed</code> or <code style="background:#eef2ff;padding:.05em .3em;border-radius:3px;font-size:.9em">passed</code> signal</li>
+          <li>Gradebook records: completed ✓ / score / time spent</li>
+          <li>Simple, widely supported, works offline</li>
+          <li style="font-size:.88em"><a href="https://adlnet.gov/projects/scorm/" target="_blank" style="color:var(--muted)">adlnet.gov/projects/scorm/</a> · <a href="https://scorm.com" target="_blank" style="color:var(--muted)">scorm.com</a></li>
+        </ul>
+        <div style="margin-top:.55em;display:flex;gap:.4em;flex-wrap:wrap">
+          <span class="badge badge-green">✓ Any LMS</span>
+          <span class="badge badge-green">✓ Zero setup</span>
+          <span style="display:inline-block;padding:.22em .7em;border-radius:99px;font-family:var(--sans);font-size:.62em;font-weight:700;background:#fef2f2;color:#991b1b">✗ No conversation data</span>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="border-color:rgba(184,76,42,.35);margin-bottom:.6em">
+        <div class="card-title" style="color:var(--primary)">
+          <a href="https://xapi.com/overview/" target="_blank" style="color:var(--primary);text-decoration:none">xAPI</a> — "How did the student learn?"
+        </div>
+        <ul class="bullet-list">
+          <li>Every interaction fires a structured statement to a <strong>Learning Record Store (LRS)</strong> — <a href="https://adlnet.gov/projects/xapi/" target="_blank" style="color:var(--muted)">adlnet.gov/projects/xapi/</a></li>
+          <li>Statements follow the pattern: <strong>Actor → Verb → Object</strong></li>
+          <li>Captures: questions asked, quiz attempts, time on task, struggle points</li>
+          <li>Moodle reads from the LRS via the <a href="https://moodle.org/plugins/logstore_xapi" target="_blank" style="color:inherit"><strong>Logstore xAPI</strong> plugin</a></li>
+          <li style="font-size:.88em"><a href="https://xapi.com" target="_blank" style="color:var(--muted)">xapi.com</a> · <a href="https://github.com/xAPI-voidEd/xAPI-Spec" target="_blank" style="color:var(--muted)">xAPI Spec on GitHub</a></li>
+        </ul>
+        <div style="margin-top:.5em;background:#1e1e1e;border-radius:8px;padding:.5em .75em;font-family:monospace;font-size:.63em;color:#d4d4d4;line-height:1.55">
+          <span style="color:#6a9955">// Example xAPI statement</span><br>
+          Simon → <span style="color:#569cd6">asked</span> → "What is a system prompt?"<br>
+          Simon → <span style="color:#4ec9b0">answered-correctly</span> → Quiz Q3 (score: 80%)<br>
+          Simon → <span style="color:#ce9178">struggled-with</span> → BYOK setup
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="highlight-box">
+    <div class="hb-label">Key Distinction</div>
+    <p>SCORM answers <strong>"did they complete it?"</strong> &nbsp;·&nbsp; xAPI answers <strong>"how did they actually learn?"</strong> — the difference between a checkbox and a learning dataset.</p>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>17 / 19</span></div>
+</div>
+
+<!-- ═══ 14. BLUEPRINT ═══ -->
+<div class="slide" data-slide="14">
+  <div class="eyebrow">Part 2 — 2026 · The Blueprint</div>
+  <div class="slide-title">SmartTextbook + Moodle:<br><em>A Full Learning Data Pipeline</em></div>
+  <div class="spacer"></div>
+  <div style="display:flex;flex-direction:column;gap:.55em;margin-bottom:.7em">
+    <div class="flow">
+      <div class="flow-step"><div class="fs-icon">📄</div><div class="fs-label">Educator pastes chapter → lesson generated</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="fs-icon">🎓</div><div class="fs-label">Students access lesson via Moodle link</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="fs-icon">💬</div><div class="fs-label">Students interact with AI tutor + quiz</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight"><div class="fs-icon">📊</div><div class="fs-label">xAPI statements → LRS → Moodle gradebook</div></div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <div class="card-title">What Moodle Sees (via xAPI)</div>
+        <ul class="bullet-list">
+          <li>Quiz score and number of attempts per student</li>
+          <li>Time spent on each lesson section</li>
+          <li>Which AI tutor questions each student asked</li>
+          <li>Where multiple students struggled — aggregate patterns surfaced automatically</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-title">What SCORM Adds (optional)</div>
+        <ul class="bullet-list">
+          <li>Package any SmartTextbook lesson as a portable SCORM export</li>
+          <li>Share with institutions using different LMS platforms (<a href="https://www.instructure.com/canvas" target="_blank" style="color:inherit">Canvas</a>, <a href="https://www.anthology.com/blackboard" target="_blank" style="color:inherit">Blackboard</a>…)</li>
+          <li>Works without internet — useful for offline or exam contexts</li>
+        </ul>
+      </div>
+      <div class="highlight-box" style="margin-top:.5em">
+        <div class="hb-label">Closes the Loop</div>
+        <p>Teacher sees <strong>where the class struggled</strong> → refines the AI tutor prompt → next cohort gets a better learning experience. The data pipeline makes improvement automatic.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>18 / 19</span></div>
+</div>
+
+<!-- ═══ 15. Q&A ═══ -->
+<div class="slide dark-bg" data-slide="15" style="padding:36px 48px">
+  <div style="display:grid;grid-template-columns:1fr auto;gap:1.8em;flex:1;align-items:start">
+    <div>
+      <div class="eyebrow">Thank You</div>
+      <div class="slide-title" style="font-size:2em">Questions &amp; Discussion</div>
+      <div class="accent-bar"></div>
+      <div style="font-family:var(--sans);font-size:.76em;color:rgba(255,255,255,.5);max-width:480px;line-height:1.65;margin-top:.2em;margin-bottom:1em">
+        "AI's job in education is not to replace the teacher's knowledge —<br>it is to scale the teacher's <em>method</em>."
+      </div>
+      <div style="display:flex;gap:1.8em;flex-wrap:wrap">
+        <div style="font-family:var(--sans);font-size:.68em;color:rgba(255,255,255,.45)">
+          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">2024 → 2026</div>
+          Chatbot customisation → AI-augmented textbook<br>Platform-based → BYOK API platform<br>Black box → educator-owned data
+        </div>
+        <div style="font-family:var(--sans);font-size:.68em;color:rgba(255,255,255,.45)">
+          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Platform</div>
+          Open-source · BYOK · Provider-agnostic<br>Data-owned · No registration required<br>
+          <a href="https://smartextbook.replit.app" target="_blank" style="color:rgba(255,255,255,.5);text-decoration:underline">smartextbook.replit.app</a>
+        </div>
+        <div style="font-family:var(--sans);font-size:.68em;color:rgba(255,255,255,.45)">
+          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Key Sources</div>
+          <a href="https://www.nature.com/articles/d41586-023-00553-9" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">Nature Correspondence 2023</a><br>
+          <a href="https://timeshighereducation.com/campus/where-start-generative-ai-chatbot-customisation" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">THE Campus 2024</a><br>
+          <a href="https://deepmind.google/research/publications/learn-your-way/" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline">Google DeepMind: Learn Your Way</a>
+        </div>
+        <div style="font-family:var(--sans);font-size:.68em;color:rgba(255,255,255,.45)">
+          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em">Simon Wang</div>
+          Lecturer in English &amp; Innovation Officer<br>The Language Centre, HKBU<br>
+          <a href="mailto:simonwang@hkbu.edu.hk" style="color:rgba(255,255,255,.5);text-decoration:underline">simonwang@hkbu.edu.hk</a><br>
+          <a href="https://lc.hkbu.edu.hk/main/simonwang/" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:underline;font-size:.92em">lc.hkbu.edu.hk/main/simonwang/</a>
+        </div>
+      </div>
+      <div style="margin-top:1em">
+        <button onclick="goTo(0)" style="font-family:var(--sans);font-size:.68em;font-weight:700;background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:.4em 1.1em;cursor:pointer">↩ Back to Start</button>
+      </div>
+    </div>
+    <!-- QR code -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:.4em;flex-shrink:0">
+      <img src="/wechat-qr.jpg" alt="WeChat group QR — Gen AI CoP 2" style="width:158px;height:158px;border-radius:10px;object-fit:cover;box-shadow:0 4px 16px rgba(0,0,0,.4)" />
+      <div style="font-family:var(--sans);font-size:.58em;color:rgba(255,255,255,.4);text-align:center;line-height:1.4">WeChat group<br>Gen AI CoP 2</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>19 / 19</span></div>
+</div>
+
+
+</div><!-- /deck -->
+
+<div id="progress"><div id="progress-fill"></div></div>
+
+<div id="portrait-hint">
+  <button id="ph-prev" disabled>←</button>
+  <span style="flex:1;text-align:center;line-height:1.35;font-size:.8rem">
+    ↔ <strong>Rotate landscape</strong> or
+    <button id="ph-fs-btn">⛶ Fullscreen</button>
+  </span>
+  <span id="ph-counter" style="color:rgba(255,255,255,.6);font-size:.8rem;white-space:nowrap">1 / 19</span>
+  <button id="ph-next">→</button>
+</div>
+
+<div id="controls">
+  <button class="ctrl-btn" id="prev-btn" disabled>← Prev</button>
+  <span id="slide-counter">1 / 19</span>
+  <button class="ctrl-btn" id="next-btn">Next →</button>
+  <button id="fullscreen-btn" title="Fullscreen (F)">⛶</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total  = slides.length;
+let current  = 0;
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const counter = document.getElementById('slide-counter');
+const fill    = document.getElementById('progress-fill');
+const deck    = document.getElementById('deck');
+const SLIDE_W = 960;
+const SLIDE_H = 540;
+
+const phHint   = document.getElementById('portrait-hint');
+const phPrev   = document.getElementById('ph-prev');
+const phNext   = document.getElementById('ph-next');
+const phFsBtn  = document.getElementById('ph-fs-btn');
+const phCtr    = document.getElementById('ph-counter');
+
+function isPortraitMobile() {
+  return window.innerHeight > window.innerWidth && window.innerWidth < 768;
+}
+
+function scaleSlide() {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const reservedH = isPortraitMobile() ? (phHint.offsetHeight || 56) : 0;
+  const scaleX = W / SLIDE_W;
+  const scaleY = (H - reservedH) / SLIDE_H;
+  const scale  = Math.min(scaleX, scaleY);
+  deck.style.transform = `scale(${scale})`;
+}
+
+function updateOrientation() {
+  if (isPortraitMobile()) {
+    phHint.classList.add('ph-show');
+  } else {
+    phHint.classList.remove('ph-show');
+  }
+  scaleSlide();
+}
+
+updateOrientation();
+window.addEventListener('resize', updateOrientation);
+
+function goTo(i) {
+  slides[current].classList.remove('active');
+  slides[current].classList.add('exit');
+  setTimeout(() => slides[current].classList.remove('exit'), 400);
+  current = Math.max(0, Math.min(total - 1, i));
+  slides[current].classList.add('active');
+  const label = (current + 1) + ' / ' + total;
+  counter.textContent = label;
+  phCtr.textContent   = label;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === total - 1;
+  phPrev.disabled  = current === 0;
+  phNext.disabled  = current === total - 1;
+  fill.style.width = ((current + 1) / total * 100) + '%';
+}
+
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+phPrev.addEventListener('click',  () => goTo(current - 1));
+phNext.addEventListener('click',  () => goTo(current + 1));
+
+const fsBtn = document.getElementById('fullscreen-btn');
+
+function doFullscreen() {
+  const req = document.documentElement.requestFullscreen
+    || document.documentElement.webkitRequestFullscreen;
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    (req.call(document.documentElement)).catch(() => {});
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+}
+
+fsBtn.addEventListener('click', doFullscreen);
+phFsBtn.addEventListener('click', doFullscreen);
+
+function toggleFullscreen() { doFullscreen(); }
+
+document.addEventListener('fullscreenchange', () => {
+  const inFS = !!document.fullscreenElement;
+  fsBtn.textContent = inFS ? '✕' : '⛶';
+  scaleSlide();
+});
+document.addEventListener('webkitfullscreenchange', () => {
+  const inFS = !!document.webkitFullscreenElement;
+  fsBtn.textContent = inFS ? '✕' : '⛶';
+  scaleSlide();
+});
+
+document.addEventListener('keydown', e => {
+  // Don't hijack keyboard when user is typing in any input or editable element
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || document.activeElement?.isContentEditable) return;
+  if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+  if (['ArrowLeft','ArrowUp'].includes(e.key))        { e.preventDefault(); goTo(current - 1); }
+  if (e.key === 'f' || e.key === 'F')                { toggleFullscreen(); }
+});
+
+/* ── Touch / swipe navigation ── */
+let touchStartX = 0, touchStartY = 0;
+document.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 45) {
+    if (dx < 0) goTo(current + 1);
+    else        goTo(current - 1);
+  }
+}, { passive: true });
+
+fill.style.width = (1 / total * 100) + '%';
+
+// ─── Simple markdown renderer ─────────────────────────────────
+function renderMd(text) {
+  if (!text) return '';
+  // Escape HTML first
+  let s = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Code blocks ```...```
+  s = s.replace(/```[\s\S]*?```/g, m => '<pre style="background:#1e1e1e;color:#d4d4d4;border-radius:7px;padding:.4em .7em;font-size:.9em;overflow-x:auto;margin:.3em 0">' + m.slice(3,-3) + '</pre>');
+  // Inline code
+  s = s.replace(/`([^`]+)`/g, '<code style="background:#f0f0f0;border-radius:4px;padding:.1em .3em;font-size:.92em">$1</code>');
+  // Bold **text**
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  // Italic *text* or _text_
+  s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  s = s.replace(/_([^_]+)_/g, '<em>$1</em>');
+  // Headings
+  s = s.replace(/^#{3,}\s+(.+)$/gm, '<h5 style="font-family:var(--sans);font-size:.88em;font-weight:800;margin:.5em 0 .15em;color:var(--text)">$1</h5>');
+  s = s.replace(/^#{2}\s+(.+)$/gm,  '<h4 style="font-family:var(--sans);font-size:.95em;font-weight:800;margin:.6em 0 .2em;color:var(--text)">$1</h4>');
+  s = s.replace(/^#{1}\s+(.+)$/gm,  '<h3 style="font-family:var(--sans);font-size:1.05em;font-weight:900;margin:.7em 0 .2em;color:var(--text)">$1</h3>');
+  // Unordered lists (- or *)
+  s = s.replace(/^[\-\*]\s+(.+)$/gm, '<li style="margin:.18em 0;padding-left:.3em">$1</li>');
+  s = s.replace(/(<li[^>]*>.*<\/li>\n?)+/g, m => '<ul style="padding-left:1.2em;margin:.2em 0">' + m + '</ul>');
+  // Ordered lists
+  s = s.replace(/^\d+\.\s+(.+)$/gm, '<li style="margin:.18em 0;padding-left:.3em">$1</li>');
+  // Horizontal rule
+  s = s.replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:.5em 0">');
+  // Paragraphs (double newlines)
+  s = s.split(/\n\n+/).map(para => {
+    para = para.trim();
+    if (!para) return '';
+    if (para.startsWith('<h') || para.startsWith('<ul') || para.startsWith('<pre') || para.startsWith('<hr')) return para;
+    return '<p style="margin:.3em 0;line-height:1.6">' + para.replace(/\n/g, '<br>') + '</p>';
+  }).join('\n');
+  return s;
+}
+// ─────────────────────────────────────────────────────────────
+
+// ─── Chatbot slide demo ───────────────────────────────────────
+const cbHistory = [];
+
+function cbGetKey() {
+  return (document.getElementById('cb-key')?.value.trim()) ||
+         (document.getElementById('demo-key')?.value.trim()) || '';
+}
+
+function cbAddBubble(role, text) {
+  const box = document.getElementById('cb-messages');
+  if (!box) return;
+  const div = document.createElement('div');
+  div.className = `cb-bubble ${role === 'user' ? 'cb-bubble-user' : 'cb-bubble-bot'}`;
+  const body = role === 'user'
+    ? text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')
+    : renderMd(text);
+  div.innerHTML = `<strong class="cb-role">${role === 'user' ? 'You' : 'Bot'}</strong>${body}`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function cbSend() {
+  const input = document.getElementById('cb-input');
+  const text  = input?.value.trim();
+  if (!text) return;
+
+  const key = cbGetKey();
+  if (!key) {
+    alert('Please paste your API key in the field on the left.');
+    return;
+  }
+
+  const [baseURL, model] = (document.getElementById('cb-provider')?.value || '').split('|');
+  const systemPrompt = document.getElementById('cb-prompt')?.value || '';
+
+  input.value = '';
+  cbAddBubble('user', text);
+  cbHistory.push({ role: 'user', content: text });
+
+  // thinking indicator
+  const box = document.getElementById('cb-messages');
+  const indicator = document.createElement('div');
+  indicator.className = 'cb-bubble cb-bubble-bot';
+  indicator.id = 'cb-thinking';
+  indicator.style.opacity = '.5';
+  indicator.textContent = 'Thinking…';
+  box?.appendChild(indicator);
+  if (box) box.scrollTop = box.scrollHeight;
+
+  try {
+    const endpoint = baseURL.endsWith('/') ? baseURL + 'chat/completions' : baseURL + '/chat/completions';
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'system', content: systemPrompt }, ...cbHistory],
+        max_tokens: 500
+      })
+    });
+    const data = await res.json();
+    document.getElementById('cb-thinking')?.remove();
+    const reply = data.choices?.[0]?.message?.content || data.error?.message || 'No response received.';
+    cbHistory.push({ role: 'assistant', content: reply });
+    cbAddBubble('bot', reply);
+  } catch (e) {
+    document.getElementById('cb-thinking')?.remove();
+    cbAddBubble('bot', 'Error: ' + e.message);
+  }
+}
+// ─────────────────────────────────────────────────────────────
+
+async function runDemo() {
+  const btn = document.getElementById('demo-btn');
+  const out = document.getElementById('demo-output');
+  const key = document.getElementById('demo-key').value.trim();
+  const text = document.getElementById('demo-text').value.trim();
+  const providerRaw = document.getElementById('demo-provider').value;
+  const [provId, baseUrl, model] = providerRaw.split('|');
+
+  if (!key) { out.textContent = '⚠ Please enter your API key first.'; return; }
+  if (!text) { out.textContent = '⚠ Please enter some text to summarise.'; return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating…';
+  out.textContent = '';
+
+  const systemPrompt = `You are an expert educator. Given a passage of text, produce:
+1. A 2-sentence SUMMARY (plain language)
+2. Three KEY CONCEPTS with brief definitions (one line each)
+3. One QUIZ QUESTION (multiple-choice, 4 options, mark the correct answer with ✓)
+
+Keep everything concise and clear for a university student.`;
+
+  const endpoint = baseUrl.endsWith('/') ? baseUrl + 'chat/completions' : baseUrl + '/chat/completions';
+
+  try {
+    const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key };
+    if (provId === 'openrouter') {
+      headers['HTTP-Referer'] = 'https://lessonbuilder.app';
+      headers['X-Title'] = 'SmartTextbook Demo';
+    }
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: 'Passage:\n\n' + text }
+        ],
+        max_tokens: 600,
+        temperature: 0.4
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      out.textContent = '❌ Error: ' + (data?.error?.message || JSON.stringify(data));
+    } else {
+      const raw = data.choices?.[0]?.message?.content ?? '(No response)';
+      out.style.whiteSpace = 'normal';
+      out.innerHTML = renderMd(raw);
+    }
+  } catch(e) {
+    out.textContent = '❌ ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⚡ Generate Lesson Summary';
+  }
+}
+</script>
+</body>
+</html>
