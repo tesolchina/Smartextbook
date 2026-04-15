@@ -90,7 +90,7 @@ export default function Home() {
               <SparklesIcon className="w-3.5 h-3.5" /> AI-Powered Learning
             </span>
 
-            <h1 className="text-5xl md:text-[68px] font-serif font-black text-foreground mb-5 leading-[1.08] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-[68px] font-serif font-black text-foreground mb-5 leading-[1.08] tracking-tight">
               Any chapter.<br />
               <span className="text-primary italic">Any subject. Learned.</span>
             </h1>
@@ -103,17 +103,18 @@ export default function Home() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-destructive/10 border border-destructive/30 text-destructive text-sm font-semibold"
+                className="mb-6 flex items-center gap-3 px-5 py-3 rounded-2xl bg-destructive/10 border border-destructive/30 text-destructive text-sm font-semibold max-w-sm mx-auto"
               >
                 <KeyRound className="w-4 h-4 shrink-0" />
-                No API key configured.{" "}
-                <button
-                  onClick={openSettings}
-                  className="underline underline-offset-2 hover:opacity-80 transition-opacity"
-                >
-                  Set up your API key
-                </button>{" "}
-                to create lessons.
+                <span>No API key set.{" "}
+                  <button
+                    onClick={openSettings}
+                    className="underline underline-offset-2 hover:opacity-80 transition-opacity"
+                  >
+                    Add your key
+                  </button>{" "}
+                  to create lessons.
+                </span>
               </motion.div>
             )}
 
@@ -141,11 +142,11 @@ export default function Home() {
       {/* ── Library ── */}
       <section className="py-16 bg-background flex-1">
         <div className="container max-w-6xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
             <h2 className="text-2xl font-serif font-bold flex items-center gap-2.5 text-foreground">
               <Library className="w-6 h-6 text-muted-foreground" /> Your Library
             </h2>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs text-muted-foreground hidden md:block mr-1 flex items-center gap-1 group relative cursor-default">
                 <Info className="w-3 h-3 shrink-0" />
                 Saved in this browser

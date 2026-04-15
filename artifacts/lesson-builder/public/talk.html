@@ -25,7 +25,6 @@ html, body {
   background: #1a1714;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 body {
   display: flex;
@@ -182,8 +181,28 @@ body {
   user-select: none; z-index: 100;
   opacity: 0; transition: opacity .25s;
 }
-body:hover #controls { opacity: 1; }
+body:hover #controls, body:focus-within #controls { opacity: 1; }
+/* Always show controls on touch devices */
+@media (pointer: coarse) {
+  #controls { opacity: 1 !important; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+}
 #slide-counter { min-width: 60px; text-align: center; color: rgba(255,255,255,.7); }
+
+/* Portrait mobile hint */
+#portrait-hint {
+  display: none;
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  z-index: 200; background: rgba(0,0,0,.82); color: #fff;
+  border-radius: 16px; padding: 18px 28px; text-align: center;
+  font-family: system-ui, sans-serif; font-size: .92rem; line-height: 1.5;
+  pointer-events: none; backdrop-filter: blur(8px);
+  animation: hintFade 3.5s forwards;
+}
+#portrait-hint svg { display: block; margin: 0 auto 10px; font-size: 2rem; }
+@keyframes hintFade { 0%{opacity:0} 15%{opacity:1} 75%{opacity:1} 100%{opacity:0} }
+@media (pointer: coarse) and (max-aspect-ratio: 1/1) {
+  #portrait-hint { display: block; }
+}
 .ctrl-btn { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); color: #eee; border-radius: 8px; padding: 5px 16px; cursor: pointer; font-size: .82rem; transition: background .15s; backdrop-filter: blur(4px); }
 .ctrl-btn:hover { background: rgba(255,255,255,.22); }
 .ctrl-btn:disabled { opacity: .3; cursor: default; }
@@ -876,6 +895,11 @@ Please consult your teacher for verification."</span>
 
 <div id="progress"><div id="progress-fill"></div></div>
 
+<div id="portrait-hint">
+  <span style="font-size:2rem;display:block;margin-bottom:.4em">↻</span>
+  Rotate to landscape<br>for the best view
+</div>
+
 <div id="controls">
   <button class="ctrl-btn" id="prev-btn" disabled>← Prev</button>
   <span id="slide-counter">1 / 16</span>
@@ -941,6 +965,22 @@ document.addEventListener('keydown', e => {
   if (['ArrowLeft','ArrowUp'].includes(e.key))        { e.preventDefault(); goTo(current - 1); }
   if (e.key === 'f' || e.key === 'F')                { toggleFullscreen(); }
 });
+
+/* ── Touch / swipe navigation ── */
+let touchStartX = 0, touchStartY = 0;
+document.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 45) {
+    if (dx < 0) goTo(current + 1);
+    else        goTo(current - 1);
+  }
+}, { passive: true });
+
 fill.style.width = (1 / total * 100) + '%';
 
 async function runDemo() {

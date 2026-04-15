@@ -131,12 +131,12 @@ export default function Landing() {
           <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/20 blur-3xl" />
           <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-accent/20 blur-3xl" />
         </div>
-        <div className="container max-w-4xl mx-auto px-4 pt-24 pb-28 text-center relative z-10">
+        <div className="container max-w-4xl mx-auto px-4 pt-14 pb-16 md:pt-24 md:pb-28 text-center relative z-10">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-7">
               <Sparkles className="w-3.5 h-3.5" /> Open-Source · Bring Your Own Key
             </span>
-            <h1 className="text-5xl md:text-7xl font-serif font-black leading-[1.07] tracking-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-black leading-[1.07] tracking-tight mb-6">
               Turn any chapter<br />
               <span className="text-primary italic">into a living lesson.</span>
             </h1>
