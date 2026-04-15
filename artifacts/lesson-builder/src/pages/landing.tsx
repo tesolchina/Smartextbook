@@ -312,9 +312,9 @@ export default function Landing() {
                 step: "01",
                 icon: <Globe className="w-6 h-6" />,
                 title: "Pick a provider",
-                desc: "Google Gemini has a generous free tier — perfect for getting started. DeepSeek is extremely low-cost. OpenRouter gives you access to 300+ models with one key.",
-                providers: ["Gemini (free)", "DeepSeek", "OpenRouter", "OpenAI", "Kimi", "Grok"],
-                link: { label: "Get a free Gemini key →", url: "https://aistudio.google.com/apikey" },
+                desc: "🇭🇰 In Hong Kong? Use DeepSeek — globally accessible and extremely low-cost. Outside HK: Google Gemini offers a free tier. OpenRouter gives access to 300+ models with one key.",
+                providers: ["DeepSeek (HK ★)", "Gemini (global free)", "OpenRouter", "OpenAI", "Kimi", "Grok"],
+                link: { label: "Get a DeepSeek key (HK users) →", url: "https://platform.deepseek.com/api_keys" },
               },
               {
                 step: "02",

@@ -489,16 +489,17 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       <div class="card" style="padding:.4em .75em">
         <div style="display:flex;gap:.5em;align-items:center;flex-wrap:wrap">
           <select id="cb-provider" style="padding:.3em .5em;border:1.5px solid var(--border);border-radius:7px;font-family:var(--sans);font-size:.65em;background:var(--bg);color:var(--text);flex:1">
-            <option value="https://generativelanguage.googleapis.com/v1beta/openai/|gemini-2.0-flash">Gemini 2.0 Flash (free)</option>
+            <option value="https://api.deepseek.com/v1|deepseek-chat">DeepSeek Chat ★ HK recommended</option>
+            <option value="https://generativelanguage.googleapis.com/v1beta/openai/|gemini-2.0-flash">Gemini 2.0 Flash (global free)</option>
             <option value="https://api.openai.com/v1|gpt-4o-mini">OpenAI GPT-4o Mini</option>
-            <option value="https://api.deepseek.com/v1|deepseek-chat">DeepSeek Chat</option>
-            <option value="https://openrouter.ai/api/v1|google/gemini-2.0-flash-001">OpenRouter</option>
+            <option value="https://openrouter.ai/api/v1|google/gemini-2.0-flash-001">OpenRouter (300+ models)</option>
           </select>
           <input id="cb-key" type="password" placeholder="API key…" style="padding:.3em .5em;border:1.5px solid var(--border);border-radius:7px;font-family:monospace;font-size:.65em;background:var(--bg);color:var(--text);flex:1.2" />
         </div>
-        <p style="font-family:var(--sans);font-size:.52em;color:var(--muted);margin-top:.2em">
-          Key stays in this page only — never stored or transmitted elsewhere.
-          Get a free Gemini key at <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--primary)">aistudio.google.com/apikey</a>
+        <p style="font-family:var(--sans);font-size:.52em;color:var(--muted);margin-top:.2em;line-height:1.6">
+          Key stays in this page only — never stored or transmitted elsewhere.<br>
+          🇭🇰 <strong>Hong Kong:</strong> <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:var(--primary)">platform.deepseek.com/api_keys</a> (DeepSeek — very low cost, globally accessible)<br>
+          🌐 <strong>Global:</strong> <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--muted)">aistudio.google.com/apikey</a> (Gemini — free tier, not available in HK)
         </p>
       </div>
     </div>
@@ -708,9 +709,9 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
         <div class="card-title" style="color:var(--primary)">Idea 3 — Bring Your Own Key (BYOK)</div>
         <ul class="bullet-list">
           <li>In 2024: Pathway 2 required institutional budget for API costs</li>
-          <li>New model: each educator connects their <strong>own API key</strong> — <a href="https://aistudio.google.com/apikey" target="_blank" style="color:inherit">Gemini</a>, <a href="https://platform.openai.com/api-keys" target="_blank" style="color:inherit">OpenAI</a>, <a href="https://platform.deepseek.com" target="_blank" style="color:inherit">DeepSeek</a>, or any provider</li>
+          <li>New model: each educator connects their <strong>own API key</strong> — <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:inherit">DeepSeek</a>, <a href="https://aistudio.google.com/apikey" target="_blank" style="color:inherit">Gemini</a>, <a href="https://platform.openai.com/api-keys" target="_blank" style="color:inherit">OpenAI</a>, or any provider</li>
           <li><strong>Zero cost to the platform</strong> — you pay only for what you use, directly to your provider</li>
-          <li><a href="https://aistudio.google.com/apikey" target="_blank" style="color:inherit">Google Gemini</a> offers a <strong>free tier</strong> — making this accessible to anyone</li>
+          <li>🇭🇰 <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:inherit"><strong>DeepSeek</strong></a> is globally accessible &amp; very low-cost · 🌐 <a href="https://aistudio.google.com/apikey" target="_blank" style="color:inherit">Gemini</a> offers a free tier (not in HK)</li>
         </ul>
       </div>
       <div class="highlight-box">
@@ -879,15 +880,19 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       <div class="card" style="padding:.75em 1em">
         <div class="card-title">Step 1 — Choose Provider &amp; Enter Key</div>
         <select id="demo-provider" style="width:100%;padding:.4em .6em;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:.75em;margin-bottom:.5em;background:var(--bg)">
-          <option value="gemini|https://generativelanguage.googleapis.com/v1beta/openai/|gemini-2.0-flash">Google Gemini (Free tier)</option>
+          <option value="deepseek|https://api.deepseek.com/v1|deepseek-chat">DeepSeek Chat ★ HK recommended</option>
+          <option value="gemini|https://generativelanguage.googleapis.com/v1beta/openai/|gemini-2.0-flash">Google Gemini (global free tier)</option>
           <option value="openai|https://api.openai.com/v1|gpt-4o-mini">OpenAI GPT-4o Mini</option>
-          <option value="deepseek|https://api.deepseek.com/v1|deepseek-chat">DeepSeek Chat</option>
           <option value="openrouter|https://openrouter.ai/api/v1|google/gemini-2.0-flash-001">OpenRouter (300+ models)</option>
           <option value="kimi|https://api.moonshot.cn/v1|moonshot-v1-8k">Kimi / Moonshot AI</option>
           <option value="grok|https://api.x.ai/v1|grok-3-mini">Grok 3 Mini (xAI)</option>
         </select>
         <input id="demo-key" type="password" placeholder="Paste your API key here…" style="width:100%;padding:.4em .6em;border:1.5px solid var(--border);border-radius:8px;font-family:monospace;font-size:.72em;background:var(--bg);color:var(--text)" />
-        <p style="font-family:var(--sans);font-size:.58em;color:var(--muted);margin-top:.35em">Key stored in this page only — never sent anywhere except your chosen provider.</p>
+        <p style="font-family:var(--sans);font-size:.56em;color:var(--muted);margin-top:.35em;line-height:1.6">
+          Key stays in this page only — never sent anywhere except your chosen provider.<br>
+          🇭🇰 <strong>HK:</strong> <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:var(--primary)">platform.deepseek.com/api_keys</a> &nbsp;·&nbsp;
+          🌐 <strong>Global:</strong> <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--muted)">aistudio.google.com/apikey</a> (not in HK)
+        </p>
       </div>
       <div class="card" style="padding:.75em 1em;flex:1">
         <div class="card-title">Step 2 — Paste a Passage (or use the sample)</div>
@@ -936,10 +941,14 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
       <div class="demo-step">
         <div class="ds-num">2</div>
         <div>
-          <div class="ds-label">Enter your free API key</div>
+          <div class="ds-label">Get an API key &amp; choose your provider</div>
           <div class="ds-detail">
-            Get one at <a href="https://aistudio.google.com/apikey" target="_blank" class="ds-link">aistudio.google.com/apikey</a>
-            — Gemini Flash is completely free
+            🇭🇰 <strong style="color:var(--primary)">HK:</strong>
+            <a href="https://platform.deepseek.com/api_keys" target="_blank" class="ds-link">platform.deepseek.com/api_keys</a>
+            (DeepSeek — globally accessible, very low cost)<br>
+            🌐 <strong>Global:</strong>
+            <a href="https://aistudio.google.com/apikey" target="_blank" class="ds-link" style="color:var(--muted)">aistudio.google.com/apikey</a>
+            (Gemini — free, not available in HK)
           </div>
         </div>
       </div>
@@ -978,8 +987,12 @@ Keep responses concise — 2 short paragraphs. Be encouraging but precise.</text
         <table style="width:100%;border-collapse:collapse;font-family:var(--sans);font-size:.65em">
           <tr><td style="padding:.22em 0;color:var(--muted);width:38%">Platform</td>
               <td><a href="https://smartextbook.replit.app/app" target="_blank" class="ds-link">smartextbook.replit.app/app</a></td></tr>
-          <tr><td style="padding:.22em 0;color:var(--muted)">Free API key</td>
-              <td><a href="https://aistudio.google.com/apikey" target="_blank" class="ds-link">aistudio.google.com/apikey</a></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">🇭🇰 API key (HK)</td>
+              <td><a href="https://platform.deepseek.com/api_keys" target="_blank" class="ds-link">platform.deepseek.com/api_keys</a>
+              <span style="color:var(--muted);font-size:.9em"> — DeepSeek</span></td></tr>
+          <tr><td style="padding:.22em 0;color:var(--muted)">🌐 API key (global)</td>
+              <td><a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--muted);text-decoration:underline;text-underline-offset:2px">aistudio.google.com/apikey</a>
+              <span style="color:var(--muted);font-size:.9em"> — Gemini free, not in HK</span></td></tr>
           <tr><td style="padding:.22em 0;color:var(--muted)">Chatbot demo</td>
               <td><a href="https://poe.com/wordchoice" target="_blank" class="ds-link">poe.com/wordchoice</a></td></tr>
           <tr><td style="padding:.22em 0;color:var(--muted)">Edit system prompt</td>
