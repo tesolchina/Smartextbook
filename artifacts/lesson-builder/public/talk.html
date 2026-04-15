@@ -436,46 +436,37 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
         </p>
       </div>
     </div>
-    <div class="col" style="flex:1.15">
-      <div style="display:flex;align-items:baseline;gap:.6em;margin-bottom:.3em;flex-wrap:wrap">
+    <div class="col" style="flex:1.15;display:flex;flex-direction:column;gap:.3em">
+      <div style="display:flex;align-items:center;gap:.6em;flex-wrap:wrap">
         <span style="font-family:var(--sans);font-size:.64em;font-weight:800;color:var(--muted)">The system prompt — written entirely in plain English</span>
         <a href="https://poe.com/edit_bot?bot=wordchoice" target="_blank" style="font-family:var(--sans);font-size:.58em;font-weight:700;background:var(--primary);color:#fff;padding:.2em .55em;border-radius:5px;text-decoration:none;flex-shrink:0">✎ Edit in Poe</a>
       </div>
-      <div class="prompt-box" style="font-size:.61em;line-height:1.5">
-<span class="comment">// Role</span>
-You are an experienced English lecturer.
-Help students improve their <span class="string">word choice</span> and collocation.
 
-<span class="comment">// Menu trigger</span>
-When user types <span class="keyword">*menu*</span>, show the 4 options ONLY.
-Do not add any extra text.
+      <!-- Summary (always visible) -->
+      <div style="background:#f8f6f3;border:1.5px solid var(--border);border-radius:9px;padding:.55em .8em">
+        <div style="font-family:var(--sans);font-size:.6em;font-weight:800;color:var(--muted);margin-bottom:.3em;text-transform:uppercase;letter-spacing:.04em">What the prompt instructs the AI to do</div>
+        <ul style="margin:0;padding-left:1.1em;font-family:var(--sans);font-size:.67em;line-height:1.65;color:var(--text)">
+          <li><strong>Role:</strong> Experienced English lecturer focused on word choice &amp; collocation</li>
+          <li><strong>Menu system:</strong> Typing <code style="background:#eee;padding:.05em .3em;border-radius:4px">*menu*</code> shows 4 options — nothing else</li>
+          <li><strong>Option 1 — Quiz:</strong> 3 MC questions on collocation, one at a time, with feedback</li>
+          <li><strong>Option 2 — Lookup:</strong> List appropriate &amp; inappropriate combinations for a word</li>
+          <li><strong>Option 3 — Check:</strong> Verdict on a word combination + better alternative if wrong</li>
+          <li><strong>Option 4 — Review:</strong> Paragraph checked sentence by sentence using a fixed template</li>
+          <li><strong>Guardrail:</strong> Always ends with an AI disclaimer</li>
+        </ul>
+      </div>
 
-<span class="comment">// Option 1 — quiz</span>
-Ask 3 multiple-choice questions one at a time.
-Wait for the answer before showing the next question.
-Give brief feedback after each answer.
-
-<span class="comment">// Option 4 — paragraph review</span>
-Ask the student to paste their paragraph.
-Review sentence by sentence. For each sentence,
-check verb-object combinations and key word choices.
-Use this template for every combination found:
-  word combination · verdict · explanation · confidence %
-
-<span class="comment">// Safety — always include at the end</span>
-<span class="string">"I am powered by AI and can make mistakes.
-Please consult your teacher for verification."</span>
-</div>
-      <details style="margin-top:.3em" onclick="event.stopPropagation()">
-        <summary style="font-family:var(--sans);font-size:.6em;font-weight:700;color:var(--primary);cursor:pointer;user-select:none;list-style:none">▼ Show full system prompt</summary>
-        <div class="prompt-box" style="font-size:.57em;line-height:1.5;max-height:140px;overflow-y:auto;margin-top:.25em">
+      <!-- Full prompt toggle -->
+      <details onclick="event.stopPropagation()" style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <summary style="font-family:var(--sans);font-size:.62em;font-weight:700;color:var(--primary);cursor:pointer;user-select:none;list-style:none;padding:.15em 0">▶ Show full system prompt</summary>
+        <div class="prompt-box" style="font-size:.57em;line-height:1.55;max-height:160px;overflow-y:auto;margin-top:.25em">
 You are an experienced lecturer in English. Your job is to help students improve their word choice in their writing. When the user type <span class="keyword">*menu*</span> you should present the following options ONLY; do not add any other info at this stage.
 1. Learn about the importance of word choice and collocation
 2. Check the collocation of individual words
 3. Check the appropriateness of a word combination
 4. Review word choices of a paragraph
 
-<span class="comment">// Option 1 — 3 multiple-choice questions, one at a time, with feedback</span>
+<span class="comment">// Option 1 — 3 MC questions, one at a time, with feedback</span>
 When the user selects 1, offer 3 MC questions on: importance of word choice to achieve idiomaticity · collocation concept · how checking collocation improves writing. Present one question at a time; give feedback before moving on. Present the menu again at the end.
 
 <span class="comment">// Option 2 — word lookup</span>
