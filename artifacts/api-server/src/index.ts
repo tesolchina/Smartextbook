@@ -24,8 +24,6 @@ if (Number.isNaN(port) || port <= 0) {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const migrationsFolder = path.join(__dirname, "migrations");
 
-const BASELINE_MIGRATION_TAG = "0000_lean_thor_girl";
-
 async function runMigrations(): Promise<void> {
   const client = await pool.connect();
   try {
@@ -43,34 +41,33 @@ async function runMigrations(): Promise<void> {
     );
 
     if (existingRows.length === 0) {
-      const { rows: tableRows } = await client.query<{ exists: boolean }>(
-        `SELECT EXISTS (
-          SELECT FROM information_schema.tables
-          WHERE table_schema = 'public' AND table_name = 'lessons'
-        ) AS exists`
+      const { rows: tableRows } = await client.query<{ count: string }>(
+        `SELECT COUNT(*) as count FROM information_schema.tables
+         WHERE table_schema = 'public' AND table_type = 'BASE TABLE'`
       );
 
-      if (tableRows[0]?.exists) {
-        const sqlContent = fs.readFileSync(
-          path.join(migrationsFolder, `${BASELINE_MIGRATION_TAG}.sql`),
-          "utf8"
-        );
-        const hash = crypto.createHash("sha256").update(sqlContent).digest("hex");
+      const existingTableCount = parseInt(tableRows[0]?.count ?? "0", 10);
 
+      if (existingTableCount > 0) {
         const journal = JSON.parse(
           fs.readFileSync(path.join(migrationsFolder, "meta/_journal.json"), "utf8")
         ) as { entries: Array<{ tag: string; when: number }> };
 
-        const baselineEntry = journal.entries.find((e) => e.tag === BASELINE_MIGRATION_TAG);
-        const folderMillis = baselineEntry?.when ?? Date.now();
-
-        await client.query(
-          `INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
-          [hash, folderMillis]
-        );
+        for (const entry of journal.entries) {
+          const sqlContent = fs.readFileSync(
+            path.join(migrationsFolder, `${entry.tag}.sql`),
+            "utf8"
+          );
+          const hash = crypto.createHash("sha256").update(sqlContent).digest("hex");
+          await client.query(
+            `INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
+            [hash, entry.when]
+          );
+        }
 
         logger.info(
-          "Seeded migration tracking: marked baseline migration as applied (tables existed from push). Newer migrations will run now."
+          { count: journal.entries.length },
+          "Seeded migration tracking: marked all migrations as applied (tables already existed from prior push/migration)."
         );
       }
     }

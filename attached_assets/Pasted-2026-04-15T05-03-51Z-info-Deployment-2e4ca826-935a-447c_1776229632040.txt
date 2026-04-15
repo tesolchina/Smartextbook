@@ -1,0 +1,92 @@
+2026-04-15T05:03:51Z info: Deployment: 2e4ca826-935a-447c-ac41-5951a04879e0
+2026-04-15T05:03:51Z info: Build: 5adef7d0-3d88-4ae5-869d-08a5a763ee4f
+2026-04-15T05:03:52Z info: Running Security Scan
+2026-04-15T05:03:55Z info: Security Scan Complete
+2026-04-15T05:03:58Z info: Installing packages
+--> pnpm install
+
+Scope: all 11 workspace projects
+
+Lockfile is up to date, resolution step is skipped
+
+
+   ╭──────────────────────────────────────────╮
+   │                                          │
+   │   Update available! 10.26.1 → 10.33.0.   │
+   │   Changelog: https://pnpm.io/v/10.33.0   │
+   │     To update, run: pnpm add -g pnpm     │
+   │                                          │
+   ╰──────────────────────────────────────────╯
+
+
+Progress: resolved 1, reused 0, downloaded 0, added 0
+
+Packages: +1 -1
++-
+
+Progress: resolved 1, reused 1, downloaded 0, added 0, done
+
+. preinstall$ sh -c 'rm -f package-lock.json yarn.lock; case "$npm_config_user_agent" in pnpm/*) ;; *) echo "Use pnpm instead" >&2; exit 1 ;; esac'
+
+. preinstall: Done
+
+Done in 3.4s using pnpm v10.26.1
+
+2026-04-15T05:04:02Z info: Starting Build
+
+> @workspace/api-server@0.0.0 build /home/runner/workspace/artifacts/api-server
+> node ./build.mjs
+
+
+
+  dist/index.mjs                       4.6mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.6kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   8.8mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.9kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 624ms
+
+
+> @workspace/lesson-builder@0.0.0 build /home/runner/workspace/artifacts/lesson-builder
+> vite build --config vite.config.ts
+
+
+vite v7.3.1 building client environment for production...
+
+transforming...
+
+src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+✓ 4612 modules transformed.
+
+rendering chunks...
+
+computing gzip size...
+
+dist/public/index.html                                           0.75 kB │ gzip:   0.42 kB
+
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+Removed all cached metadata files
+
+Removed 43668 files
+
+Removed 837 packages
+
+2026-04-15T05:04:21Z info: Pushing pid1 binary layer...
+2026-04-15T05:04:22Z info: Pushing Repl layer...
+2026-04-15T05:04:22Z info: Pushing hosting layer...
+2026-04-15T05:04:22Z info: Created hosting layer
+2026-04-15T05:04:23Z info: Created pid1 binary layer
+2026-04-15T05:04:49Z info: Created Repl layer
+2026-04-15T05:04:55Z info: Creating Autoscale service
