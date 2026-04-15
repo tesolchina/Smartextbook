@@ -7,4 +7,6 @@ the tech has remedied the issue
 alternative foundation models, e.g. DeepSeek 
 accessing to ChatGPT, Claude and Gemini via API  
 
-slide no 3 
+slide no 3 A question asked in Aug 2024 
+changed to more direct heading: AI chatbot customization or sth  
+
