@@ -12,3 +12,9 @@ id = "0VR5k3P0kPb4eRySVdSN1"
 uri = "file://docs/gemini-gems-inspiration-report.md"
 type = "text"
 title = "Gemini Gems — Research Report & SmartTextbook Inspiration"
+
+[[outputs]]
+id = "oA2E-trCQpG8KD0B6s37G"
+uri = "file://docs/theoretical-assessments-mapping.md"
+type = "text"
+title = "SmartTextbook & Assessment Reform — Reform-by-Reform Mapping"
