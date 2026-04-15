@@ -147,6 +147,13 @@ body {
 .prompt-box .comment { color: #6a9955; }
 .prompt-box .keyword { color: #569cd6; }
 .prompt-box .string  { color: #ce9178; }
+/* chat bubbles */
+.cb-bubble { font-family: var(--sans); font-size: .7em; border-radius: 10px; padding: .45em .7em; max-width: 90%; line-height: 1.5; color: var(--text); }
+.cb-bubble-bot  { background: rgba(184,76,42,.08); align-self: flex-start; border-bottom-left-radius: 3px; }
+.cb-bubble-user { background: rgba(30,64,175,.07); align-self: flex-end; border-bottom-right-radius: 3px; }
+.cb-bubble strong.cb-role { display:block; font-size:.82em; margin-bottom:.1em; }
+.cb-bubble-bot  strong.cb-role { color: var(--primary); }
+.cb-bubble-user strong.cb-role { color: #1e40af; }
 
 /* loop diagram */
 .loop-row { display: flex; align-items: center; gap: .5em; justify-content: center; }
@@ -243,7 +250,7 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
     <span class="badge badge-orange">Open Source</span>
     <span class="badge badge-orange">BYOK</span>
   </div>
-  <div class="slide-footer"><span>Simon Wang · Lecturer in English &amp; Innovation Officer · HKBU Language Centre</span><span>1 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · Lecturer in English &amp; Innovation Officer · HKBU Language Centre</span><span>1 / 18</span></div>
 </div>
 
 <!-- ═══ 2. NATURE 2023 ═══ -->
@@ -284,7 +291,7 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>2 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>2 / 18</span></div>
 </div>
 
 <!-- ═══ 3. ORIGIN — 2024 ARTICLE ═══ -->
@@ -324,7 +331,7 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>3 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>3 / 18</span></div>
 </div>
 
 <!-- ═══ 3. WHAT IS CHATBOT CUSTOMISATION ═══ -->
@@ -377,7 +384,7 @@ body:hover #controls, body:focus-within #controls { opacity: 1; }
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>4 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>4 / 18</span></div>
 </div>
 
 <!-- ═══ 4. CASE STUDY — WORDCHOICE ═══ -->
@@ -446,7 +453,69 @@ Please consult your teacher for verification."</span>
       <p style="font-family:var(--sans);font-size:.7em;line-height:1.5;color:var(--text)">Vibe coding asks AI to <strong>write programming code</strong> from a description — more powerful. But this came first: using natural language to <strong>direct AI behaviour directly</strong>, without generating code at all.</p>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>5 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>5 / 18</span></div>
+</div>
+
+<!-- ═══ NEW: CHATBOT DEMO ═══ -->
+<div class="slide" data-slide="5b" style="padding:26px 38px;overflow:hidden">
+  <div class="eyebrow">Part 1 — 2024 · Try It Now</div>
+  <div class="slide-title" style="font-size:1.4em;margin-bottom:.45em">Customise a Chatbot — <em>Live in this Slide</em></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.85em;flex:1;min-height:0">
+
+    <!-- LEFT: System prompt + key -->
+    <div style="display:flex;flex-direction:column;gap:.4em;min-height:0">
+      <div class="card" style="padding:.5em .75em;flex:1;display:flex;flex-direction:column;min-height:0">
+        <div class="card-title" style="margin-bottom:.25em;font-size:.75em">
+          System Prompt
+          <span style="font-weight:400;color:var(--muted);font-size:.85em"> — edit to change the bot's behaviour</span>
+        </div>
+        <textarea id="cb-prompt" style="flex:1;width:100%;padding:.4em .55em;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:.64em;line-height:1.55;resize:none;background:var(--bg);color:var(--text);min-height:0">You are an academic writing coach for university students. Your role is to help them improve their own writing — never to rewrite it for them.
+
+When a student shares a sentence or paragraph:
+1. Give ONE specific, actionable piece of feedback on word choice or sentence structure
+2. Ask ONE guiding question to prompt their own revision
+3. If they share a revised version, acknowledge the improvement and suggest one more refinement
+
+Keep responses concise — 2 short paragraphs. Be encouraging but precise.</textarea>
+      </div>
+      <div class="card" style="padding:.4em .75em">
+        <div style="display:flex;gap:.5em;align-items:center;flex-wrap:wrap">
+          <select id="cb-provider" style="padding:.3em .5em;border:1.5px solid var(--border);border-radius:7px;font-family:var(--sans);font-size:.65em;background:var(--bg);color:var(--text);flex:1">
+            <option value="https://generativelanguage.googleapis.com/v1beta/openai/|gemini-2.0-flash">Gemini 2.0 Flash (free)</option>
+            <option value="https://api.openai.com/v1|gpt-4o-mini">OpenAI GPT-4o Mini</option>
+            <option value="https://api.deepseek.com/v1|deepseek-chat">DeepSeek Chat</option>
+            <option value="https://openrouter.ai/api/v1|google/gemini-2.0-flash-001">OpenRouter</option>
+          </select>
+          <input id="cb-key" type="password" placeholder="API key…" style="padding:.3em .5em;border:1.5px solid var(--border);border-radius:7px;font-family:monospace;font-size:.65em;background:var(--bg);color:var(--text);flex:1.2" />
+        </div>
+        <p style="font-family:var(--sans);font-size:.52em;color:var(--muted);margin-top:.2em">
+          Key stays in this page only — never stored or transmitted elsewhere.
+          Get a free Gemini key at <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--primary)">aistudio.google.com/apikey</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- RIGHT: Chat -->
+    <div style="display:flex;flex-direction:column;gap:.4em;min-height:0">
+      <div class="card" style="padding:.5em .75em;flex:1;display:flex;flex-direction:column;min-height:0">
+        <div class="card-title" style="margin-bottom:.3em;font-size:.75em">Chat with your bot</div>
+        <div id="cb-messages" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:.35em;padding-right:.15em;min-height:0">
+          <div class="cb-bubble cb-bubble-bot">
+            Hello! Share a sentence or paragraph you're working on, and I'll help you improve it step by step.
+          </div>
+        </div>
+        <div style="display:flex;gap:.4em;margin-top:.4em">
+          <input id="cb-input" type="text"
+            placeholder="e.g. The results were very big and important."
+            style="flex:1;padding:.38em .55em;border:1.5px solid var(--border);border-radius:7px;font-family:var(--sans);font-size:.68em;background:var(--bg);color:var(--text)"
+            onkeydown="if(event.key==='Enter')cbSend()" />
+          <button onclick="cbSend()" style="padding:.38em .85em;background:var(--primary);color:#fff;border:none;border-radius:7px;font-family:var(--sans);font-size:.68em;font-weight:700;cursor:pointer;white-space:nowrap">Send →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>6 / 18</span></div>
 </div>
 
 <!-- ═══ 5. TWO PATHWAYS ═══ -->
@@ -494,7 +563,7 @@ Please consult your teacher for verification."</span>
     <div class="hb-label">Where We Were in 2024</div>
     <p>Pathway 1 was accessible but left educators blind to their students' learning. Pathway 2 solved that — but required a programmer and months of development. <strong>Fast forward two years.</strong></p>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>6 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>7 / 18</span></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════ -->
@@ -536,7 +605,7 @@ Please consult your teacher for verification."</span>
     &nbsp;·&nbsp;
     <a href="https://simonwillison.net/2025/Feb/6/vibe-coding/" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:underline">simonwillison.net/2025/Feb/6/vibe-coding/</a>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>7 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>8 / 18</span></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════ -->
@@ -573,7 +642,7 @@ Please consult your teacher for verification."</span>
     <div class="hb-label">SmartTextbook addresses all three</div>
     <p>Embedded AI tutor + chapter-to-lesson pipeline + <strong>BYOK</strong> (Bring Your Own Key) — each student uses their own free API key.</p>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>8 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>9 / 18</span></div>
 </div>
 
 <!-- ═══ 8. GOOGLE RESEARCH ═══ -->
@@ -606,7 +675,7 @@ Please consult your teacher for verification."</span>
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>9 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>10 / 18</span></div>
 </div>
 
 <!-- ═══ 8. THREE NEW IDEAS ═══ -->
@@ -642,7 +711,7 @@ Please consult your teacher for verification."</span>
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>10 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>11 / 18</span></div>
 </div>
 
 <!-- ═══ 9. PLATFORM ═══ -->
@@ -686,7 +755,7 @@ Please consult your teacher for verification."</span>
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>11 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>12 / 18</span></div>
 </div>
 
 <!-- ═══ 10. COMPARISON ═══ -->
@@ -736,7 +805,7 @@ Please consult your teacher for verification."</span>
       </tr>
     </tbody>
   </table>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>12 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>13 / 18</span></div>
 </div>
 
 <!-- ═══ 11. CLOSED LOOP ═══ -->
@@ -778,7 +847,7 @@ Please consult your teacher for verification."</span>
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>13 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>14 / 18</span></div>
 </div>
 
 <!-- ═══ 12. LIVE DEMO ═══ -->
@@ -813,7 +882,7 @@ Please consult your teacher for verification."</span>
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>14 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>15 / 18</span></div>
 </div>
 
 <!-- ═══ 13. SCORM & xAPI ═══ -->
@@ -866,7 +935,7 @@ Please consult your teacher for verification."</span>
     <div class="hb-label">Key Distinction</div>
     <p>SCORM answers <strong>"did they complete it?"</strong> &nbsp;·&nbsp; xAPI answers <strong>"how did they actually learn?"</strong> — the difference between a checkbox and a learning dataset.</p>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>15 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>16 / 18</span></div>
 </div>
 
 <!-- ═══ 14. BLUEPRINT ═══ -->
@@ -912,7 +981,7 @@ Please consult your teacher for verification."</span>
       </div>
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>16 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>17 / 18</span></div>
 </div>
 
 <!-- ═══ 15. Q&A ═══ -->
@@ -946,7 +1015,7 @@ Please consult your teacher for verification."</span>
       Lecturer in English &amp; Innovation Officer<br>The Language Centre, HKBU
     </div>
   </div>
-  <div class="slide-footer"><span>Simon Wang · 2026</span><span>17 / 17</span></div>
+  <div class="slide-footer"><span>Simon Wang · 2026</span><span>18 / 18</span></div>
 </div>
 
 
@@ -961,7 +1030,7 @@ Please consult your teacher for verification."</span>
 
 <div id="controls">
   <button class="ctrl-btn" id="prev-btn" disabled>← Prev</button>
-  <span id="slide-counter">1 / 17</span>
+  <span id="slide-counter">1 / 18</span>
   <button class="ctrl-btn" id="next-btn">Next →</button>
   <button id="fullscreen-btn" title="Fullscreen (F)">⛶</button>
 </div>
@@ -1041,6 +1110,75 @@ document.addEventListener('touchend', e => {
 }, { passive: true });
 
 fill.style.width = (1 / total * 100) + '%';
+
+// ─── Chatbot slide demo ───────────────────────────────────────
+const cbHistory = [];
+
+function cbGetKey() {
+  return (document.getElementById('cb-key')?.value.trim()) ||
+         (document.getElementById('demo-key')?.value.trim()) || '';
+}
+
+function cbAddBubble(role, text) {
+  const box = document.getElementById('cb-messages');
+  if (!box) return;
+  const div = document.createElement('div');
+  div.className = `cb-bubble ${role === 'user' ? 'cb-bubble-user' : 'cb-bubble-bot'}`;
+  div.innerHTML = `<strong class="cb-role">${role === 'user' ? 'You' : 'Bot'}</strong>${text.replace(/\n/g,'<br>')}`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function cbSend() {
+  const input = document.getElementById('cb-input');
+  const text  = input?.value.trim();
+  if (!text) return;
+
+  const key = cbGetKey();
+  if (!key) {
+    alert('Please paste your API key in the field on the left.');
+    return;
+  }
+
+  const [baseURL, model] = (document.getElementById('cb-provider')?.value || '').split('|');
+  const systemPrompt = document.getElementById('cb-prompt')?.value || '';
+
+  input.value = '';
+  cbAddBubble('user', text);
+  cbHistory.push({ role: 'user', content: text });
+
+  // thinking indicator
+  const box = document.getElementById('cb-messages');
+  const indicator = document.createElement('div');
+  indicator.className = 'cb-bubble cb-bubble-bot';
+  indicator.id = 'cb-thinking';
+  indicator.style.opacity = '.5';
+  indicator.textContent = 'Thinking…';
+  box?.appendChild(indicator);
+  if (box) box.scrollTop = box.scrollHeight;
+
+  try {
+    const endpoint = baseURL.endsWith('/') ? baseURL + 'chat/completions' : baseURL + '/chat/completions';
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'system', content: systemPrompt }, ...cbHistory],
+        max_tokens: 500
+      })
+    });
+    const data = await res.json();
+    document.getElementById('cb-thinking')?.remove();
+    const reply = data.choices?.[0]?.message?.content || data.error?.message || 'No response received.';
+    cbHistory.push({ role: 'assistant', content: reply });
+    cbAddBubble('bot', reply);
+  } catch (e) {
+    document.getElementById('cb-thinking')?.remove();
+    cbAddBubble('bot', 'Error: ' + e.message);
+  }
+}
+// ─────────────────────────────────────────────────────────────
 
 async function runDemo() {
   const btn = document.getElementById('demo-btn');
