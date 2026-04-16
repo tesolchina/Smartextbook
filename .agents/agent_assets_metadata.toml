@@ -18,3 +18,9 @@ id = "oA2E-trCQpG8KD0B6s37G"
 uri = "file://docs/theoretical-assessments-mapping.md"
 type = "text"
 title = "SmartTextbook & Assessment Reform — Enriched with Panel Discussion"
+
+[[outputs]]
+id = "I1ici26X44j-McunOxs0P"
+uri = "file://docs/slide-making-process.md"
+type = "text"
+title = "SmartTextbook Slide Deck — Complete Making-of Process"
