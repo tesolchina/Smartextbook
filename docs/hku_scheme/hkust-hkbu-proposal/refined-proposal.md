@@ -14,18 +14,16 @@
 
 ## 1. Rationale, Purpose and Expected Outcomes
 
-Hong Kong undergraduates face a documented gap between academic learning and career readiness. In LANG1422 *Chinese for Workplace Applications* at HKBU, each student typically receives one ten-minute tutorial slot for CV feedback — insufficient for the iterative improvement that real-world employers expect. A compounding challenge: previous course iterations did not emphasise CV editing for international contexts, because Chinese CVs are not typically required in local hiring. As graduates increasingly enter multilingual, international workplaces, this gap is widening.
+Hong Kong undergraduates face a widening gap between academic learning and career readiness. In LANG1422 *Chinese for Workplace Applications* (HKBU), each student receives one ten-minute tutorial slot for CV feedback — insufficient for the iterative improvement international employers expect. As graduates enter multilingual workplaces, the gap between local CV conventions and international standards compounds the problem.
 
-When students seek help outside class hours, they turn to general-purpose AI chatbots (ChatGPT, Claude) and receive generic, culturally decontextualised feedback — what Ahmedtelba et al. (2025) call "unproductive cognitive offloading," where fluent AI output substitutes for genuine skill development.
+When students seek help independently, generic AI chatbots return culturally decontextualised feedback — what Ahmedtelba et al. (2025) call "unproductive cognitive offloading," where fluent AI output substitutes for genuine skill development.
 
-This project addresses both gaps through a specific mechanism: *distilling teacher expertise into AI-delivered scaffolding.* The coaching knowledge that experienced teachers carry — what makes a CV culturally credible in an international workplace, what patterns of weakness recur across cohorts, what questions produce genuine revision rather than surface editing — exists but cannot be delivered to forty students individually. This project encodes that expertise into a structured prompt system that delivers it as a personalised, iterative dialogue with every student. The student remains the decision-maker at every stage: they judge which feedback to act on, which suggestions fit their context, and how to revise. The AI delivers the teacher's questioning framework, not the teacher's answers.
-
-This design is the practical expression of the Trio model: teacher expertise sets the direction, AI scales the delivery, students do the intellectual work. The platform implementing this system is built on BYOK and platform-neutral principles — the prompt library, not the software, is the transferable asset. If institutional policy requires a change of AI provider, the pedagogical design functions identically.
+This project responds through *expert knowledge distillation*: teacher coaching knowledge — what makes a CV internationally credible, which feedback patterns recur across cohorts, which questions produce genuine revision — is encoded into a structured prompt system delivered as personalised, iterative dialogue. Students remain the decision-makers at every stage: they judge which feedback applies to their context, and how to revise. The AI delivers the teacher's questioning framework, not the teacher's answers. This is the Trio model in practice: teacher expertise sets direction, AI scales delivery, students do the intellectual work.
 
 **Expected outcomes:**
-- Measurable improvement in CV quality scores (pre/post standardised rubric, targeting 25–30% gain)
-- Growth in student AI literacy: ability to critically evaluate AI-generated career advice rather than accept it uncritically
-- A documented, open-source "career coaching prompt library" — teacher expertise encoded in replicable, platform-agnostic format any course can adopt
+- Measurable CV quality improvement (pre/post standardised rubric; targeting 25–30% gain)
+- Growth in AI literacy: students evaluate AI career advice critically, not passively
+- An open-source career coaching prompt playbook any institution can adopt
 
 ---
 
@@ -59,36 +57,36 @@ This project follows four phases within the September–December 2026 window, de
 
 ## 4. Evaluation
 
-Evidence will be collected using a mixed-methods design grounded in the HKU AI Assessment Integration Framework (Chan & Colloton, 2024) — specifically the human-machine partnership assessment type, which evaluates students' ability to collaborate with AI while keeping human judgement central.
+Evidence will be collected via a mixed-methods design grounded in the HKU AI Assessment Integration Framework (Chan & Colloton, 2024).
 
-**Quantitative measures:**
-- *CV quality:* Pre/post rubric scores (content relevance, professional presentation, achievement articulation, industry alignment) for all participants; AI-generated and teacher evaluations compared for inter-rater reliability
-- *Mock interview performance:* Structured rubric scores on audio recordings; AI feedback accuracy benchmarked against teacher judgements; student confidence self-report pre/post
-- *Iteration depth:* Number of AI-assisted revision cycles per student, correlated with final rubric score
-- *Cross-institutional comparison:* Rubric scores and AI literacy gains compared between HKUST and HKBU cohorts
+**Quantitative:**
+- *CV quality:* Pre/post rubric scores (content relevance, professional presentation, achievement articulation, industry alignment); AI and teacher evaluations compared for inter-rater reliability
+- *Mock interview performance:* Structured rubric scores; AI feedback benchmarked against teacher judgements; student confidence self-report pre/post
+- *Iteration depth:* AI-assisted revision cycles per student, correlated with final rubric score
+- *Cross-institutional comparison:* Scores and AI literacy gains compared across HKUST and HKBU cohorts
 
-**Qualitative measures:**
-- *Interaction transcripts:* Conversation logs scored against the teacher-designed rubric — the process record that distinguishes a student who drove analytical choices from one who passively followed AI suggestions
-- *Focus group:* Reciprocal learning documented — what did teachers learn from students? What surprised students about AI limitations?
-- *Partnership quality indicator:* The Evaluation section of the final report is co-written by student partners — their authorial voice is evidence of genuine partnership, not its symbol
+**Qualitative:**
+- *Interaction transcripts:* Conversation logs scored against the rubric — process evidence distinguishing students who drove analytical choices from those who followed AI suggestions
+- *Focus group:* Reciprocal learning documented — what did teachers learn from students? What surprised students?
+- *Partnership quality:* Student partners co-author the Evaluation section — authorial voice as evidence of genuine partnership
 
-**Impact and reach:**
-- Student cohort size across both institutions (30–40 direct participants)
-- Post-project tracking of prompt playbook downloads and institutional adaptations via open-source GitHub repository analytics — adoptions beyond the original cohort are the primary long-term impact indicator
+**Impact:**
+- Direct cohort: 30–40 participants across both institutions
+- Long-term reach: prompt playbook downloads and institutional adoptions tracked via GitHub analytics — the primary indicator that the course was a starting point, not a ceiling
 
 ---
 
 ## 5. Ensuring Success
 
-**Sustainability and wider adoption:** The primary deliverable is not the AI tool — it is the **open-source prompt engineering playbook and rubric framework**, published on GitHub alongside the RSLEIHE report. Any teacher at any institution can adopt it with any compliant AI provider, without budget negotiation or platform agreement. The cross-institutional structure (HKUST + HKBU) already demonstrates transferability across different student populations and is designed to serve as a replication template for other institutions. Post-project adoption is tracked via GitHub analytics and reported as a long-term impact indicator.
+**Sustainability and wider adoption:** The Trio model works here because the deliverable is not the tool — it is the distilled expertise (Section 1), encoded in an open-source prompt playbook any teacher can adopt with any compliant AI provider, without budget negotiation. The HKUST + HKBU structure is itself a replication template: two institutions, two student partners, two teacher architects, one shared design. Any consortium can reproduce this. Post-project adoption tracked via GitHub analytics.
 
-**AI output quality in cross-cultural contexts:** Prompts are trained specifically on LANG1422 rubrics and documented feedback patterns; student partners stress-test outputs for cultural accuracy before deployment.
+**Cross-cultural accuracy:** Prompts are co-designed against LANG1422 rubrics and documented teacher feedback patterns (Phase 2); student partners stress-test outputs for cultural accuracy before full deployment (Phase 3).
 
-**Student data privacy:** CV data anonymised for research; consent forms issued to all participants; only aggregated data in the final report. Ethics clearance sought from both institutions by July 2026.
+**Data privacy:** CV content anonymised for research; consent forms issued to all participants; only aggregated data in the final report. Ethics clearance from both institutions by July 2026.
 
-**AI access inequality:** System built on free-tier compatible tools (DeepSeek, ChatGPT free). No paid subscription required — a deliberate design principle, not a fallback.
+**Access equity:** Built on free-tier compatible tools (DeepSeek, ChatGPT free) — the BYOK principle from Section 2 ensures no student is excluded by subscription cost.
 
-**Cross-institutional coordination:** Monthly Trio meetings from July; shared milestone ownership across HKUST and HKBU; cross-institutional differences treated as research data, not logistical friction.
+**Coordination:** Monthly Trio meetings from July; shared milestone ownership across HKUST and HKBU; cross-institutional differences generate comparative data for Section 4, not logistical friction.
 
 ---
 
