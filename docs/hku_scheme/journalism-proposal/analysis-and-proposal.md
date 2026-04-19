@@ -74,22 +74,13 @@ This project builds a corpus of annotated professional journalism — local and 
 
 ### 2. Partnership
 
-This project embodies the Trio model through a distinctive SaP structure: a student's own exemplary analytical work becomes the pedagogical foundation the entire AI system is built upon.
+This project embodies the Trio model through a shared corpus-building partnership: teacher expertise defines the framework, students build the evidence base, and AI scales the tutoring.
 
-**Student partners [3 members — names to confirm]:**
-The student partners have three distinct roles in this project. First, Bess [surname] contributes her analytical framework as the intellectual core of the AI scaffolding system — her data journalism analysis of NY Times articles serves as the benchmark all scaffolding prompts are trained toward. Second, all student partners co-design the AI scaffolding prompts, testing whether the system guides students toward the analytical behaviours Bess exhibited. Third, students conduct peer evaluation sessions during the pilot, using their own judgement to assess AI output quality. Students co-author the Methodology and Evaluation sections of the final report.
+**Teachers (Bess Wang, HKBU Journalism; Simon Wang, HKBU Language) — the architects:** Bess defines the annotation framework for expert topic selection, source identification, and newsworthiness judgement in data journalism; Simon designs the AI scaffolding and pedagogical integration. Together they encode professional knowledge into a structure students and AI can operationalise.
 
-**Faculty partners [1–2: journalism teacher + Simon Wang]:**
-The journalism teacher provides domain expertise: professional data journalism conventions, course assessment rubrics, and knowledge of the specific student misconceptions documented across previous cohorts. Simon Wang contributes AI integration and pedagogical design expertise. Both faculty partners learn from the students: specifically, what aspects of Bess's framework students find most opaque and why.
+**Students [names TBC] — decision-makers and co-builders:** Students occupy three roles no faculty can fill: reporting where tools fail and which scaffolding questions miss the mark; annotating the professional journalism corpus, contributing ground-level judgements about what makes an angle distinctive; and testing new reporting approaches in their own JOUR3306/3307 stories. Their difficulties are design data; their annotations are the intellectual foundation of the corpus.
 
-**GenAI tools — SmartTextbook platform (current default: DeepSeek; alternative: ChatGPT 4o):**
-The scaffolding system is deployed via SmartTextbook, an open-source AI-in-education platform built on two principles that directly address institutional AI governance concerns.
-
-*Bring Your Own Key (BYOK):* Students supply their own API credentials, stored locally in their browser and never transmitted to or held by the platform server. The institution bears no credential liability or data residency risk. Students also learn — through the act of using the tool — that AI is a service with a cost structure and a provider relationship, not a magic box. This is itself a data journalism literacy outcome: evaluating sources includes evaluating the technologies used to gather and analyse them.
-
-*Platform Neutrality:* The five-module scaffolding prompt library (one module per identified student challenge) is provider-agnostic. DeepSeek is the recommended default for Hong Kong users; ChatGPT 4o is a fully supported alternative. If the journalism department or institution has a preferred approved provider, the pedagogical scaffolding functions identically — only the API endpoint changes. The deliverable of this project is the prompt library, not a subscription to a specific service. Any journalism programme can adopt it with any AI tool.
-
-This approach aligns with the HKU GenAI Guidebook (Tsao & Wong, 2025) and complies with institutional policies on responsible AI use in teaching and learning.
+**GenAI (DeepSeek / ChatGPT 4o) — the tutor at scale:** AI assists in analysing published journalistic pieces to surface patterns in the corpus, and delivers customised scaffolding that simulates Bess's tutoring — asking the questions she would ask — for every student, at every story pitch, unconstrained by class size. Students use their own AI accounts; the scaffolding works with any compliant provider, so the pedagogical design is unaffected by institutional tool requirements. Ethics clearance will be sought by July 2026 if required.
 
 ---
 
