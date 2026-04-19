@@ -54,3 +54,9 @@ id = "spyfYslIqZO2tkJrl6eXE"
 uri = "file://docs/hku_scheme/journalism-proposal/raw-draft.md"
 type = "text"
 title = "原始文件内容整理"
+
+[[outputs]]
+id = "Ak4wa0NJl_VpyF0GAd0-C"
+uri = "file://docs/hku_scheme/gtsu-proposal/analysis-and-proposal.md"
+type = "text"
+title = "GTSU 和平教育平台 — 完整分析与草案提案"
