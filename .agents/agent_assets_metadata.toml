@@ -30,3 +30,15 @@ id = "ggS8WF9HvcrEoMLRUf4N8"
 uri = "file://docs/hku_scheme/analysis-and-strategy.md"
 type = "text"
 title = "HKU RSLEIHE 2026-27 — Research Analysis & Proposal Strategy"
+
+[[outputs]]
+id = "M7SRVYw9nwbKKppELfGJz"
+uri = "file://docs/hku_scheme/hkust-hkbu-proposal/refined-proposal.md"
+type = "text"
+title = "精炼版计划书草案 — AI Career Coaching (HKUST × HKBU)"
+
+[[outputs]]
+id = "_6KBDlgwutSx_XKayMYcz"
+uri = "file://docs/hku_scheme/hkust-hkbu-proposal/analysis-and-gaps.md"
+type = "text"
+title = "草案分析 — 不足之处与修改建议"
