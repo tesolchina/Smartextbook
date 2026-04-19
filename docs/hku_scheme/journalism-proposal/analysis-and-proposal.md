@@ -55,20 +55,20 @@ The document contains only problem analysis. All five proposal sections (Rationa
 
 ### 1. Rationale, Purpose and Expected Outcomes
 
-HKBU's Data Journalism Practicum publishes student work at DataStory (datastory.hkbu.edu.hk), yet a persistent gap separates student output from professional practice. Direct observation reveals three recurring patterns:
+JOUR3306/3307 Journalism Practicum (Data) at HKBU produces published reporting at DataStory (datastory.hkbu.edu.hk), yet a persistent gap separates student output from professional practice. Three challenges recur:
 
-*Topic selection:* Students choose broad themes — "silver economy," "climate change" — producing unfocused, predictable stories. Professionals narrow instinctively to a specific industry (silver economy → food and catering); students lack the framework to do the same.
+*Topic selection:* Students default to broad themes — "silver economy," "ageing population" — producing unfocused, predictable stories. Professionals narrow to a specific industry; students lack the framework to do the same.
 
-*Sourcing:* Students rely on public datasets. Professionals seek first-hand, industry-specific sources and frame stories around what public data cannot show. Students rarely know what they are missing.
+*Sourcing:* Students rely on public datasets. Professionals combine government data with industry reports, first-hand interviews, and trade statistics — source combinations that produce newsworthy, specific claims.
 
-*Perspective:* The hardest gap — finding an angle beyond common sense. Students cannot replicate professional intuition without industry knowledge or exposure to professional practice.
+*Newsworthiness:* Students cannot find angles beyond common sense — the gap assessed directly by JOUR3306/3307's Story Ideas criterion (news value, originality, timeliness).
 
-This project analyses published professional journalism to extract reusable patterns: how expert reporters establish newsworthiness, identify non-obvious data sources, and narrow broad topics to specific, untold angles. Students crowdsource these patterns and use AI scaffolding to apply them to their own stories: *Is this angle newsworthy? Which sources would a professional seek? What has not been told?*
+This project builds a corpus of annotated professional journalism — local and international — extracting reusable patterns of topic selection, sourcing, and framing. An AI tutor, empowered by this corpus, scaffolds students through pre-reporting decisions: *Is this angle newsworthy? Which sources would a professional seek?* Students crowdsource the annotations; the AI delivers the patterns.
 
 **Expected outcomes:**
-- Measurable gain in topic specificity and source diversity (pre/post rubric)
-- A reusable newsworthiness and sourcing strategy toolkit students apply to every story
-- An open-source pattern library for data journalism education, adoptable by any programme
+- Measurable improvement in topic specificity and source diversity (pre/post rubric)
+- A reusable newsworthiness and sourcing toolkit students apply to every story pitch
+- An open-source pattern library and AI scaffold adoptable by any journalism programme
 
 ---
 
