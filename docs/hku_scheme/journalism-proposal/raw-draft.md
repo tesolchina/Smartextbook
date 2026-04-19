@@ -1,6 +1,29 @@
 # RSLEIHE 2026-27 — Data Journalism Project
 ## Reading Like a Reporter: AI Scaffolding Through Reusable Patterns from Professional Journalism
-*Updated: April 2026 | Course: Data Journalism Practicum (HKBU) | Output: DataStory (datastory.hkbu.edu.hk)*
+*Updated: April 2026*
+*Course: JOUR3306/3307 Journalism Practicum (Data) I/II/III — Dept of Journalism, HKBU*
+*Output: DataStory (datastory.hkbu.edu.hk)*
+
+---
+
+## Course Context
+
+| Item | Detail |
+|------|--------|
+| Course code | JOUR3306 / JOUR3307 |
+| Title | Journalism Practicum (Data) I / II / III |
+| Department | Department of Journalism, HKBU |
+| Units | 2 units |
+| Medium | Cantonese / English |
+| Output | DataStory website + social media platforms |
+| Workflow | PACE process: Preparation → Analysis → Conduct → Evaluation |
+| Student roles | Data collecting, cleaning, wrangling, visualisation, drafting, publishing |
+
+**Assessment directly relevant to this project:**
+- *Story Ideas (20%)*: evaluated on **news value, originality, innovation, creativity, timeliness** — precisely the newsworthiness judgement students struggle with
+- *CILO 2*: Establish relationships with news sources — connects to the first-hand sourcing gap
+
+**AI tutor integration point:** The PACE *Preparation* stage — before students commit to a topic — is where topic-scoping, source planning, and newsworthiness decisions are made. This is where AI scaffolding adds most value.
 
 ---
 
@@ -53,14 +76,16 @@ Rare but high-value sources students miss:
 ## Proposed Mechanism
 
 ### Step 1 — Build a Corpus from Published Professional Journalism
-- Large-scale analysis of published data journalism articles (Hong Kong and international)
+- Large-scale analysis of published data journalism articles from a **wide range of local and international media**, including:
+  - *Local:* South China Morning Post, RTHK, HK01, Ming Pao, Stand News archives, DataStory itself
+  - *International:* NY Times, The Guardian, Reuters, ProPublica, FiveThirtyEight, Caixin (财新)
 - For each article, extract and annotate:
   - Topic → specific industry/community narrowed to
-  - Data sources used (categorised by type: government / industry / first-hand / academic)
-  - The newsworthy angle and why it works
-  - What common-sense angle was *avoided*
-- Students crowdsource this analysis: each student contributes annotations on 2–3 articles
-- Result: a structured pattern database of professional journalism practice
+  - Data sources used (categorised: government / industry / first-hand / academic / cross-border)
+  - The newsworthy angle and what makes it distinct from common-sense coverage
+  - Source combinations that enabled the angle
+- Students crowdsource this analysis: each student contributes annotations on 2–3 articles per semester
+- Result: a growing, structured pattern database of professional journalism practice — improves each year
 
 ### Step 2 — AI Tutor Empowered by the Corpus
 An AI assistant trained on / retrieval-augmented by the corpus acts as a decision-support tool for students **at the topic selection and pre-reporting stage**:
