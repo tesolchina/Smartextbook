@@ -78,8 +78,14 @@ The student partners have three distinct roles in this project. First, Bess [sur
 **Faculty partners [1–2: journalism teacher + Simon Wang]:**
 The journalism teacher provides domain expertise: professional data journalism conventions, course assessment rubrics, and knowledge of the specific student misconceptions documented across previous cohorts. Simon Wang contributes AI integration and pedagogical design expertise. Both faculty partners learn from the students: specifically, what aspects of Bess's framework students find most opaque and why.
 
-**GenAI tools [1–2 to specify]:**
-[Recommended: ChatGPT 4o for interactive scaffolding; SmartTextbook's Socratic tutor mode as the structured probing framework.] The tools deliver proactive scaffolding — asking students guided questions through the analytical process rather than providing answers. The system is designed to be platform-agnostic: the prompt library works with any conversational AI tool, ensuring students learn transferable analytical habits rather than tool-specific workflows.
+**GenAI tools — SmartTextbook platform (current default: DeepSeek; alternative: ChatGPT 4o):**
+The scaffolding system is deployed via SmartTextbook, an open-source AI-in-education platform built on two principles that directly address institutional AI governance concerns.
+
+*Bring Your Own Key (BYOK):* Students supply their own API credentials, stored locally in their browser and never transmitted to or held by the platform server. The institution bears no credential liability or data residency risk. Students also learn — through the act of using the tool — that AI is a service with a cost structure and a provider relationship, not a magic box. This is itself a data journalism literacy outcome: evaluating sources includes evaluating the technologies used to gather and analyse them.
+
+*Platform Neutrality:* The five-module scaffolding prompt library (one module per identified student challenge) is provider-agnostic. DeepSeek is the recommended default for Hong Kong users; ChatGPT 4o is a fully supported alternative. If the journalism department or institution has a preferred approved provider, the pedagogical scaffolding functions identically — only the API endpoint changes. The deliverable of this project is the prompt library, not a subscription to a specific service. Any journalism programme can adopt it with any AI tool.
+
+This approach aligns with the HKU GenAI Guidebook (Tsao & Wong, 2025) and complies with institutional policies on responsible AI use in teaching and learning.
 
 ---
 

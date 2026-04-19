@@ -39,10 +39,14 @@ Students are not tool testers — they are **co-designers** of the coaching syst
 **Teacher partners (Krista Du, Simon Wang):**
 Teachers contribute expert pedagogical knowledge: industry-aligned CV standards, culturally-specific interview conventions, and documented patterns from years of student coaching. Teachers do not build the AI system alone — they co-design it with students, sharing their reasoning for every rubric criterion. This is the reciprocal learning dimension: teachers discover what criteria students find ambiguous or culturally unfamiliar.
 
-**GenAI tools (ChatGPT 4o; platform-agnostic principles):**
-The tools provide scalable, immediate formative feedback on CV drafts and interview responses. Critically, the coaching system is designed around **platform-agnostic skills** — prompt engineering principles, output evaluation rubrics, and iterative refinement processes that transfer across any AI tool. Students learn to work *with* AI discerningly, not to depend on any single platform.
+**GenAI tools — SmartTextbook platform (current default: DeepSeek; alternative: ChatGPT 4o):**
+The coaching system is deployed via SmartTextbook, an open-source AI-in-education platform built on two architectural principles that directly address institutional AI governance concerns.
 
-*[Compliance note to add before submission: "The use of GenAI tools will comply with HKBU and HKUST institutional policies on GenAI use in teaching and learning. Ethics clearance will be obtained by July 2026 if required."]*
+*Bring Your Own Key (BYOK):* Students and educators supply their own API credentials, which are stored only in the browser's local storage and never transmitted to or stored on any platform server. The institution accumulates no credential liability and no data residency risk. This model also teaches an under-discussed AI literacy competency: students learn that AI has a cost structure, a provider relationship, and a usage model — not just an output.
+
+*Platform Neutrality:* The prompt library, rubric design, and scaffolding architecture developed in this project work equivalently across all supported AI providers. DeepSeek is the recommended default for Hong Kong-based users given its accessibility and cost profile; ChatGPT 4o is a fully supported alternative for institutions with existing OpenAI agreements. If HKBU or HKUST policy requires a specific approved provider, the pedagogical design is unchanged — only the API endpoint is redirected. Students learn to evaluate AI-generated feedback critically, not to depend on a specific platform's interface.
+
+This approach aligns with the HKU GenAI Guidebook's emphasis on AI literacy as a transferable skill rather than platform proficiency (Tsao & Wong, 2025). The use of all AI tools will comply with HKBU and HKUST institutional policies. Ethics clearance will be obtained by July 2026 if required.
 
 ---
 

@@ -135,7 +135,14 @@ The student partners are drawn from the Spring 2026 GTSU cohort. Their roles are
 **Faculty partner — [GTSU 2026 instructor name, institution]:**
 The course instructor provides domain expertise (diplomatic simulation conventions, assessment rubrics, course learning outcomes), reviews all student prompt redesign proposals for pedagogical alignment, and facilitates the Fall 2026 pilot. Crucially, the instructor learns from the student partners what aspects of the Spring 2026 experience were opaque or counterproductive — knowledge not accessible through teacher observation alone.
 
-**GenAI partners:** MartinPeaceBot (OpenAI GPT-4.1 via Replit AI Integrations, web search enabled for the Research Advisor). All four tutors operate in Socratic mode: they never write content for students, instead asking guiding questions and providing structured critique. This design principle is non-negotiable and student partners are expected to maintain and strengthen it in their redesigns.
+**GenAI partners — MartinPeaceBot platform (current default: GPT-4.1; alternative: DeepSeek):**
+MartinPeaceBot is deployed on two architectural principles that directly address institutional AI governance concerns and make this a pedagogically sustainable research platform.
+
+*Bring Your Own Key (BYOK):* Each student team supplies its own API credentials, stored only in the browser and never held by the platform server. The institution bears no credential liability. This is pedagogically significant in a diplomatic simulation context: students who understand that AI access has a cost structure, a provider relationship, and an availability boundary are better equipped to reason about the AI-mediated information environments they will encounter in professional life.
+
+*Platform Neutrality:* The four tutor system prompts — Research Advisor, Writing Coach, Speech Coach, and Assessment Analyst — are provider-agnostic. GPT-4.1 is the current deployment default; DeepSeek is a fully supported alternative for Hong Kong users or cost-conscious institutions. When student partners redesign the prompt system in Fall 2026, their work is expressed as documented, open-source prompt logic — not as changes to a proprietary platform. Any institution running a diplomatic simulation can adopt the tutor framework with any AI provider.
+
+All four tutors operate in Socratic mode: they never write content for students, instead asking guiding questions and providing structured critique. This anti-ghostwriting principle is non-negotiable and student partners are expected to maintain and strengthen it in their redesigns. Use of all AI tools complies with institutional policies on responsible GenAI use in teaching and learning (Tsao & Wong, 2025).
 
 **Partnership principles:** Student authorship of all redesign decisions; transparent AI use (instructors can view all chat histories); co-authorship of the research report; reciprocal learning (the instructor documents what the students taught them about the platform's blind spots).
 
