@@ -39,7 +39,7 @@ Grounded in Cook-Sather et al.'s (2014) principles of respect, reciprocity, and 
 
 **Student partners (Derun Sun, HKUST; Cheng Peng, HKBU) — decision-makers and design intelligence:** Students contribute two forms of expertise teachers cannot access: current industry knowledge (the ground truth for rubric validity) and recent learner experience (where AI coaching fails language learners). They co-develop the prompt framework, stress-test outputs for cultural accuracy, and co-author the Evaluation section. Co-authorship is evidence of genuine partnership, not its symbol.
 
-**GenAI (SmartTextbook; default: DeepSeek / alt: ChatGPT 4o) — the dictionary, not the architect:** The AI surfaces questions; students answer and revise. It never produces the revised CV. Students supply their own API credentials (BYOK); the prompt library functions with any compliant provider — only the endpoint changes if institutional policy requires it. Ethics clearance will be sought by July 2026 if required.
+**GenAI (default: DeepSeek / alt: ChatGPT 4o) — the dictionary, not the architect:** The AI surfaces questions; students answer and revise. It never produces the revised CV or recommends specific wording. Students use their own AI accounts; the prompt library works with any compliant provider, so the pedagogical design is unaffected by institutional tool requirements. Ethics clearance will be sought by July 2026 if required.
 
 ---
 
