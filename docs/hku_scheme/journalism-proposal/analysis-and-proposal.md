@@ -122,17 +122,17 @@ Evidence collection uses a mixed-methods design aligned with the project's three
 
 ### 5. Ensuring Success
 
-**Challenge 1 — Sustainability and currency of the corpus**
-The corpus must grow and stay current as topics, media practices, and news landscapes shift.
-*Solution:* The crowdsourcing model is the sustainability mechanism — each new JOUR3306/3307 cohort contributes annotations, expanding topic coverage organically. A semester review session identifies gaps. The corpus is structured as an open, annotated dataset, inviting contributions from other journalism programmes beyond HKBU.
+**Challenge 1 — Keeping the corpus current**
+A static corpus quickly becomes outdated as topics and journalistic practices evolve.
+*Solution:* Each cohort annotates articles as part of JOUR3306/3307 participation, prioritising topics flagged as gaps in previous semester evaluation data. Student partners verify quality each semester. This transforms the deliverable into a self-renewing resource that improves with each intake — and gives future students ownership of a tool they will themselves use.
 
-**Challenge 2 — Ethical use and preventing AI abuse**
-Students may prompt the AI tutor to generate story ideas or angles rather than developing their own.
-*Solution:* The Custom GPT is designed in Socratic mode — it asks questions and never generates content. Students receive explicit AI ethics instruction in the Week 1 orientation. Chat histories are reviewed periodically by faculty; patterns of concern become teachable moments rather than disciplinary events.
+**Challenge 2 — Preventing AI-generated shortcuts**
+Students may attempt to extract ready-made story ideas or angles directly from the tutor, bypassing the reflective process.
+*Solution:* The Custom GPT is locked in Socratic mode — architecturally incapable of generating content; it can only ask questions. Where students find workarounds, they document and present the method as a class case study — turning attempted abuse into a lesson on AI limitations and journalistic integrity.
 
-**Challenge 3 — Technical implementation**
-Building a Custom GPT with reliable retrieval from a growing corpus involves real technical complexity.
-*Solution:* The language and AI faculty leads implementation, with student partners as testers. The corpus is structured as an annotated spreadsheet — compatible with any retrieval approach and exportable to future tools. A fallback system prompt without retrieval ensures pedagogical continuity if technical issues arise.
+**Challenge 3 — Technical reliability**
+Custom GPT retrieval may degrade as the corpus expands.
+*Solution:* The corpus is maintained as a structured spreadsheet — simple, portable, and exportable. If retrieval limits are reached, annotations are partitioned by topic category across multiple Custom GPTs. A system-prompt-only fallback preserves tutoring continuity during any technical disruption.
 
 ---
 
