@@ -24,3 +24,9 @@ id = "I1ici26X44j-McunOxs0P"
 uri = "file://docs/slide-making-process.md"
 type = "text"
 title = "SmartTextbook Slide Deck — Complete Making-of Process"
+
+[[outputs]]
+id = "ggS8WF9HvcrEoMLRUf4N8"
+uri = "file://docs/hku_scheme/analysis-and-strategy.md"
+type = "text"
+title = "HKU RSLEIHE 2026-27 — Research Analysis & Proposal Strategy"
