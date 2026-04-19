@@ -14,7 +14,7 @@
 
 ## 1. Rationale, Purpose and Expected Outcomes
 
-Hong Kong undergraduates face a persistent disconnect between academic curricula and job market readiness, compounded by overstretched career development courses such as LANG1422 (HKUST), where skewed teacher–student ratios make individualised CV review and interview coaching nearly unfeasible. Direct observation reveals consistent patterns:
+LANG1422 Chinese for Workplace Applications (HKUST) equips students with career communication skills essential for competitive, multilingual workplaces. Yet its impact is constrained by manpower: skewed teacher–student ratios render individualised CV review and interview coaching nearly unfeasible. Direct observation reveals consistent patterns:
 
 *CV:* Generic documents untailored to job descriptions; experience poorly prioritised; achievements unquantified; formatting unclear.
 
@@ -22,7 +22,7 @@ Hong Kong undergraduates face a persistent disconnect between academic curricula
 
 These are not knowledge deficits but *design failures*: students lack a framework for reading their experience the way employers do. Generic AI compounds the problem — fluent but generic feedback that substitutes for genuine skill development (Ahmedtelba et al., 2025).
 
-This project builds an AI coaching framework that amplifies, rather than replaces, teacher expertise: automated CV assessments anchored to teacher-trained rubrics, interactive interview chatbots simulating real-world scenarios, and iterative feedback cycles. The AI delivers the teacher's questioning framework; students do the intellectual work.
+This project builds an AI coaching framework that amplifies, rather than replaces, teacher expertise: automated CV assessments anchored to teacher rubrics, interactive interview chatbots simulating real scenarios, and iterative feedback cycles. The AI delivers the teacher's framework; students do the intellectual work.
 
 **Expected outcomes:**
 - CV quality gain, pre/post standardised rubric (targeting 25–30%)
