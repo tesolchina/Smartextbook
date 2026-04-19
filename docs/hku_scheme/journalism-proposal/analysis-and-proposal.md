@@ -63,12 +63,12 @@ JOUR3306/3307 Journalism Practicum (Data) at HKBU produces published reporting a
 
 *Newsworthiness:* Students cannot find angles beyond common sense — the gap assessed directly by JOUR3306/3307's Story Ideas criterion (news value, originality, timeliness).
 
-This project builds a corpus of annotated professional journalism — local and international — extracting reusable patterns of topic selection, sourcing, and framing. An AI tutor, empowered by this corpus, scaffolds students through pre-reporting decisions: *Is this angle newsworthy? Which sources would a professional seek?* Students crowdsource the annotations; the AI delivers the patterns.
+This project builds a corpus of annotated professional journalism — local and international — documenting how experienced reporters approached topic selection, sourcing, and framing across comparable stories. An AI tutor, drawing on this corpus, scaffolds students through pre-reporting decisions: *How did professionals narrow this kind of topic? Which sources made this angle possible?* Students crowdsource the annotations; the AI offers inspiration from documented practice.
 
 **Expected outcomes:**
 - Measurable improvement in topic specificity and source diversity (pre/post rubric)
-- A reusable newsworthiness and sourcing toolkit students apply to every story pitch
-- An open-source pattern library and AI scaffold adoptable by any journalism programme
+- A practice-informed newsworthiness and sourcing guide students draw on for every story pitch
+- An open-source professional practice library and AI scaffold adoptable by any journalism programme
 
 ---
 

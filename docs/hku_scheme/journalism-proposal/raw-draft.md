@@ -135,7 +135,7 @@ Students work through a structured AI-guided pre-reporting checklist:
 **Institutional deliverables:**
 - A structured corpus of professional data journalism patterns (open dataset)
 - An AI tutor prompt system deployable with any LLM provider
-- A reusable pre-reporting scaffold for any journalism programme
+- A practice-informed pre-reporting scaffold for any journalism programme
 
 ---
 
