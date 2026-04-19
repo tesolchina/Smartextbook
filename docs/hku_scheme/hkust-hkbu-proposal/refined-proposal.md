@@ -14,20 +14,20 @@
 
 ## 1. Rationale, Purpose and Expected Outcomes
 
-LANG1422 Chinese for Workplace Applications (HKUST) equips students with career communication skills essential for competitive, multilingual workplaces. Yet its impact is constrained by manpower: skewed teacher–student ratios render individualised CV review and interview coaching nearly unfeasible. Direct observation reveals consistent patterns:
+Hong Kong undergraduates face a persistent disconnect between academic curricula and job market readiness — exacerbated by overstretched courses and skewed teacher–student ratios. LANG1422 Chinese for Workplace Applications (HKUST) illustrates the tension: it equips students with essential career communication skills, yet limited manpower renders individualised coaching nearly unfeasible. Direct observation reveals consistent patterns:
 
 *CV:* Generic documents untailored to job descriptions; experience poorly prioritised; achievements unquantified; formatting unclear.
 
-*Interview:* Self-introductions list credentials rather than a narrative. STAR routinely violated — wordy, roles unclear, actions and impact absent. Situational questions expose inability to identify the core challenge.
+*Interview:* Self-introductions list credentials rather than a narrative. STAR routinely violated — wordy, roles unclear, impact absent. Situational questions expose inability to identify the core challenge.
 
-These are not knowledge deficits but *design failures*: students lack a framework for reading their experience the way employers do. Generic AI compounds the problem — fluent but generic feedback that substitutes for genuine skill development (Ahmedtelba et al., 2025).
+These are not knowledge deficits but *design failures*: students lack a framework for reading their experience as employers do. Generic AI compounds this — fluent but generic feedback substituting for genuine skill development (Ahmedtelba et al., 2025).
 
-This project builds an AI coaching framework that amplifies, rather than replaces, teacher expertise: automated CV assessments anchored to teacher rubrics, interactive interview chatbots simulating real scenarios, and iterative feedback cycles. The AI delivers the teacher's framework; students do the intellectual work.
+This project amplifies, rather than replaces, teacher expertise through AI: automated CV assessments anchored to teacher rubrics, interview chatbots simulating real scenarios, and iterative feedback cycles. The AI delivers the framework; students do the intellectual work.
 
 **Expected outcomes:**
-- CV quality gain, pre/post standardised rubric (targeting 25–30%)
-- STAR-structured interview responses demonstrated under uncoached conditions
-- An open-source coaching prompt playbook any institution can adopt
+- CV quality gain, pre/post rubric (targeting 25–30%)
+- STAR-structured interview responses under uncoached conditions
+- An open-source prompt playbook any institution can adopt
 
 ---
 
