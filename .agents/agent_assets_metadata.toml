@@ -42,3 +42,15 @@ id = "_6KBDlgwutSx_XKayMYcz"
 uri = "file://docs/hku_scheme/hkust-hkbu-proposal/analysis-and-gaps.md"
 type = "text"
 title = "草案分析 — 不足之处与修改建议"
+
+[[outputs]]
+id = "XYDkAQOE4yJ21pWf70rYr"
+uri = "file://docs/hku_scheme/journalism-proposal/analysis-and-proposal.md"
+type = "text"
+title = "新闻系项目 — 分析与完整草案"
+
+[[outputs]]
+id = "spyfYslIqZO2tkJrl6eXE"
+uri = "file://docs/hku_scheme/journalism-proposal/raw-draft.md"
+type = "text"
+title = "原始文件内容整理"
