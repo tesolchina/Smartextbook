@@ -14,7 +14,7 @@
 
 ## 1. Rationale, Purpose and Expected Outcomes
 
-Hong Kong undergraduates face a persistent disconnect between academic curricula and job market readiness, compounded by overstretched career development courses such as LANG1422 (HKBU), where skewed teacher–student ratios make individualised CV review and interview coaching nearly unfeasible. Direct observation reveals consistent patterns:
+Hong Kong undergraduates face a persistent disconnect between academic curricula and job market readiness, compounded by overstretched career development courses such as LANG1422 (HKUST), where skewed teacher–student ratios make individualised CV review and interview coaching nearly unfeasible. Direct observation reveals consistent patterns:
 
 *CV:* Generic documents untailored to job descriptions; experience poorly prioritised; achievements unquantified; formatting unclear.
 
