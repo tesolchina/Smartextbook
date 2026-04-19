@@ -14,7 +14,7 @@
 
 ## 1. Rationale, Purpose and Expected Outcomes
 
-Hong Kong graduates face a growing gap between academic learning and workplace readiness. In LANG1422 (HKBU), career coaching is limited to one ten-minute tutorial per student — insufficient for the iterative development employers expect. Direct observation reveals consistent patterns:
+Hong Kong undergraduates face a persistent disconnect between academic curricula and job market readiness, compounded by overstretched career development courses and skewed teacher–student ratios that make individualised CV review and interview coaching nearly unfeasible. Direct observation identifies consistent patterns:
 
 *CV:* Generic documents untailored to job descriptions; experience poorly prioritised; achievements unquantified; formatting unclear.
 
@@ -22,7 +22,7 @@ Hong Kong graduates face a growing gap between academic learning and workplace r
 
 These are not knowledge deficits but *design failures*: students lack a framework for reading their experience the way employers do. Generic AI compounds the problem — fluent but generic feedback that substitutes for genuine skill development (Ahmedtelba et al., 2025).
 
-This project encodes teacher diagnostic knowledge into an AI coaching system asking what students cannot yet ask: *What does this JD require? What does your CV claim? Where is the gap?* Students answer; students revise. Framework belongs to the teacher; intellectual work belongs to the student.
+This project builds an AI coaching framework that amplifies, rather than replaces, teacher expertise: automated CV assessments anchored to teacher-trained rubrics, interactive interview chatbots simulating real-world scenarios, and iterative feedback cycles. The AI delivers the teacher's questioning framework; students do the intellectual work.
 
 **Expected outcomes:**
 - CV quality gain, pre/post standardised rubric (targeting 25–30%)
