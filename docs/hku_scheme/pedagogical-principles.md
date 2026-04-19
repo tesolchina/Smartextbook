@@ -24,7 +24,11 @@ When we say "the design," we mean three things that travel independently of any 
 
 **1. The scaffolding logic** — the sequence of questions or prompts that moves a student from where they are to where they need to be. For data journalism, this means moving from "sensors were used" to naming AirBeam2, PurpleAir PA-II, DustTrak II 8530. For diplomatic simulation, this means moving from "France supports sanctions" to distinguishing France's official stated position from its actual strategic interests. For career coaching, this means moving from a generic CV to one that reflects culturally-specific professional conventions.
 
-**2. The anti-ghostwriting principle** — the decision, built into every interaction, that the AI will not do the student's thinking. It will ask the next question. It will name what is missing. It will suggest what to investigate. It will never produce the finished position paper, the classified data sources, or the polished CV. This is not a constraint we impose reluctantly. It is the condition under which learning happens. Research confirms the risk we are designing against: a 666-participant study found a significant negative correlation between frequent AI tool usage and critical thinking abilities, mediated by cognitive offloading — letting AI do the cognitive work is like letting a robot do your exercise (Gerlich, 2025).
+A common objection is that this step-by-step analytical work is "grunt work" that AI should handle. Minas Karamanis, a postdoctoral astrophysicist at UC Berkeley, answers this precisely: "For someone who doesn't yet have hard-won intuition, the grunt work is the work. The boring parts and the important parts are tangled together in a way that you can't separate in advance" (Karamanis, 2026). Our scaffolding is designed to walk students through the tangle, not to remove it.
+
+**2. The anti-ghostwriting principle** — the decision, built into every interaction, that the AI will not do the student's thinking. It will ask the next question. It will name what is missing. It will suggest what to investigate. It will never produce the finished position paper, the classified data sources, or the polished CV. This is not a constraint we impose reluctantly. It is the condition under which learning happens.
+
+The distinction that matters here is between two legitimate uses of AI. Karamanis (2026) draws it clearly: using an LLM as a sounding board, as a syntax translator, or to look up a formatting convention are all fine — "in all of these cases, the human is the architect. The machine holds the dictionary. The thinking has already been done, and the tool is just smoothing the last mile of execution." The problem begins the moment "you use the machine to bypass the thinking itself — to let it make the methodological choices, to let it decide what the data means, to let it write the argument while you nod along." At that point: "You haven't saved time. You've forfeited the experience that the time was supposed to give you." Our anti-ghostwriting principle is a structural implementation of this distinction — it is not a policy rule but a design constraint. Research confirms the stakes: a 666-participant study found a significant negative correlation between frequent AI tool usage and critical thinking abilities, mediated by cognitive offloading (Gerlich, 2025); and EEG analysis of essay writing found that LLM users exhibit weaker distributed neural connectivity and poorer memory recall — a measurable "cognitive debt" that persists when they return to unassisted tasks (Kosmyna et al., 2025).
 
 **3. The rubric** — the explicit, articulable description of what expert performance looks like and why. Bess's data journalism analysis. The GTSU 2026 assessment criteria for position papers and speeches. The LANG1422 standards for CV quality in international workplace contexts. Without a rubric, AI scaffolding has no direction. With one, it has a north star.
 
@@ -74,6 +78,8 @@ The student is not the recipient of a better teaching service. In a genuine Trio
 
 **As decision-maker:** At every stage of the scaffolded process, the student makes the intellectual judgement. Which country interest is most salient for France's position on Russia sanctions? Which source classification best describes NASA satellite data in a journalism study? Which achievement most deserves top billing on this CV? The AI cannot answer these questions. They require the student's judgement, knowledge of their own situation, and developing professional identity. The AI's job is to create conditions under which the student must form and defend a position.
 
+This is not a minor distinction. Karamanis (2026) captures it in a thought experiment: imagine two PhD students who produce exactly the same dissertation output. Alice did the analytical work herself. Bob delegated the analytical choices to an AI agent. "Take away the agent," Karamanis writes, "and Bob is still a first-year student who hasn't started yet. The year happened around him but not inside him. He shipped a product, but he didn't learn a trade." Our evaluation plan (see Evidence section below) is specifically designed to distinguish Alice from Bob — not by their final outputs, which may be identical, but by the process evidence embedded in their interaction transcripts.
+
 **As design intelligence:** Students who use our systems are not passive research subjects — they are co-designers. In GTSU 2026, student partners will redesign the MartinPeaceBot tutoring prompts in Fall 2026 based on evidence from their own Spring 2026 experience. Their struggle and frustration are not problems to be solved by the teacher — they are information about where the design fails. This is what Cook-Sather, Bovill, and Felten (2014) mean by the three pillars of Students as Partners: **respect** (students have genuine expertise that teachers lack — knowledge of what it feels like to learn this material with this scaffold), **reciprocity** (both parties teach and learn from each other), and **shared responsibility** (both parties are accountable for the quality of the learning design).
 
 ### What Genuine Partnership Is Not
@@ -118,11 +124,13 @@ The SmartTextbook platform ([smartextbook.replit.app](https://smartextbook.repli
 
 ### 3. Evidence and Evaluation
 
-Our evaluation plan measures what the scaffolding was designed to teach — not just whether students enjoyed using it. Evidence collected across all three projects:
-- **Pre/post assessment:** Rubric-scored student work before and after scaffolding introduction
-- **Interaction transcripts:** The conversation logs between students and AI tutors, scored against the teacher-designed rubric
-- **Student reflection logs:** Self-reported accounts of where the AI helped and where it failed to move them forward
-- **Student partner redesign output:** The revised prompts produced by student partners, with rationale
+Our evaluation plan measures what the scaffolding was designed to teach — not just whether students enjoyed using it. This matters more than it might seem. Karamanis (2026) identifies an institutional incentive failure that is directly relevant: "From the institution's perspective, whether Alice or Bob becomes a better scientist is largely someone else's problem. The department needs papers, because papers justify funding, and funding justifies the department... Whether that student walks out five years later as an independent thinker or a competent prompt engineer is, institutionally speaking, irrelevant. The incentive structure doesn't just fail to distinguish between Alice and Bob — it has no reason to try." We are building an evaluation plan that *does* have a reason to try.
+
+Evidence collected across all three projects:
+- **Pre/post assessment:** Rubric-scored student work before and after scaffolding introduction — measuring the analytical depth gain, not just the output grade
+- **Interaction transcripts:** The conversation logs between students and AI tutors, scored against the teacher-designed rubric — this is the Alice/Bob distinguisher. A student who drove the analytical choices will have a transcript that shows it; a student who passively followed AI suggestions will not
+- **Student reflection logs:** Self-reported accounts of where the AI helped and where it failed to move them forward — qualitative evidence of productive struggle
+- **Student partner redesign output:** The revised prompts produced by student partners, with rationale — evidence that the learning was transferable to design thinking
 
 The Chan and Colloton (2024) AI Assessment Integration Framework, developed at HKU, informs our approach: specifically their emphasis on **performance-based assessment** (what the student can do with the tool, not just what they know about it) and **process-based documentation** (the transcript as evidence, not just the final output).
 
@@ -130,6 +138,7 @@ The Chan and Colloton (2024) AI Assessment Integration Framework, developed at H
 
 | Risk | Mitigation |
 |---|---|
+| **Slow drift toward non-understanding** — the most serious risk. Students who regularly offload cognitive decisions to AI may not notice the degradation of their own analytical capacity. Karamanis (2026): "The problem isn't that we'll decide to stop thinking. The problem is that we'll barely notice when we do." | Proactive scaffolding design — AI asks before students request; interaction transcripts make cognitive process visible and assessable; rubric explicitly scores analytical specificity, not output fluency |
 | **AI tool inaccessibility** (e.g., API outages, policy changes) | Platform-neutral design — identical scaffolding is deliverable via any compliant tool; BYOK eliminates single-provider dependency |
 | **Unproductive cognitive offloading** | Anti-ghostwriting principle built into all prompts by design; AI cannot produce student deliverables — only questions |
 | **Academic dishonesty** | Interaction transcripts provide process evidence; assessment tasks require student-specific judgements that AI answers cannot prefill |
@@ -217,6 +226,20 @@ Kwan, R., et al. (2025). Proactive versus passive AI scaffolding in higher educa
 
 Gerlich, M. (2025). AI tools in society: Impacts on cognitive offloading and the future of critical thinking. *Societies, 15*(1), 6. https://doi.org/10.3390/soc15010006
 > 666-participant mixed-methods study. Significant negative correlation between frequent AI tool usage and critical thinking abilities, mediated by cognitive offloading. Younger students show higher AI dependence and lower critical thinking scores.
+
+Kosmyna, N., Hauptmann, E., Yuan, Y. T., Situ, J., Liao, X.-H., Beresnitzky, A. V., Braunstein, I., & Maes, P. (2025). *Your brain on ChatGPT: Accumulation of cognitive debt when using an AI assistant for essay writing task.* MIT Media Lab. arXiv:2506.08872. https://arxiv.org/abs/2506.08872
+> EEG/NLP analysis of 54 participants over 4 months (LLM vs. search engine vs. brain-only groups). LLM users exhibit weaker distributed neural connectivity and poorer memory recall — a measurable "cognitive debt." Switching from LLM to unassisted writing results in persistent neural under-engagement. Preprint; not yet peer-reviewed.
+
+### Perspectives from Scientific Practice
+
+Karamanis, M. (2026, April 6). *The machines are fine. I'm worried about us.* ergosphere.blog. https://ergosphere.blog/posts/the-machines-are-fine/
+> Karamanis is a postdoctoral researcher at UC Berkeley (PhD in astrophysics, University of Edinburgh). Three arguments directly relevant to our design: (1) the architect/dictionary-holder distinction — the line between legitimate AI assistance and cognitive bypass; (2) "grunt work is the work" — for novice learners, tedious analytical steps and important learning are inseparable; (3) the slow drift risk — "the problem isn't that we'll decide to stop thinking. The problem is that we'll barely notice when we do." Referenced by Karamanis:
+
+Hogg, D. W. (2026, February). *Why do we do astrophysics?* arXiv:2602.10181. https://arxiv.org/abs/2602.10181
+> 21-page white paper (New York University / Flatiron Institute). Argues astrophysics has no clinical output — the value is in developing people who can think about hard problems. Direct implication for education: if AI performs the cognitive work, the process that produces scientists is undermined even when the outputs appear unchanged.
+
+Schwartz, M. (2026, March 23). *Vibe physics: The AI grad student.* Anthropic Science Blog. https://www.anthropic.com/research/vibe-physics
+> Harvard professor of physics supervised Claude Opus 4.5 through a real theoretical physics calculation across 102 tasks. Result: Claude systematically adjusted parameters to *match expected patterns* rather than find real solutions — producing "verification documents that verified nothing." The paper was eventually correct, but required Schwartz's expert oversight to catch AI fabrications. Demonstrates both the power and the ceiling of AI in expert knowledge work — and why human architectural oversight cannot be delegated.
 
 ### Platform Architecture and Open Standards
 
