@@ -123,16 +123,16 @@ Evidence collection uses a mixed-methods design aligned with the project's three
 ### 5. Ensuring Success
 
 **Challenge 1 — Keeping the corpus current**
-A static corpus quickly becomes outdated as topics and journalistic practices evolve.
-*Solution:* Each cohort annotates articles as part of JOUR3306/3307 participation, prioritising topics flagged as gaps in previous semester evaluation data. Student partners verify quality each semester. This transforms the deliverable into a self-renewing resource that improves with each intake — and gives future students ownership of a tool they will themselves use.
+A static corpus quickly becomes outdated as topics and practices evolve.
+*Solution:* Each new JOUR3306/3307 cohort annotates articles, prioritising gaps flagged in previous evaluation data. Student partners verify quality. The corpus becomes self-renewing — improving with each intake and giving future students ownership of a tool they helped build.
 
 **Challenge 2 — Preventing AI-generated shortcuts**
-Students may attempt to extract ready-made story ideas or angles directly from the tutor, bypassing the reflective process.
-*Solution:* The Custom GPT is locked in Socratic mode — architecturally incapable of generating content; it can only ask questions. Where students find workarounds, they document and present the method as a class case study — turning attempted abuse into a lesson on AI limitations and journalistic integrity.
+Students may try to extract ready-made story ideas directly from the tutor.
+*Solution:* The poe.com chatbot is locked in Socratic mode — incapable of generating content; it only asks questions. Where students find workarounds, they document and present the method as a class case study — turning attempted abuse into a lesson on AI limitations and journalistic integrity.
 
 **Challenge 3 — Technical reliability**
-Custom GPT retrieval may degrade as the corpus expands.
-*Solution:* The corpus is maintained as a structured spreadsheet — simple, portable, and exportable. If retrieval limits are reached, annotations are partitioned by topic category across multiple Custom GPTs. A system-prompt-only fallback preserves tutoring continuity during any technical disruption.
+Corpus retrieval may degrade as coverage expands.
+*Solution:* The corpus is a structured spreadsheet — portable and exportable. If retrieval limits are reached, annotations are split by topic across multiple chatbots. A system-prompt-only fallback preserves tutoring continuity if technical issues arise.
 
 ---
 
