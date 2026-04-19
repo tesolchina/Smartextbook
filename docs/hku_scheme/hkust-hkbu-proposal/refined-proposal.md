@@ -72,24 +72,23 @@ Evidence will be collected using a mixed-methods design grounded in the HKU AI A
 - *Focus group:* Reciprocal learning documented — what did teachers learn from students? What surprised students about AI limitations?
 - *Partnership quality indicator:* The Evaluation section of the final report is co-written by student partners — their authorial voice is evidence of genuine partnership, not its symbol
 
+**Impact and reach:**
+- Student cohort size across both institutions (30–40 direct participants)
+- Post-project tracking of prompt playbook downloads and institutional adaptations via open-source GitHub repository analytics — adoptions beyond the original cohort are the primary long-term impact indicator
+
 ---
 
 ## 5. Ensuring Success
 
-**Challenge 1 — AI output quality varies by cultural context**
-CVs for Hong Kong's international workplaces sit at a cross-cultural intersection that generic AI handles poorly. *Solution:* The co-design phase specifically trains prompts on LANG1422 rubrics and Simon Wang's documented feedback patterns. Student partners stress-test outputs for cultural accuracy before deployment. Bias detection is built into the evaluation rubric.
+**Sustainability and wider adoption:** The primary deliverable is not the AI tool — it is the **open-source prompt engineering playbook and rubric framework**, published on GitHub alongside the RSLEIHE report. Any teacher at any institution can adopt it with any compliant AI provider, without budget negotiation or platform agreement. The cross-institutional structure (HKUST + HKBU) already demonstrates transferability across different student populations and is designed to serve as a replication template for other institutions. Post-project adoption is tracked via GitHub analytics and reported as a long-term impact indicator.
 
-**Challenge 2 — Student data privacy (CV content is personal)**
-*Solution:* All CV data is anonymised for research purposes. Students receive a clear data consent form before participation. Only aggregated, de-identified data is used in the final report. Ethics clearance is sought from both institutions by July 2026.
+**AI output quality in cross-cultural contexts:** Prompts are trained specifically on LANG1422 rubrics and documented feedback patterns; student partners stress-test outputs for cultural accuracy before deployment.
 
-**Challenge 3 — AI platform dependency and access inequality**
-Not all students have premium AI subscriptions. *Solution:* The coaching system is built on platform-agnostic principles — the prompt frameworks and evaluation rubrics work with free-tier tools (ChatGPT free, DeepSeek, open-source models). Students who cannot access paid tools are fully supported. This is a deliberate design choice, not a fallback.
+**Student data privacy:** CV data anonymised for research; consent forms issued to all participants; only aggregated data in the final report. Ethics clearance sought from both institutions by July 2026.
 
-**Challenge 4 — Cross-institutional coordination complexity**
-*Solution:* Monthly Trio meetings (online) from July onwards; shared project management workspace; clear milestone ownership split between HKUST and HKBU teams. The cross-institutional structure is treated as an asset, not a logistical burden — it produces richer evaluation data.
+**AI access inequality:** System built on free-tier compatible tools (DeepSeek, ChatGPT free). No paid subscription required — a deliberate design principle, not a fallback.
 
-**Challenge 5 — Sustaining the model beyond December 2026**
-*Solution:* The deliverable is not the AI tool — it is the **prompt engineering playbook and rubric framework**, which any teacher at any institution can adapt with any AI tool. By design, no proprietary system is created. The playbook will be published open-source alongside the RSLEIHE report.
+**Cross-institutional coordination:** Monthly Trio meetings from July; shared milestone ownership across HKUST and HKBU; cross-institutional differences treated as research data, not logistical friction.
 
 ---
 
