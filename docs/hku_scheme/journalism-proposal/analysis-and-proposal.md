@@ -1,5 +1,5 @@
 # RSLEIHE 2026-27 — Data Journalism Project
-## Analysis, Gaps & Full Draft Proposal
+## Reading Like a Reporter: AI Scaffolding Through Reusable Patterns from Professional Journalism
 
 *Based on: Google Doc "overall plan-data journalism" + background research*
 *Prepared: April 2026*
@@ -55,20 +55,20 @@ The document contains only problem analysis. All five proposal sections (Rationa
 
 ### 1. Rationale, Purpose and Expected Outcomes
 
-HKBU's Data Journalism Practicum produces published, evidence-based reporting visible at DataStory (datastory.hkbu.edu.hk). Yet a persistent gap separates student output from professional practice. Direct observation reveals three recurring patterns:
+HKBU's Data Journalism Practicum publishes student work at DataStory (datastory.hkbu.edu.hk), yet a persistent gap separates student output from professional practice. Direct observation reveals three recurring patterns:
 
-*Topic selection:* Students choose broad themes — "silver economy," "climate change" — that produce unfocused, predictable stories. Professionals narrow instinctively to a specific industry (silver economy → food and catering); students lack the framework to do the same.
+*Topic selection:* Students choose broad themes — "silver economy," "climate change" — producing unfocused, predictable stories. Professionals narrow instinctively to a specific industry (silver economy → food and catering); students lack the framework to do the same.
 
-*Sourcing:* Students rely on public datasets. Professionals seek first-hand, industry-specific sources and build frames around what public data cannot show. Students rarely know what they are missing.
+*Sourcing:* Students rely on public datasets. Professionals seek first-hand, industry-specific sources and frame stories around what public data cannot show. Students rarely know what they are missing.
 
-*Perspective:* The hardest gap — finding an angle that goes beyond common sense. Students cannot replicate what professional journalists do intuitively without industry knowledge and exposure to professional practice.
+*Perspective:* The hardest gap — finding an angle beyond common sense. Students cannot replicate professional intuition without industry knowledge or exposure to professional practice.
 
-This project addresses the gap through AI-powered text analysis of published professional journalism, extracting how expert reporters select topics, narrow scope, and structure frames. Crowdsourced by students, these patterns become scaffolding that guides pre-reporting decisions: *What specific angle remains untold? Which industry? Which sources would a professional seek?*
+This project analyses published professional journalism to extract reusable patterns: how expert reporters establish newsworthiness, identify non-obvious data sources, and narrow broad topics to specific, untold angles. Students crowdsource these patterns and use AI scaffolding to apply them to their own stories: *Is this angle newsworthy? Which sources would a professional seek? What has not been told?*
 
 **Expected outcomes:**
-- Measurable improvement in topic specificity and source diversity (pre/post rubric)
-- An open-source topic-selection scaffold replicable by any journalism programme
-- A student-built corpus of professional journalism practice patterns
+- Measurable gain in topic specificity and source diversity (pre/post rubric)
+- A reusable newsworthiness and sourcing strategy toolkit students apply to every story
+- An open-source pattern library for data journalism education, adoptable by any programme
 
 ---
 
