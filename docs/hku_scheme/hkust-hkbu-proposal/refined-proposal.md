@@ -14,18 +14,18 @@
 
 ## 1. Rationale, Purpose and Expected Outcomes
 
-Coaching sessions reveal consistent, specific failure patterns:
+Hong Kong graduates face a growing gap between academic learning and workplace readiness. In LANG1422 (HKBU), career coaching is limited to one ten-minute tutorial per student — insufficient for the iterative development employers expect. Direct observation reveals consistent patterns:
 
-*CV:* Students produce generic documents untailored to job descriptions; cannot prioritize or sequence experience effectively; underuse quantitative evidence of achievement; present without clear formatting logic.
+*CV:* Generic documents untailored to job descriptions; experience poorly prioritised; achievements unquantified; formatting unclear.
 
-*Interview:* Self-introductions list credentials rather than articulate a candidate narrative. Answers under pressure lack logical structure. Behavioral responses violate STAR principles — wordy, roles unclear, specific actions and measurable impact absent. Situational questions expose an inability to identify the core challenge embedded in a scenario.
+*Interview:* Self-introductions list credentials rather than a narrative. STAR routinely violated — wordy, roles unclear, actions and impact absent. Situational questions expose inability to identify the core challenge.
 
-These are not knowledge deficits but *design failures*: students lack a framework for reading their own experience the way employers do. Generic AI compounds the problem — producing fluent, culturally generic feedback that substitutes for genuine skill development (Ahmedtelba et al., 2025).
+These are not knowledge deficits but *design failures*: students lack a framework for reading their experience the way employers do. Generic AI compounds the problem — fluent but generic feedback that substitutes for genuine skill development (Ahmedtelba et al., 2025).
 
-This project encodes teacher diagnostic knowledge — these specific patterns — into an AI coaching system that asks the questions students cannot yet ask themselves: *What does this JD require? What does your CV claim? Where is the gap?* Students answer. Students revise. The framework belongs to the teacher; the intellectual work belongs to the student.
+This project encodes teacher diagnostic knowledge into an AI coaching system asking what students cannot yet ask: *What does this JD require? What does your CV claim? Where is the gap?* Students answer; students revise. Framework belongs to the teacher; intellectual work belongs to the student.
 
 **Expected outcomes:**
-- CV quality improvement measured pre/post standardised rubric, targeting 25–30% gain
+- CV quality gain, pre/post standardised rubric (targeting 25–30%)
 - STAR-structured interview responses demonstrated under uncoached conditions
 - An open-source coaching prompt playbook any institution can adopt
 
