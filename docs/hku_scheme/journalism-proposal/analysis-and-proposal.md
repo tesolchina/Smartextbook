@@ -122,24 +122,17 @@ Evidence collection uses a mixed-methods design aligned with the project's three
 
 ### 5. Ensuring Success
 
-**Challenge 1 — Over-reliance on Bess's single framework**
-The scaffolding system is built on one student's analysis of two articles. This risks being too narrow or idiosyncratic.
-*Solution:* In the co-design phase (July–August), student partners test the scaffolding against multiple different data journalism articles from different contexts (not just NY Times). Framework is expanded where gaps appear. The goal is a transferable analytical method, not a Bess-specific template.
+**Challenge 1 — Sustainability and currency of the corpus**
+The corpus must grow and stay current as topics, media practices, and news landscapes shift.
+*Solution:* The crowdsourcing model is the sustainability mechanism — each new JOUR3306/3307 cohort contributes annotations, expanding topic coverage organically. A semester review session identifies gaps. The corpus is structured as an open, annotated dataset, inviting contributions from other journalism programmes beyond HKBU.
 
-**Challenge 2 — Students bypassing scaffolding to get direct answers**
-Students may use the AI to ask "just tell me what the methodology is" rather than engaging with the probing questions.
-*Solution:* Scaffolding prompts are designed in "Socratic mode" — the AI is instructed never to provide direct analysis, only to ask the next guiding question. This is analogous to the SmartTextbook Socratic tutor style. Student partners test and stress-test this during Phase 1.
+**Challenge 2 — Ethical use and preventing AI abuse**
+Students may prompt the AI tutor to generate story ideas or angles rather than developing their own.
+*Solution:* The Custom GPT is designed in Socratic mode — it asks questions and never generates content. Students receive explicit AI ethics instruction in the Week 1 orientation. Chat histories are reviewed periodically by faculty; patterns of concern become teachable moments rather than disciplinary events.
 
-**Challenge 3 — Journalism faculty AI literacy**
-The journalism teacher may not be familiar with prompt engineering or AI tool configuration.
-*Solution:* Simon Wang takes primary responsibility for AI system setup and maintenance. The journalism teacher focuses on content expertise (what good analysis looks like); Simon handles the AI side. This is a genuine skill exchange between the two faculty partners.
-
-**Challenge 4 — Student data privacy (student work as training data)**
-Using Bess's analysis as the framework foundation involves a student's intellectual work.
-*Solution:* Explicit consent obtained from Bess for use of her analytical framework in research. Her work is not used to train any external AI model — it is used to design human-authored scaffolding prompts. This distinction is clear in the ethics application.
-
-**Challenge 5 — Sustaining the prompt library after December 2026**
-*Solution:* The deliverable is an openly documented, platform-agnostic prompt library — not a proprietary tool. Any journalism teacher can use it with any AI tool. Published alongside the RSLEIHE report. The Bess framework lives on as a pedagogical contribution, not a software dependency.
+**Challenge 3 — Technical implementation**
+Building a Custom GPT with reliable retrieval from a growing corpus involves real technical complexity.
+*Solution:* The language and AI faculty leads implementation, with student partners as testers. The corpus is structured as an annotated spreadsheet — compatible with any retrieval approach and exportable to future tools. A fallback system prompt without retrieval ensures pedagogical continuity if technical issues arise.
 
 ---
 
