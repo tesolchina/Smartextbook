@@ -74,13 +74,13 @@ This project builds a corpus of annotated professional journalism — local and 
 
 ### 2. Partnership
 
-This project embodies the Trio model through a shared corpus-building partnership: teacher expertise defines the framework, students build the evidence base, and AI scales the tutoring.
+This project embodies the Trio model: teacher expertise defines the framework, students build the evidence base, AI scales the tutoring.
 
-**Teachers — the architects:** The journalism faculty defines the annotation framework for expert topic selection, source identification, and newsworthiness judgement in data journalism; the language and AI faculty designs the scaffolding and pedagogical integration. Together they encode professional knowledge into a structure students and AI can operationalise.
+**Teachers — the architects:** The journalism faculty defines the annotation framework for expert topic selection, source identification, and newsworthiness; the language and AI faculty designs the scaffolding and pedagogical integration. Together they encode professional knowledge into an operationalised structure.
 
-**Students — decision-makers and co-builders:** Students occupy three roles no faculty can fill: reporting where tools fail and which scaffolding questions miss the mark; annotating the professional journalism corpus, contributing ground-level judgements about what makes an angle distinctive; and testing new reporting approaches in their own JOUR3306/3307 stories. Their difficulties are design data; their annotations are the intellectual foundation of the corpus.
+**Students — decision-makers and co-builders:** Students occupy three roles no faculty can fill: reporting where tools fail and which questions miss the mark; annotating the corpus and contributing judgements about what makes an angle distinctive; and testing new approaches in their own JOUR3306/3307 stories. Their difficulties are design data; their annotations are the intellectual foundation of the corpus.
 
-**GenAI (DeepSeek / ChatGPT 4o) — the tutor at scale:** AI assists in analysing published journalistic pieces to surface patterns in the corpus, and delivers customised scaffolding that simulates the journalism faculty's tutoring approach — asking the questions an expert would ask — for every student, at every story pitch, unconstrained by class size. Students use their own AI accounts; the scaffolding works with any compliant provider, so the pedagogical design is unaffected by institutional tool requirements. Ethics clearance will be sought by July 2026 if required.
+**GenAI (ChatGPT 4o / DeepSeek) — the tutor at scale:** AI surfaces patterns from the corpus and delivers customised scaffolding simulating the journalism faculty's tutoring — asking what an expert would ask — for every student, unconstrained by class size. Implemented as a Custom GPT with the corpus embedded, requiring no specialised platform; students access it through their existing ChatGPT interface. The corpus annotations and tutor logic are the portable deliverables — reproducible with any provider that supports system prompts. Ethics clearance will be sought by July 2026 if required.
 
 ---
 
