@@ -66,3 +66,9 @@ id = "Hozvl5nbHcmGakHi_F_rG"
 uri = "file://docs/hku_scheme/three-projects-comparison.md"
 type = "text"
 title = "三个项目对比分析与共同理念梳理"
+
+[[outputs]]
+id = "1QHtv2In-RO3KiBiOxUU8"
+uri = "file://docs/hku_scheme/pedagogical-principles.md"
+type = "text"
+title = "What We Believe About AI in Education — 团队共享文件"
