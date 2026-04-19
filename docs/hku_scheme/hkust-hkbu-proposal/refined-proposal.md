@@ -31,22 +31,18 @@ This design is the practical expression of the Trio model: teacher expertise set
 
 ## 2. Partnership
 
-This project embodies the Trio model (Students as Partners + GenAI) through three interlocking relationships, grounded in Cook-Sather et al.'s (2014) principles of reciprocity, shared ownership, and genuine student agency.
+This project operationalises the Trio model through three non-interchangeable roles, grounded in Cook-Sather et al.'s (2014) principles of respect, reciprocity, and shared responsibility, and in Bovill's (2020) framework for co-creating pedagogy. Each party contributes what the other two cannot provide.
 
-**Student partners (2 members: one HKUST, one HKBU):**
-Students are not tool testers — they are **co-designers** of the coaching system. Their role includes: co-developing the AI prompt engineering rubrics from the ground up; evaluating AI-generated CV feedback against their own professional judgement; proposing improvements to the coaching workflows; and co-authoring the Evaluation and Reflection sections of the final report. This positions them as researchers, not users.
+**Teacher partners (Krista Du, Simon Wang) — the architects:**
+Teachers bring what AI cannot generate: years of accumulated knowledge about what makes a CV culturally credible in an international workplace, what patterns of weakness recur across cohorts, and which questions produce genuine revision rather than surface editing. This expertise exists but cannot be delivered individually to forty students. The teachers' role is to *encode* this knowledge — to make tacit expert judgement explicit enough that AI can deliver it as a structured dialogue. This is pedagogical design work, not technology oversight. Teachers also carry the reciprocal learning role: in co-designing rubrics *with* student partners, they discover which criteria students find ambiguous, culturally unfamiliar, or contextually irrelevant to their own professional backgrounds. That discovery improves the rubric.
 
-**Teacher partners (Krista Du, Simon Wang):**
-Teachers contribute expert pedagogical knowledge: industry-aligned CV standards, culturally-specific interview conventions, and documented patterns from years of student coaching. Teachers do not build the AI system alone — they co-design it with students, sharing their reasoning for every rubric criterion. This is the reciprocal learning dimension: teachers discover what criteria students find ambiguous or culturally unfamiliar.
+**Student partners (one HKUST, one HKBU) — decision-makers and design intelligence:**
+Students are not tool testers. They are co-designers who contribute two kinds of expertise that teachers cannot access. First, *professional experience*: student partners bring current knowledge of their own industries, networks, and hiring contexts — the ground truth against which teacher-designed rubrics must be tested. Second, *learning experience*: they know, from recent direct experience, where generic AI coaching fails language learners and where culturally-specific scaffolding would change outcomes. Their role includes co-developing the prompt framework, stress-testing AI outputs for cultural accuracy before deployment, proposing improvements based on peer feedback, and co-authoring the Evaluation and Reflection sections of the final report. The final report's co-authorship is not symbolic — it is the evidence that genuine partnership occurred.
 
-**GenAI tools — SmartTextbook platform (current default: DeepSeek; alternative: ChatGPT 4o):**
-The coaching system is deployed via SmartTextbook, an open-source AI-in-education platform built on two architectural principles that directly address institutional AI governance concerns.
+**GenAI tools (SmartTextbook platform; default: DeepSeek / alt: ChatGPT 4o) — the dictionary, not the architect:**
+The AI's role is precisely delimited. Karamanis (2026) draws the line that governs our design: when a student uses AI as a sounding board, a question-generator, or a framework-deliverer, "the human is the architect. The machine holds the dictionary." The problem begins when AI makes the methodological choices — when it decides what feedback means rather than surfaces questions that help the student decide. Our coaching system is designed so that the AI *never* produces the revised CV, never recommends a specific wording, and never evaluates whether a choice is correct. It asks: *What industry is this achievement aimed at? What does this verb imply about your level of agency? What would an international employer need to know that isn't here?* The student answers. The student revises.
 
-*Bring Your Own Key (BYOK):* Students and educators supply their own API credentials, which are stored only in the browser's local storage and never transmitted to or stored on any platform server. The institution accumulates no credential liability and no data residency risk. This model also teaches an under-discussed AI literacy competency: students learn that AI has a cost structure, a provider relationship, and a usage model — not just an output.
-
-*Platform Neutrality:* The prompt library, rubric design, and scaffolding architecture developed in this project work equivalently across all supported AI providers. DeepSeek is the recommended default for Hong Kong-based users given its accessibility and cost profile; ChatGPT 4o is a fully supported alternative for institutions with existing OpenAI agreements. If HKBU or HKUST policy requires a specific approved provider, the pedagogical design is unchanged — only the API endpoint is redirected. Students learn to evaluate AI-generated feedback critically, not to depend on a specific platform's interface.
-
-This approach aligns with the HKU GenAI Guidebook's emphasis on AI literacy as a transferable skill rather than platform proficiency (Tsao & Wong, 2025). The use of all AI tools will comply with HKBU and HKUST institutional policies. Ethics clearance will be obtained by July 2026 if required.
+The coaching system is deployed via SmartTextbook, built on Bring Your Own Key (BYOK) and platform-neutral principles: students supply their own API credentials (stored only in their browser, never on any server), and the prompt library works equivalently with any compliant AI provider. If HKBU or HKUST policy requires a specific approved provider, only the API endpoint changes — the pedagogical design is untouched. The use of all AI tools will comply with both institutions' policies. Ethics clearance will be sought by July 2026 if required.
 
 ---
 
@@ -122,10 +118,12 @@ Not all students have premium AI subscriptions. *Solution:* The coaching system 
 ## References
 
 - Ahmedtelba, A., Elycheikh, M., Mitereva, S., & Ponce, M. (2025). Critical integration of generative AI in higher education. *London Journal of Research in Humanities and Social Sciences, 25*(13), 45–62.
-- Bhatia, A., Bhatia, P., & Sood, D. (2024). Leveraging AI to transform online higher education. *International Journal of Management and Humanities, 11*(1).
-- Chan, C. K. Y., & Colloton, T. (2024). *Generative AI in higher education: The ChatGPT effect.* Routledge.
-- Cook-Sather, A., Bovill, C., & Felten, P. (2014). *Engaging students as partners in learning and teaching.* Jossey-Bass.
-- Creely, E., & Carabott, K. (2025). Teaching and learning with AI: An Integrated AI-Oriented Pedagogical Model. *Australian Educational Researcher, 52*, 4633–4654.
+- Bovill, C. (2020). *Co-creating learning and teaching: Towards relational pedagogy in higher education.* Critical Publishing. https://doi.org/10.4324/9781041054597
+- Chan, C. K. Y., & Colloton, T. (2024). *Generative AI in higher education: The ChatGPT effect.* Routledge. [Open Access] https://aied.talic.hku.hk/
+- Cook-Sather, A., Bovill, C., & Felten, P. (2014). *Engaging students as partners in learning and teaching.* Jossey-Bass. ISBN: 978-1-118-43458-1
+- Creely, E., & Carabott, K. (2025). Teaching and learning with AI: An Integrated AI-Oriented Pedagogical Model. *Australian Educational Researcher, 52*, 4633–4654. https://doi.org/10.1007/s13384-025-00913-6
+- Karamanis, M. (2026, April 6). *The machines are fine. I'm worried about us.* ergosphere.blog. https://ergosphere.blog/posts/the-machines-are-fine/
+- Tsao, B., & Wong, K. (2025). *GenAI in teaching and learning: A guidebook.* Common Core, University of Hong Kong. https://commoncore.hku.hk/wp-content/uploads/documents/Guidebook%20-%20GenAI%20in%20Teaching%20and%20Learning.pdf
 
 ---
 
