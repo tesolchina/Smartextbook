@@ -3,7 +3,7 @@
 
 **Team:**
 - **Faculty:** Krista Du (HKUST), Simon Wang (HKBU)
-- **Students:** [Student A name, HKUST], [Student B name, HKBU]
+- **Students:** Derun Sun (HKUST), Cheng Peng (HKBU)
 - **GenAI Platform:** SmartTextbook (BYOK; default provider: DeepSeek / alt: ChatGPT 4o)
 
 **Sub-themes:** GenAI Tools and Pedagogy · Assessment and Feedback · Student AI Literacy and Digital Resilience
@@ -33,7 +33,7 @@ Grounded in Cook-Sather et al.'s (2014) principles of respect, reciprocity, and 
 
 **Teachers (Krista Du, Simon Wang) — the architects:** Teachers encode tacit expertise — what makes a CV internationally credible, which patterns of weakness recur, which questions drive genuine revision — into a structured prompt framework AI delivers at scale. Co-designing rubrics *with* student partners reveals which criteria students find culturally unfamiliar; that discovery improves the design and constitutes the reciprocal learning dimension.
 
-**Student partners (one HKUST, one HKBU) — decision-makers and design intelligence:** Students contribute two forms of expertise teachers cannot access: current industry knowledge (the ground truth for rubric validity) and recent learner experience (where AI coaching fails language learners). They co-develop the prompt framework, stress-test outputs for cultural accuracy, and co-author the Evaluation section. Co-authorship is evidence of genuine partnership, not its symbol.
+**Student partners (Derun Sun, HKUST; Cheng Peng, HKBU) — decision-makers and design intelligence:** Students contribute two forms of expertise teachers cannot access: current industry knowledge (the ground truth for rubric validity) and recent learner experience (where AI coaching fails language learners). They co-develop the prompt framework, stress-test outputs for cultural accuracy, and co-author the Evaluation section. Co-authorship is evidence of genuine partnership, not its symbol.
 
 **GenAI (SmartTextbook; default: DeepSeek / alt: ChatGPT 4o) — the dictionary, not the architect:** The AI surfaces questions; students answer and revise. It never produces the revised CV. Students supply their own API credentials (BYOK); the prompt library functions with any compliant provider — only the endpoint changes if institutional policy requires it. Ethics clearance will be sought by July 2026 if required.
 
