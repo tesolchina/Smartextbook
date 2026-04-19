@@ -43,21 +43,17 @@ Grounded in Cook-Sather et al.'s (2014) principles of respect, reciprocity, and 
 
 ## 3. Implementation
 
-The project executes across two institutions during the mandatory September–December 2026 window, in four phases:
+This project follows four phases within the September–December 2026 window, deliberately establishing human coaching before AI is introduced.
 
-**Phase 1 — Co-design Foundation (July–August 2026, pre-semester)**
-Trio team attends the Design Sprint (6 June). Students and teachers jointly review existing LANG1422 rubrics and identify what current AI tools get wrong when students use them independently. Together, the team writes the first draft of the AI coaching prompt framework — students propose, teachers refine, and both evaluate outputs together. By August, a validated prompt set is ready for pilot testing.
+**Phase 1 — Human Foundation (September):** A cohort of 10–15 students receives direct CV reviews and interview coaching from teacher partners. Baseline CV quality is scored using the co-designed rubric. Critically, teachers document their recurring feedback patterns — the raw material for Phase 2.
 
-**Phase 2 — Baseline & Soft Launch (September 2026)**
-Students enrolled in LANG1422 (HKBU) and a parallel career skills module (HKUST) complete a baseline CV assessment using standardised rubrics. The Trio partners introduce the AI coaching system to a small initial cohort (10–15 students) with close monitoring. Student partners document real-time feedback on AI output quality.
+**Phase 2 — Expertise Transfer (October):** Documented feedback patterns are converted into AI training prompts. Student partners co-build the CV assessment module and interview simulation scenarios, then beta-test outputs under teacher supervision. This is the distillation stage: tacit expertise becomes structured scaffolding.
 
-**Phase 3 — Full Pilot (October–November 2026)**
-Expanded deployment to 40–50 students across both institutions. Students complete at least three AI-assisted CV revision cycles. Interview coaching chatbot deployed for mock interview preparation. Student partners conduct peer coaching sessions using AI transcripts as evidence of progress.
+**Phase 3 — Integrated Deployment (November):** The AI-human model launches with 30–40 students across both institutions. Students use the AI tool for initial CV drafts and interview practice; teachers handle quality assurance and complex cases. Interaction transcripts and performance data are collected.
 
-**Phase 4 — Evaluation (December 2026)**
-Post-test CV rubric scoring, student AI literacy self-assessment, focus group with student partners, and teacher reflection on workload and pedagogical insight gained.
+**Phase 4 — Evaluation (December):** Pre/post rubric analysis, AI literacy self-assessment, focus group with student partners, and prompt refinement based on findings. Outcomes documented for the final report.
 
-*Framework reference: Creely & Carabott's (2025) Integrated AI-Oriented Pedagogical Model — Positionality of Teacher, Relationality in Pedagogy, Functionality of GenAI.*
+*Framework: Creely & Carabott's (2025) Integrated AI-Oriented Pedagogical Model.*
 
 ---
 
