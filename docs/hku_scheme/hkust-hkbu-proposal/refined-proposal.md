@@ -14,16 +14,20 @@
 
 ## 1. Rationale, Purpose and Expected Outcomes
 
-Hong Kong undergraduates face a widening gap between academic learning and career readiness. In LANG1422 *Chinese for Workplace Applications* (HKBU), each student receives one ten-minute tutorial slot for CV feedback — insufficient for the iterative improvement international employers expect. As graduates enter multilingual workplaces, the gap between local CV conventions and international standards compounds the problem.
+Coaching sessions reveal consistent, specific failure patterns:
 
-When students seek help independently, generic AI chatbots return culturally decontextualised feedback — what Ahmedtelba et al. (2025) call "unproductive cognitive offloading," where fluent AI output substitutes for genuine skill development.
+*CV:* Students produce generic documents untailored to job descriptions; cannot prioritize or sequence experience effectively; underuse quantitative evidence of achievement; present without clear formatting logic.
 
-This project responds through *expert knowledge distillation*: teacher coaching knowledge — what makes a CV internationally credible, which feedback patterns recur across cohorts, which questions produce genuine revision — is encoded into a structured prompt system delivered as personalised, iterative dialogue. Students remain the decision-makers at every stage: they judge which feedback applies to their context, and how to revise. The AI delivers the teacher's questioning framework, not the teacher's answers. This is the Trio model in practice: teacher expertise sets direction, AI scales delivery, students do the intellectual work.
+*Interview:* Self-introductions list credentials rather than articulate a candidate narrative. Answers under pressure lack logical structure. Behavioral responses violate STAR principles — wordy, roles unclear, specific actions and measurable impact absent. Situational questions expose an inability to identify the core challenge embedded in a scenario.
+
+These are not knowledge deficits but *design failures*: students lack a framework for reading their own experience the way employers do. Generic AI compounds the problem — producing fluent, culturally generic feedback that substitutes for genuine skill development (Ahmedtelba et al., 2025).
+
+This project encodes teacher diagnostic knowledge — these specific patterns — into an AI coaching system that asks the questions students cannot yet ask themselves: *What does this JD require? What does your CV claim? Where is the gap?* Students answer. Students revise. The framework belongs to the teacher; the intellectual work belongs to the student.
 
 **Expected outcomes:**
-- Measurable CV quality improvement (pre/post standardised rubric; targeting 25–30% gain)
-- Growth in AI literacy: students evaluate AI career advice critically, not passively
-- An open-source career coaching prompt playbook any institution can adopt
+- CV quality improvement measured pre/post standardised rubric, targeting 25–30% gain
+- STAR-structured interview responses demonstrated under uncoached conditions
+- An open-source coaching prompt playbook any institution can adopt
 
 ---
 
