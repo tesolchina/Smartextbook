@@ -86,22 +86,20 @@ This project embodies the Trio model: teacher expertise defines the framework, s
 
 ### 3. Implementation
 
-**Design Sprint preparation (June 2026)**
-Trio team attends the RSLEIHE Design Sprint (6 June). Students and faculty jointly formalise the scaffolding framework: translating Bess's analytical approach into a structured sequence of AI prompts. By end of June, a first draft prompt library (five modules, one per student challenge) is ready for testing.
+**Phase 0 — Needs Analysis (June–August 2026)**
+Focus group discussions and interviews with students and teachers; analysis of existing story pitches and published articles to document recurring patterns of weakness.
 
-**Phase 1 — Baseline and Co-design (July–August 2026)**
-Student partners test the prompt library with sample NY Times data articles, evaluating whether the AI scaffolding produces the analytical behaviours in the Bess framework. Faculty review and refine. A validated, tested prompt set is finalised before semester starts.
+**Phase 1 — Corpus Building (July–August 2026)**
+Collection and annotation of professional journalism articles, beginning with topics common among JOUR3306/3307 students. Team identifies pedagogical insights, strategies, and patterns that distinguish professional from student practice.
 
-**Phase 2 — Pilot Introduction (September 2026)**
-[Course code] students begin the semester. Baseline analytical assessment: students analyse a data journalism article without AI support; work scored against Bess's analytical framework rubric. Student partners introduce the AI scaffolding tools and facilitate an orientation session.
+**Phase 2 — AI Tutor Development (August–September 2026)**
+Custom GPT built and connected to the annotated corpus. Internal testing with faculty and student partners before semester launch.
 
-**Phase 3 — Scaffolded Practice (October–November 2026)**
-Students use AI scaffolding tools across [3–4] data journalism analysis assignments. Each session produces a structured AI transcript showing the questions asked and the student's analytical responses. Student partners review transcripts for quality and flag edge cases.
+**Phase 3 — Pilot in JOUR3306/3307 (September–November 2026)**
+Baseline assessment: students submit story pitches without AI support. AI tutor deployed from Week 3; students use it at the pre-reporting stage for each assignment. Chat histories collected. Tool iterated based on student and faculty feedback.
 
 **Phase 4 — Evaluation (December 2026)**
-Post-test analytical assessment using the same rubric as the baseline. Focus group with student partners. Teacher reflection. Data collation for the written report.
-
-*Theoretical framework: Creely & Carabott (2025) Integrated AI-Oriented Pedagogical Model — Functionality of GenAI as proactive scaffolding agent.*
+Impact assessed by comparing story pitches and published articles: AI-supported students versus a comparison group without tool access. Focus group with student partners. Findings compiled for the RSLEIHE report.
 
 ---
 
