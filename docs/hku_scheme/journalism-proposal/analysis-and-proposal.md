@@ -105,19 +105,18 @@ Impact assessed by comparing story pitches and published articles: AI-supported 
 
 ### 4. Evaluation
 
-Evidence collection uses a mixed-methods design focused on the analytical capabilities the project is designed to develop.
+Evidence collection uses a mixed-methods design aligned with the project's three core challenges.
 
 **Quantitative:**
-- *Analytical depth rubric scores:* Pre/post assessment of student-written data journalism analyses scored on five dimensions (technical vocabulary, source classification, critical evaluation, multi-dimensional analysis, context-method connection). Rubric derived from the Bess framework and validated by the journalism faculty partner.
-- *AI scaffolding engagement:* Average number of AI prompt exchanges per assignment; correlation between engagement depth and rubric improvement.
-- *Technical vocabulary growth:* Pre/post count of specific instrument names, methodology terms, and institutional names in student writing.
+- *Story pitch quality:* Pre/post rubric assessment on topic specificity, source diversity, and newsworthiness — comparing student work produced with and without AI tutor access, and against archived student work from previous cohorts of JOUR3306/3307.
+- *Chat history analysis:* Frequency and depth of AI tutor interactions; which query types correlate with improvements in story pitch quality.
 
 **Qualitative:**
-- *Student partner co-authorship:* Students write the Methodology and Evaluation sections of the final report — their authorial voice is evidence of genuine SaP partnership.
-- *Focus group:* What did the students learn from Bess's framework? What did they find most difficult? What did they teach the faculty partners that surprised them? (reciprocal learning evidence)
-- *AI transcript analysis:* Qualitative review of 10–15 student AI scaffolding sessions — what questions did students resist answering? Where did the scaffolding fail?
+- *Pre and post reflections:* Students document their story-selection process before and after using the AI tutor, capturing changes in how they approach topic narrowing and source planning.
+- *Focus group discussions:* Separate sessions with students and the journalism faculty, exploring what the tool changed, where it fell short, and what surprised them.
+- *Chat transcript review:* Qualitative analysis of 10–15 sessions — which questions prompted genuine reconsideration of a topic; where students disengaged.
 
-**Partnership quality indicator:** The journalism teacher's reflection on whether student partners changed any aspect of the scaffolding design that improved learning outcomes. If yes — this is the strongest possible evidence of genuine SaP partnership.
+**Partnership quality indicator:** Student partners' co-authorship of the Evaluation section is itself evidence of genuine SaP collaboration — their analytical voice is the record.
 
 ---
 
