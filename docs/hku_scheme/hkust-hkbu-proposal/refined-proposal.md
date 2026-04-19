@@ -59,21 +59,18 @@ This project follows four phases within the September–December 2026 window, de
 
 ## 4. Evaluation
 
-Evidence will be collected using a mixed-methods design grounded in the HKU AI Assessment Integration Framework (Chan & Colloton, 2024), specifically the "Human-machine partnership assessment" type — evaluating students' ability to collaborate with AI while ensuring human judgement remains central.
+Evidence will be collected using a mixed-methods design grounded in the HKU AI Assessment Integration Framework (Chan & Colloton, 2024) — specifically the human-machine partnership assessment type, which evaluates students' ability to collaborate with AI while keeping human judgement central.
 
 **Quantitative measures:**
-- CV Quality: Pre/post scores on standardised rubric (content relevance, professional presentation, achievement articulation, industry alignment) for all 40–50 participants
-- AI Literacy Growth: Self-assessment rubric adapted from HKU AIED AI Literacy Framework, administered pre-semester and post-pilot
-- Iteration Depth: Number of AI-assisted revision cycles per student; correlation with final rubric score
-- Cross-institutional comparison: Rubric scores and AI literacy gains compared between HKUST and HKBU cohorts
+- *CV quality:* Pre/post rubric scores (content relevance, professional presentation, achievement articulation, industry alignment) for all participants; AI-generated and teacher evaluations compared for inter-rater reliability
+- *Mock interview performance:* Structured rubric scores on audio recordings; AI feedback accuracy benchmarked against teacher judgements; student confidence self-report pre/post
+- *Iteration depth:* Number of AI-assisted revision cycles per student, correlated with final rubric score
+- *Cross-institutional comparison:* Rubric scores and AI literacy gains compared between HKUST and HKBU cohorts
 
 **Qualitative measures:**
-- Student partner co-authorship of report sections (evidence of genuine SaP agency)
-- Focus group exploring reciprocal learning: what did teachers learn from students? What did students learn that surprised them?
-- Student reflection on AI output quality — where did AI fail? Where did it help?
-- Teacher workload diary: time spent on individual coaching before and after AI integration
-
-**Partnership quality indicator:** The Evaluation section of the final report will be co-written by the student partners — their authorial voice is itself evidence of genuine partnership.
+- *Interaction transcripts:* Conversation logs scored against the teacher-designed rubric — the process record that distinguishes a student who drove analytical choices from one who passively followed AI suggestions
+- *Focus group:* Reciprocal learning documented — what did teachers learn from students? What surprised students about AI limitations?
+- *Partnership quality indicator:* The Evaluation section of the final report is co-written by student partners — their authorial voice is evidence of genuine partnership, not its symbol
 
 ---
 
