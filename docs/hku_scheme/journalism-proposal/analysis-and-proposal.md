@@ -59,12 +59,14 @@ Data journalism — the practice of analysing datasets to drive evidence-based r
 
 Existing AI tools offer little structured help: students who query ChatGPT receive general explanations rather than guided analytical scaffolding through their own work. A 2025 randomised controlled trial found that *proactive* AI scaffolding agents — those that ask structured questions guiding students through expert frameworks — significantly outperform passive chatbots, with lasting comprehension gains (Kwan et al., 2025).
 
-This project develops a Trio partnership to co-design a proactive AI scaffolding system grounded in a real student's exemplary analysis (the "Bess framework"), then pilots it in [Course code/title] at [Institution].
+This project addresses the gap through a specific mechanism: *distilling expert analytical knowledge into AI-delivered scaffolding.* The team has documented, in granular detail, how an expert analyst (student partner Bess) approaches a data journalism article — what she names, how she classifies, what she questions. This expert framework is encoded into a five-module prompt system that guides every student through the same analytical process Bess follows, at their own pace, on their own chosen articles. The student remains the analyst at every stage: the AI asks the next question, never provides the classification. The teacher's expert framework becomes available to every student, not just those who happen to receive individual coaching.
+
+This is the Trio model in practice: teacher and expert-student establish the analytical framework, AI scales it into personalised scaffolding, students do the analytical work. The scaffolding system runs on BYOK and platform-neutral principles — the five-module prompt library is the deliverable, not the software. Any journalism programme can adopt it with any AI tool.
 
 **Expected outcomes:**
 - Measurable improvement in students' analytical depth scores on data journalism articles (pre/post rubric)
-- Growth in ability to classify data sources hierarchically and evaluate methodological choices
-- A validated, open-source AI scaffolding prompt library for data journalism education — replicable by any journalism programme
+- Growth in ability to classify data sources hierarchically and evaluate methodological choices critically
+- A documented, open-source five-module prompt library for data journalism education — replicable by any journalism programme with any AI provider
 
 ---
 

@@ -3,8 +3,8 @@
 
 **Team:**
 - **Faculty:** Krista Du (HKUST), Simon Wang (HKBU)
-- **Students:** [Confirm name: Derun/Sylvia] Sun (HKUST), Cheng Peng (HKBU)
-- **GenAI Tools:** ChatGPT 4o, [confirm compliance with HKBU policy]
+- **Students:** [Student A name, HKUST], [Student B name, HKBU]
+- **GenAI Platform:** SmartTextbook (BYOK; default provider: DeepSeek / alt: ChatGPT 4o)
 
 **Sub-themes:** GenAI Tools and Pedagogy · Assessment and Feedback · Student AI Literacy and Digital Resilience
 
@@ -18,14 +18,14 @@ Hong Kong undergraduates face a documented gap between academic learning and car
 
 When students seek help outside class hours, they turn to general-purpose AI chatbots (ChatGPT, Claude) and receive generic, culturally decontextualised feedback — what Ahmedtelba et al. (2025) call "unproductive cognitive offloading," where fluent AI output substitutes for genuine skill development.
 
-This project addresses both gaps through a Trio partnership. Students, teachers, and GenAI tools co-design a career coaching system grounded in the specific rubrics, cultural expectations, and industry standards of the LANG1422 course context. The project pilots across HKUST and HKBU, enabling cross-institutional comparison.
+This project addresses both gaps through a specific mechanism: *distilling teacher expertise into AI-delivered scaffolding.* The coaching knowledge that experienced teachers carry — what makes a CV culturally credible in an international workplace, what patterns of weakness recur across cohorts, what questions produce genuine revision rather than surface editing — exists but cannot be delivered to forty students individually. This project encodes that expertise into a structured prompt system that delivers it as a personalised, iterative dialogue with every student. The student remains the decision-maker at every stage: they judge which feedback to act on, which suggestions fit their context, and how to revise. The AI delivers the teacher's questioning framework, not the teacher's answers.
+
+This design is the practical expression of the Trio model: teacher expertise sets the direction, AI scales the delivery, students do the intellectual work. The platform implementing this system is built on BYOK and platform-neutral principles — the prompt library, not the software, is the transferable asset. If institutional policy requires a change of AI provider, the pedagogical design functions identically.
 
 **Expected outcomes:**
 - Measurable improvement in CV quality scores (pre/post standardised rubric, targeting 25–30% gain)
-- Growth in student AI literacy: ability to critically evaluate AI-generated career advice
-- A validated, transferable "career coaching playbook" — platform-agnostic prompt frameworks and rubrics other courses can adopt
-
-*[To strengthen: add 1–2 specific authentic stories from Simon Wang's actual coaching experience — e.g., a student who revised a CV six times, or a common mistake that recurs every semester.]*
+- Growth in student AI literacy: ability to critically evaluate AI-generated career advice rather than accept it uncritically
+- A documented, open-source "career coaching prompt library" — teacher expertise encoded in replicable, platform-agnostic format any course can adopt
 
 ---
 
