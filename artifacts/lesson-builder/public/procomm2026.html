@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop: From Static to Interactive — IEEE ProComm 2026</title>
+<meta name="description" content="A hands-on workshop at IEEE ProComm 2026 Edmonton. Learn to transform professional communication articles into interactive learning modules using Agentic AI and the PITA framework.">
+<meta property="og:title" content="From Static to Interactive — IEEE ProComm 2026 Workshop">
+<meta property="og:description" content="No-code. No programming experience needed. 75 minutes. Bring your laptop.">
+<style>
+:root {
+  --ieee-blue: #006699;
+  --ieee-dark: #003366;
+  --accent: #00a0d2;
+  --gold: #f5a623;
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #1a2332;
+  --muted: #6b7a8d;
+  --border: #dde3ec;
+  --success: #27ae60;
+  --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.7; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--ieee-dark) 0%, var(--ieee-blue) 60%, var(--accent) 100%);
+  color: white; padding: 60px 24px 48px; text-align: center;
+}
+.ieee-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 999px; padding: 6px 16px; font-size: 0.82em;
+  letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 24px;
+}
+.hero h1 { font-size: clamp(1.6em, 4vw, 2.4em); font-weight: 800; margin-bottom: 12px; line-height: 1.2; max-width: 700px; margin-left: auto; margin-right: auto; }
+.hero .subtitle { font-size: 1.1em; opacity: 0.9; max-width: 560px; margin: 0 auto 28px; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-bottom: 36px; }
+.meta-pill {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px; padding: 8px 18px; font-size: 0.9em;
+}
+.meta-pill strong { display: block; font-size: 0.75em; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-size: 1em; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: var(--gold); color: #1a2332; }
+.btn-primary:hover { background: #e8941a; transform: translateY(-1px); }
+.btn-outline { background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.5); }
+.btn-outline:hover { background: rgba(255,255,255,0.2); }
+
+/* Container */
+.container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+/* Section */
+section { padding: 56px 0; }
+section + section { border-top: 1px solid var(--border); }
+.section-label { font-size: 0.78em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ieee-blue); margin-bottom: 8px; }
+h2 { font-size: 1.75em; font-weight: 800; color: var(--ieee-dark); margin-bottom: 16px; }
+.lead { font-size: 1.05em; color: var(--muted); max-width: 700px; margin-bottom: 32px; }
+
+/* Cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 24px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.card-icon { font-size: 2em; margin-bottom: 12px; }
+.card h3 { font-size: 1.05em; font-weight: 700; color: var(--ieee-dark); margin-bottom: 6px; }
+.card p { font-size: 0.9em; color: var(--muted); }
+
+/* PITA */
+.pita-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-top: 24px; }
+.pita-step {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; text-align: center; position: relative; overflow: hidden;
+}
+.pita-step::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--ieee-blue);
+}
+.pita-letter { font-size: 2.4em; font-weight: 900; color: var(--ieee-blue); line-height: 1; margin-bottom: 4px; }
+.pita-name { font-weight: 700; font-size: 0.95em; margin-bottom: 6px; }
+.pita-desc { font-size: 0.82em; color: var(--muted); }
+
+/* Schedule */
+.schedule { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 24px; }
+.schedule-row { display: grid; grid-template-columns: 110px 1fr; align-items: start; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.schedule-row:last-child { border-bottom: none; }
+.schedule-row:nth-child(even) { background: #f8fafc; }
+.time { font-size: 0.85em; font-weight: 700; color: var(--ieee-blue); }
+.activity { font-size: 0.92em; }
+.activity small { display: block; color: var(--muted); font-size: 0.85em; margin-top: 2px; }
+
+/* Demo */
+.demo-preview {
+  background: var(--ieee-dark); border-radius: 16px; overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2); margin-top: 24px;
+}
+.demo-bar { background: rgba(255,255,255,0.08); padding: 12px 20px; display: flex; align-items: center; gap: 8px; }
+.demo-dot { width: 10px; height: 10px; border-radius: 50%; }
+.demo-iframe-wrap { position: relative; padding-bottom: 56.25%; height: 0; }
+.demo-iframe-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.demo-cta { background: rgba(255,255,255,0.05); padding: 16px 20px; text-align: center; }
+.demo-cta a { color: var(--gold); font-weight: 600; text-decoration: none; }
+.demo-cta a:hover { text-decoration: underline; }
+
+/* Hybrid */
+.hybrid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+.hybrid-card {
+  background: var(--card); border-radius: 12px; padding: 24px;
+  border: 2px solid var(--border);
+}
+.hybrid-card.inperson { border-color: var(--ieee-blue); }
+.hybrid-card.online { border-color: var(--accent); }
+.hybrid-tag { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+.inperson .hybrid-tag { background: #e8f0f9; color: var(--ieee-dark); }
+.online .hybrid-tag { background: #e0f4fb; color: #0077aa; }
+.hybrid-card h3 { font-size: 1em; font-weight: 700; margin-bottom: 6px; }
+.hybrid-card p { font-size: 0.88em; color: var(--muted); }
+
+/* Recruit */
+.recruit-box {
+  background: linear-gradient(135deg, var(--ieee-dark), var(--ieee-blue));
+  color: white; border-radius: 16px; padding: 40px; text-align: center;
+  margin-top: 40px;
+}
+.recruit-box h3 { font-size: 1.4em; font-weight: 800; margin-bottom: 10px; }
+.recruit-box p { opacity: 0.9; max-width: 500px; margin: 0 auto 24px; }
+.recruit-perks { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 28px; }
+.perk { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 8px 16px; font-size: 0.85em; }
+
+/* Presenter */
+.presenter { display: flex; gap: 24px; align-items: flex-start; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin-top: 24px; }
+.presenter-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--ieee-blue); display: flex; align-items: center; justify-content: center; font-size: 1.8em; font-weight: 800; color: white; flex-shrink: 0; }
+.presenter-name { font-size: 1.1em; font-weight: 700; margin-bottom: 4px; }
+.presenter-title { font-size: 0.88em; color: var(--muted); margin-bottom: 8px; }
+.presenter-bio { font-size: 0.88em; color: var(--muted); }
+
+/* Footer */
+footer { background: var(--ieee-dark); color: rgba(255,255,255,0.7); text-align: center; padding: 32px 24px; font-size: 0.85em; }
+footer a { color: rgba(255,255,255,0.9); }
+footer strong { color: white; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .hybrid-grid { grid-template-columns: 1fr; }
+  .presenter { flex-direction: column; }
+  .schedule-row { grid-template-columns: 90px 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="container">
+    <div class="ieee-badge">⚡ IEEE ProComm 2026 · Edmonton, Canada</div>
+    <h1>From Static to Interactive</h1>
+    <p class="subtitle">Transform Professional Communication Articles into Interactive Learning Modules — No Programming Required</p>
+    <div class="hero-meta">
+      <div class="meta-pill"><strong>Date</strong>July 12–15, 2026</div>
+      <div class="meta-pill"><strong>Duration</strong>75 Minutes</div>
+      <div class="meta-pill"><strong>Format</strong>Hybrid (In-person + Online)</div>
+      <div class="meta-pill"><strong>Prerequisites</strong>Bring a laptop</div>
+    </div>
+    <div class="hero-ctas">
+      <a href="listening-demo.html" class="btn btn-primary">▶ Try the Live Demo</a>
+      <a href="#register" class="btn btn-outline">Register Interest</a>
+    </div>
+  </div>
+</div>
+
+<!-- About -->
+<section>
+  <div class="container">
+    <div class="section-label">About This Workshop</div>
+    <h2>What You'll Walk Away With</h2>
+    <p class="lead">In 75 minutes, you'll produce a complete interactive learning module from a real ProComm article — using only natural language instructions to an AI agent.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🗂️</div>
+        <h3>The PITA Framework</h3>
+        <p>A structured 4-stage workflow for transforming any static article into an interactive lesson. Reusable across topics and formats.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>A Completed Artifact</h3>
+        <p>Leave with a working HTML interactive module — quizzes, audio narration, and design annotations — built during the session.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h3>A Contribution Template</h3>
+        <p>Everything you need to contribute your module to the open ProComm Interactive library for other learners worldwide.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Research Context</h3>
+        <p>How xAPI learning analytics and AI-assisted assessment can turn your modules into research-grade educational data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PITA -->
+<section>
+  <div class="container">
+    <div class="section-label">The Framework</div>
+    <h2>The PITA Workflow</h2>
+    <p class="lead">Four stages. Natural language at every step. No code required.</p>
+    <div class="pita-steps">
+      <div class="pita-step">
+        <div class="pita-letter">P</div>
+        <div class="pita-name">Parse</div>
+        <div class="pita-desc">AI reads the article, identifies key concepts, and maps the pedagogical structure</div>
+      </div>
+      <div class="pita-step">
+        <div class="pita-letter">I</div>
+        <div class="pita-name">Identify</div>
+        <div class="pita-desc">You choose which concepts need active practice — scenarios, quizzes, reflection prompts</div>
+      </div>
+      <div class="pita-step">
+        <div class="pita-letter">T</div>
+        <div class="pita-name">Transform</div>
+        <div class="pita-desc">AI assembles a single-file HTML interactive module, no server required</div>
+      </div>
+      <div class="pita-step">
+        <div class="pita-letter">A</div>
+        <div class="pita-name">Augment</div>
+        <div class="pita-desc">Add audio narration, design annotations, and xAPI learning analytics</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Live Demo -->
+<section>
+  <div class="container">
+    <div class="section-label">Live Example</div>
+    <h2>See It in Action</h2>
+    <p class="lead">This interactive module was produced entirely through natural language instructions in under four hours. It's the template for what you'll build at the workshop.</p>
+    <div class="demo-preview">
+      <div class="demo-bar">
+        <div class="demo-dot" style="background:#ff5f57"></div>
+        <div class="demo-dot" style="background:#ffbd2e"></div>
+        <div class="demo-dot" style="background:#28c840"></div>
+        <span style="color:rgba(255,255,255,0.5); font-size:0.82em; margin-left:8px;">Listening as Engineering Communication — Interactive Demo</span>
+      </div>
+      <div class="demo-iframe-wrap">
+        <iframe src="listening-demo.html" title="Listening Demo" loading="lazy" allow="autoplay"></iframe>
+      </div>
+      <div class="demo-cta">
+        <a href="listening-demo.html" target="_blank">Open full demo in new tab ↗</a>
+        &nbsp;·&nbsp;
+        <span style="color:rgba(255,255,255,0.5); font-size:0.88em;">Adapted from Ly-dens & Lucena (2009), IEEE Trans. Prof. Commun. — used with author permission</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Schedule -->
+<section>
+  <div class="container">
+    <div class="section-label">Workshop Agenda</div>
+    <h2>75-Minute Session Plan</h2>
+    <p class="lead">Participants need a laptop and a free poe.com account. No installation required.</p>
+    <div class="schedule">
+      <div class="schedule-row">
+        <span class="time">0–10 min</span>
+        <span class="activity">Live demo of the completed Listening Module<small>See the full PITA output before you build it</small></span>
+      </div>
+      <div class="schedule-row">
+        <span class="time">10–20 min</span>
+        <span class="activity">PITA framework walkthrough<small>Receive your AI skill file — the key to the whole workflow</small></span>
+      </div>
+      <div class="schedule-row">
+        <span class="time">20–35 min</span>
+        <span class="activity">Hands-on: Parse + Identify<small>Pick a ProComm article and map its pedagogical structure with AI</small></span>
+      </div>
+      <div class="schedule-row">
+        <span class="time">35–55 min</span>
+        <span class="activity">Hands-on: Transform<small>Generate your interactive HTML module with quizzes and feedback</small></span>
+      </div>
+      <div class="schedule-row">
+        <span class="time">55–68 min</span>
+        <span class="activity">Hands-on: Augment<small>Add audio narration and design annotations</small></span>
+      </div>
+      <div class="schedule-row">
+        <span class="time">68–75 min</span>
+        <span class="activity">Debrief + next steps<small>How to publish your module and join the ProComm Interactive community</small></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Hybrid -->
+<section>
+  <div class="container">
+    <div class="section-label">Participation Format</div>
+    <h2>In-Person + Online</h2>
+    <p class="lead">The workshop runs as a hybrid session. Attend in Edmonton or join the live stream — hands-on participation either way.</p>
+    <div class="hybrid-grid">
+      <div class="hybrid-card inperson">
+        <span class="hybrid-tag">🏛 In-Person</span>
+        <h3>Edmonton, Canada</h3>
+        <p>Lister Conference Centre, University of Alberta. Full hands-on session with live facilitation and peer collaboration.</p>
+        <br>
+        <a href="https://attend.ieee.org/procomm-2026/registration/" target="_blank" class="btn btn-primary" style="font-size:0.88em; padding:9px 20px; margin-top:8px; display:inline-flex;">Register for ProComm 2026 ↗</a>
+      </div>
+      <div class="hybrid-card online">
+        <span class="hybrid-tag">💻 Online</span>
+        <h3>Join Remotely</h3>
+        <p>Live-streamed session with interactive participation. Bring your laptop, follow along, and submit your module from anywhere.</p>
+        <br>
+        <a href="#register" class="btn btn-outline" style="color:var(--ieee-blue); border-color:var(--ieee-blue); font-size:0.88em; padding:9px 20px; margin-top:8px; display:inline-flex;">Register Interest Below</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recruit / Register -->
+<section id="register">
+  <div class="container">
+    <div class="section-label">Join the Community</div>
+    <h2>Become a ProComm Interactive Contributor</h2>
+    <p class="lead">The workshop is also a recruitment event. We're building an open community to transform all 127 IEEE ProComm articles into interactive learning modules.</p>
+    <div class="recruit-box">
+      <h3>127 articles. One article per volunteer.</h3>
+      <p>Non-programming practitioners using the PITA framework to build the world's first open interactive library of professional communication education.</p>
+      <div class="recruit-perks">
+        <span class="perk">✍️ Author attribution on your module</span>
+        <span class="perk">🏅 IEEE ProComm contributor certificate</span>
+        <span class="perk">📄 Co-authorship credit in research outputs</span>
+        <span class="perk">🌐 Your work on ProComm.ieee.org</span>
+      </div>
+      <a href="mailto:simonwang@hkbu.edu.hk?subject=ProComm%20Interactive%20%E2%80%94%20I%27m%20interested&body=Hi%20Simon%2C%0A%0AI%27m%20interested%20in%20contributing%20to%20the%20ProComm%20Interactive%20project.%0A%0AName%3A%0AAffiliation%3A%0AHow%20I%20heard%20about%20it%3A" class="btn btn-primary">Express Interest via Email</a>
+    </div>
+  </div>
+</section>
+
+<!-- Presenter -->
+<section>
+  <div class="container">
+    <div class="section-label">Workshop Facilitator</div>
+    <h2>About the Presenter</h2>
+    <div class="presenter">
+      <div class="presenter-avatar">SW</div>
+      <div>
+        <div class="presenter-name">Simon Wang (王皓)</div>
+        <div class="presenter-title">Lecturer &amp; Innovation Officer · Language Centre, Hong Kong Baptist University</div>
+        <p class="presenter-bio">Simon's research focuses on AI-augmented language education, computational thinking for non-programming students, and open educational resources. He leads the genAI2026 Ambassador Programme at HKBU, training over 300 students to use agentic AI tools for professional communication tasks. The ProComm Interactive project is a collaboration with IEEE ProComm VP Content Traci Nathans-Kelly (Cornell University / IEEE).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <strong>IEEE ProComm 2026</strong> · University of Alberta, Edmonton, Canada · July 12–15, 2026<br>
+  <br>
+  Workshop by Simon Wang · <a href="mailto:simonwang@hkbu.edu.hk">simonwang@hkbu.edu.hk</a> · <a href="https://lc.hkbu.edu.hk/main/simonwang/" target="_blank">HKBU Profile ↗</a><br>
+  <br>
+  <span style="opacity:0.6">Listening Demo adapted from Ly-dens &amp; Lucena (2009) with author permission · SmartTextbook Platform</span>
+</footer>
+
+</body>
+</html>

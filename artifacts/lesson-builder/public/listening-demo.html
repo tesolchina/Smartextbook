@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listening as Engineering Communication — Interactive</title>
+<style>
+  :root {
+    --primary: #1a365d;
+    --accent: #2b6cb0;
+    --success: #38a169;
+    --warning: #dd6b20;
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --text: #2d3748;
+    --muted: #718096;
+    --anno-bg: #fffbeb;
+    --anno-border: #f59e0b;
+    --anno-text: #92400e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+  header { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 40px 20px; text-align: center; margin-bottom: 30px; border-radius: 12px; position: relative; }
+  header h1 { font-size: 1.8em; margin-bottom: 8px; }
+  header p { opacity: 0.9; font-size: 0.95em; }
+  .source { font-size: 0.8em; opacity: 0.7; margin-top: 10px; }
+  .source a { color: white; }
+  .card { background: var(--card); border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: relative; }
+  .card h2 { color: var(--primary); margin-bottom: 12px; font-size: 1.3em; }
+  .card h3 { color: var(--accent); margin: 16px 0 8px; font-size: 1.1em; }
+  .progress-bar { background: #e2e8f0; border-radius: 999px; height: 8px; margin-bottom: 30px; position: relative; }
+  .progress-fill { background: var(--accent); height: 100%; border-radius: 999px; transition: width 0.5s; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .nav-buttons { display: flex; gap: 12px; justify-content: center; margin: 20px 0; }
+  .btn { padding: 10px 24px; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--primary); }
+  .btn-outline { background: white; border: 2px solid var(--accent); color: var(--accent); }
+  .btn-outline:hover { background: var(--accent); color: white; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .quiz-option { display: block; width: 100%; text-align: left; padding: 12px 16px; margin: 8px 0; border: 2px solid #e2e8f0; border-radius: 8px; background: white; cursor: pointer; font-size: 0.95em; transition: all 0.2s; }
+  .quiz-option:hover { border-color: var(--accent); background: #ebf8ff; }
+  .quiz-option.correct { border-color: var(--success); background: #f0fff4; }
+  .quiz-option.wrong { border-color: #e53e3e; background: #fff5f5; }
+  .quiz-option.disabled { pointer-events: none; }
+  .feedback { padding: 12px 16px; border-radius: 8px; margin-top: 12px; display: none; font-size: 0.9em; }
+  .feedback.show { display: block; }
+  .feedback.correct { background: #f0fff4; border-left: 4px solid var(--success); color: #276749; }
+  .feedback.wrong { background: #fff5f5; border-left: 4px solid #e53e3e; color: #9b2c2c; }
+  .scenario { background: #ebf8ff; border-left: 4px solid var(--accent); padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .scenario-label { font-weight: 700; color: var(--accent); margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.05em; }
+  .highlight { background: #fefcbf; padding: 2px 6px; border-radius: 4px; }
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .comparison > div { padding: 16px; border-radius: 8px; }
+  .comparison .basic { background: #fff5f5; border: 1px solid #fed7d7; }
+  .comparison .contextual { background: #f0fff4; border: 1px solid #c6f6d5; }
+  .comparison h4 { margin-bottom: 8px; font-size: 0.95em; }
+  .score-display { text-align: center; font-size: 2em; font-weight: 700; color: var(--accent); margin: 20px 0; }
+  textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 0.95em; resize: vertical; min-height: 80px; }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  .key-concept { display: inline-block; background: var(--primary); color: white; padding: 3px 10px; border-radius: 999px; font-size: 0.8em; margin: 2px; }
+  .audio-player { display: flex; align-items: center; gap: 10px; background: #edf2f7; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; }
+  .audio-player .play-btn { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--accent); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; transition: background 0.2s; }
+  .audio-player .play-btn:hover { background: var(--primary); }
+  .audio-player .audio-label { font-size: 0.85em; color: var(--muted); }
+  .audio-player audio { flex: 1; height: 32px; }
+  ul { padding-left: 20px; }
+  ul li { margin-bottom: 8px; }
+  @media (max-width: 600px) {
+    .comparison { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.4em; }
+  }
+
+  .anno-toggle { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; border: 2px solid var(--anno-border); background: var(--anno-bg); color: var(--anno-text); font-size: 0.85em; font-weight: 600; cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,0.15); transition: all 0.2s; }
+  .anno-toggle:hover { background: #fef3c7; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+  .anno-toggle.active { background: var(--anno-border); color: white; border-color: #d97706; }
+  .anno-toggle .toggle-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--anno-border); transition: background 0.2s; }
+  .anno-toggle.active .toggle-dot { background: white; }
+
+  .annotation { display: none; background: var(--anno-bg); border: 1px solid var(--anno-border); border-radius: 8px; padding: 14px 16px; margin: 12px 0; font-size: 0.82em; line-height: 1.6; color: var(--anno-text); position: relative; }
+  .annotation::before { content: ''; position: absolute; top: -6px; left: 20px; width: 12px; height: 12px; background: var(--anno-bg); border-left: 1px solid var(--anno-border); border-top: 1px solid var(--anno-border); transform: rotate(45deg); }
+  .annotations-visible .annotation { display: block; }
+  .anno-tag { display: inline-block; font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 4px; margin-right: 6px; vertical-align: middle; }
+  .anno-tag.google { background: #dbeafe; color: #1e40af; }
+  .anno-tag.vibe { background: #ede9fe; color: #5b21b6; }
+  .anno-tag.pita { background: #dcfce7; color: #166534; }
+  .anno-title { font-weight: 700; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<button class="anno-toggle" id="annoToggle" onclick="toggleAnnotations()" data-testid="button-toggle-annotations">
+  <span class="toggle-dot"></span>
+  Design Commentary
+</button>
+
+<header>
+  <h1>Listening as Engineering Communication</h1>
+  <p>An interactive learning experience</p>
+  <div class="source">Adapted from <a href="https://procomm.ieee.org/listening-as-engineering-communication/" target="_blank">IEEE Professional Communication Society</a> | Original by J. Leydens & J. Lucena (2009)</div>
+  <div class="source" style="margin-top:6px;"><a href="https://procomm.ieee.org/resources-intro/" target="_blank" style="color:white; text-decoration:underline;">Browse all IEEE PCS Learning Resources</a></div>
+  <div class="annotation" data-testid="annotation-header">
+    <div class="anno-title"><span class="anno-tag pita">PITA: Parse</span> Source content extraction</div>
+    The AI agent first read the original IEEE PCS article and produced a structured analysis: core thesis (basic vs. contextual listening), key concepts, supporting evidence, and learning objectives. This Parse phase ensures the agent understands the content before any transformation begins.
+    <br><br>
+    <span class="anno-tag google">Google</span> This corresponds to Google's <strong>content ingestion pipeline</strong> in "Learn Your Way" (arXiv:2509.13348) — where source textbook content is analyzed before being re-shaped into multiple formats.
+  </div>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
+<div class="annotation" data-testid="annotation-progress">
+  <div class="anno-title"><span class="anno-tag google">Google</span> Progressive disclosure + self-pacing</div>
+  Google's research found that students learn better when they control their own pace. The progress bar and section-based navigation implement this principle. In "Learn Your Way," content is divided into digestible chunks with visual progress indicators — the same pattern used here.
+  <br><br>
+  <span class="anno-tag vibe">Vibe coding</span> The entire progress bar, section navigation, and state management were generated from a single natural language prompt: <em>"Add a progress bar and Next/Previous navigation that divides content into 4 sections."</em>
+</div>
+
+<!-- Section 1: Why Listening Matters -->
+<div class="section active" id="section1">
+<div class="card">
+  <h2>1. Why Listening Matters in Engineering</h2>
+  <div class="audio-player" data-testid="audio-player-section1">
+    <button class="play-btn" onclick="toggleAudio('audio1')" data-testid="play-btn-section1">&#9654;</button>
+    <audio id="audio1" src="https://simon.hkbu.me/aiworkshop/listeningdemo/audio/section1.mp3" preload="none"></audio>
+    <span class="audio-label">Listen to narration</span>
+  </div>
+  <div class="annotation" data-testid="annotation-audio">
+    <div class="anno-title"><span class="anno-tag pita">PITA: Augment</span> Multi-modal: AI-generated audio narration</div>
+    Audio narration was generated using ElevenLabs text-to-speech via the Poe API. The AI agent wrote narration scripts for each section, then called the TTS model to produce MP3 files — all from a single prompt.
+    <br><br>
+    <span class="anno-tag google">Google</span> This implements Google's <strong>multiple representations</strong> principle — the same content available as text and as audio. "Learn Your Way" generates podcasts, slides, and immersive text from the same source. Here, the AI agent generates audio narration as an additional modality.
+  </div>
+  <p>When we talk about professional communication, we almost exclusively focus on <strong>delivering</strong> messages — writing and speaking persuasively. But in a discipline whose main purpose is to <span class="highlight">serve the needs of communities, stakeholders, and clients</span>, accurately <strong>receiving</strong> their messages is just as important.</p>
+  <br>
+  <p>Key insight from Leydens & Lucena: <em>"The skill of listening is crucial to understanding engineering problems, which is the first step to doing engineering right."</em></p>
+  <br>
+  <div>
+    <span class="key-concept">Professional Communication</span>
+    <span class="key-concept">Active Listening</span>
+    <span class="key-concept">Stakeholder Needs</span>
+    <span class="key-concept">Engineering Design</span>
+  </div>
+  <div class="annotation" data-testid="annotation-concepts">
+    <div class="anno-title"><span class="anno-tag pita">PITA: Identify</span> Concept tagging for retrieval</div>
+    During the Identify phase, the AI agent tagged key concepts from the source analysis. These concept pills serve as visual anchors — a technique from learning design that aids recall by making abstract concepts concrete and scannable.
+  </div>
+</div>
+
+<div class="card">
+  <h3>Quick Check</h3>
+  <p><strong>Why is listening often overlooked in engineering education?</strong></p>
+  <button class="quiz-option" onclick="checkAnswer(this, true, 'q1')">It is not formally taught in most engineering curricula, despite being identified as a key attribute by NAE and ABET</button>
+  <button class="quiz-option" onclick="checkAnswer(this, false, 'q1')">Engineers already know how to listen from everyday life</button>
+  <button class="quiz-option" onclick="checkAnswer(this, false, 'q1')">Listening is only relevant for management roles, not technical work</button>
+  <div class="feedback correct" id="q1-correct">Correct! Leydens & Lucena found that listening is rarely formally taught despite being explicitly listed as a key engineering attribute by multiple agencies.</div>
+  <div class="feedback wrong" id="q1-wrong">Not quite. The research shows that while listening seems intuitive, the depth of listening needed for engineering problem-solving requires formal instruction — it goes far beyond everyday conversation.</div>
+  <div class="annotation" data-testid="annotation-quiz">
+    <div class="anno-title"><span class="anno-tag google">Google</span> Comprehension quiz with explanatory feedback</div>
+    Google's "Learn Your Way" generates quizzes as one of its multiple representation formats. Key design principle: feedback is not just "correct/incorrect" but <strong>explains why</strong> — reinforcing the concept. The wrong-answer feedback redirects learners to the core distinction rather than simply marking them wrong.
+    <br><br>
+    <span class="anno-tag vibe">Vibe coding</span> The quiz logic (answer checking, feedback reveal, score tracking, disabling options after selection) was entirely generated by the AI agent. The prompt specified: <em>"Quiz questions with immediate feedback that explains why the answer is correct or incorrect."</em>
+  </div>
+</div>
+</div>
+
+<!-- Section 2: Basic vs Contextual Listening -->
+<div class="section" id="section2">
+<div class="card">
+  <h2>2. Two Types of Listening</h2>
+  <div class="audio-player" data-testid="audio-player-section2">
+    <button class="play-btn" onclick="toggleAudio('audio2')" data-testid="play-btn-section2">&#9654;</button>
+    <audio id="audio2" src="https://simon.hkbu.me/aiworkshop/listeningdemo/audio/section2.mp3" preload="none"></audio>
+    <span class="audio-label">Listen to narration</span>
+  </div>
+  <p>Leydens and Lucena make a critical distinction between <strong>basic</strong> and <strong>contextual</strong> listening:</p>
+  <div class="comparison">
+    <div class="basic">
+      <h4>Basic Listening</h4>
+      <p>A dyadic process of speaking (output) and hearing (input). Your ability to hear or pay attention to the speaker is considered sufficient.</p>
+      <p><em>Like a microphone — captures sound but doesn't understand meaning.</em></p>
+    </div>
+    <div class="contextual">
+      <h4>Contextual Listening</h4>
+      <p>Making meaning from more than just speech — using clues from the socio-cultural and historical contexts of stakeholders to facilitate deeper understanding.</p>
+      <p><em>Like an interpreter — understands the full context behind the words.</em></p>
+    </div>
+  </div>
+  <div class="annotation" data-testid="annotation-comparison">
+    <div class="anno-title"><span class="anno-tag pita">PITA: Identify</span> Comparison table — contrasting two concepts</div>
+    During the Identify phase, the agent mapped the article's central distinction (basic vs. contextual listening) to a <strong>comparison table</strong> format. This is one of several representation formats in the PITA framework — chosen here because side-by-side contrast is the most effective way to teach binary distinctions.
+    <br><br>
+    <span class="anno-tag google">Google</span> Google's "Learn Your Way" calls this <strong>re-leveling</strong> — adapting how content is presented to match the learner's needs. The analogies ("like a microphone" / "like an interpreter") were added by the AI agent to make abstract concepts concrete, a technique Google found increases comprehension.
+  </div>
+</div>
+
+<div class="card">
+  <h3>How Contextual Listening Transforms Engineering</h3>
+  <p>According to Leydens & Lucena, contextual listening helps engineers:</p>
+  <ul>
+    <li><strong>Develop empathic relationships</strong> — Moving beyond one-way information transmission to multidirectional dialogue</li>
+    <li><strong>Transform actions</strong> — Actions become collaborative rather than individual, with stakeholder empowerment and project ownership</li>
+    <li><strong>Foster accountability</strong> — A dialogic relationship creates transparency</li>
+    <li><strong>Create awareness</strong> — Sensitivity to individuals' roles, abilities, biases, and their consequences</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Scenario: Which Type of Listening?</h3>
+  <div class="scenario">
+    <div class="scenario-label">Scenario</div>
+    <p>You are an engineer designing a water treatment system for a rural community. During a community meeting, a village elder says: <em>"We don't trust the water from the new pipes."</em></p>
+  </div>
+  <p><strong>A basic listener would:</strong></p>
+  <button class="quiz-option" onclick="checkAnswer(this, false, 'q2')">Note the concern and add better filtration to address water quality</button>
+  <p><strong>A contextual listener would:</strong></p>
+  <button class="quiz-option" onclick="checkAnswer(this, true, 'q2')">Investigate whether "trust" relates to past failed projects, cultural beliefs about water sources, or experiences with outside interventions — then co-design the solution with the community</button>
+  <div class="feedback correct" id="q2-correct">Exactly! The contextual listener recognizes that "trust" is not about water chemistry — it's about history, culture, and power dynamics. This deeper understanding leads to solutions the community will actually adopt.</div>
+  <div class="feedback wrong" id="q2-wrong">This is a basic listening response — it addresses the surface meaning but misses the deeper context. The elder's concern about "trust" likely involves much more than water quality.</div>
+  <div class="annotation" data-testid="annotation-scenario">
+    <div class="anno-title"><span class="anno-tag pita">PITA: Transform</span> Scenario-based exercise — application, not recall</div>
+    The PITA framework distinguishes between formats for recall (quizzes) and formats for application (scenarios). This scenario exercise was mapped during the Identify phase as the best format for the article's practical implications — it asks learners to <strong>apply</strong> the basic/contextual distinction to a realistic engineering situation.
+    <br><br>
+    <span class="anno-tag google">Google</span> In "Learn Your Way," this corresponds to <strong>interest-based examples</strong> — Google found that learners engage more deeply when concepts are illustrated through scenarios relevant to their field. The water treatment scenario connects listening theory to real engineering practice.
+    <br><br>
+    <span class="anno-tag vibe">Vibe coding</span> The scenario content was generated by the AI agent, drawing on the source article's discussion of community-based engineering projects. The prompt was: <em>"Create a scenario exercise where learners must distinguish basic from contextual listening in an engineering context."</em>
+  </div>
+</div>
+</div>
+
+<!-- Section 3: Application -->
+<div class="section" id="section3">
+<div class="card">
+  <h2>3. Applying Contextual Listening</h2>
+  <div class="audio-player" data-testid="audio-player-section3">
+    <button class="play-btn" onclick="toggleAudio('audio3')" data-testid="play-btn-section3">&#9654;</button>
+    <audio id="audio3" src="https://simon.hkbu.me/aiworkshop/listeningdemo/audio/section3.mp3" preload="none"></audio>
+    <span class="audio-label">Listen to narration</span>
+  </div>
+  <div class="scenario">
+    <div class="scenario-label">Your Turn — Reflection Exercise</div>
+    <p>Think of a professional communication situation where basic listening led (or could lead) to a misunderstanding. Describe how contextual listening would change the outcome.</p>
+  </div>
+  <textarea placeholder="Write your reflection here... Consider: What was the surface message? What context was missed? How would a contextual listener approach it differently?"></textarea>
+  <div class="annotation" data-testid="annotation-reflection">
+    <div class="anno-title"><span class="anno-tag pita">PITA: Identify</span> Reflection prompt — metacognition</div>
+    The Identify phase mapped the article's call to action to a <strong>reflection prompt</strong> format. Unlike quizzes (which test recall) or scenarios (which test application), reflection prompts engage <strong>metacognition</strong> — learners connecting the concept to their own experience. This progression from recall to application to reflection follows Bloom's taxonomy.
+    <br><br>
+    <span class="anno-tag google">Google</span> Google's architecture supports <strong>personalization</strong> — adapting content to the individual learner. The reflection prompt is the simplest form of personalization: the learner supplies their own context, making the content personally meaningful.
+  </div>
+</div>
+
+<div class="card">
+  <h3>Key Takeaways</h3>
+  <ul>
+    <li>Listening is a <strong>professional communication skill</strong> that deserves the same attention as writing and speaking</li>
+    <li><strong>Basic listening</strong> (hearing words) is necessary but insufficient for engineering practice</li>
+    <li><strong>Contextual listening</strong> (understanding socio-cultural meaning) leads to better design, stronger stakeholder relationships, and more equitable outcomes</li>
+    <li>Engineering curricula should formally teach listening, not assume students will develop it naturally</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Final Quiz</h3>
+  <p><strong>An engineer is developing a mobile health app for elderly patients. Which practice best demonstrates contextual listening?</strong></p>
+  <button class="quiz-option" onclick="checkAnswer(this, false, 'q3')">Conducting a survey about desired app features and implementing the most popular ones</button>
+  <button class="quiz-option" onclick="checkAnswer(this, false, 'q3')">Recording user testing sessions and fixing all usability issues found</button>
+  <button class="quiz-option" onclick="checkAnswer(this, true, 'q3')">Spending time in patients' homes to understand their daily routines, technology anxieties, family support structures, and cultural attitudes toward healthcare before designing</button>
+  <div class="feedback correct" id="q3-correct">This is contextual listening in practice! By understanding the full socio-cultural context — not just stated preferences — the engineer can design a solution that truly fits the users' lives.</div>
+  <div class="feedback wrong" id="q3-wrong">While useful, this approach relies on basic listening — collecting explicit input without exploring the deeper context that shapes how users relate to technology and health.</div>
+</div>
+</div>
+
+<!-- Section 4: Score -->
+<div class="section" id="section4">
+<div class="card" style="text-align:center;">
+  <h2>Your Results</h2>
+  <div class="audio-player" style="justify-content:center;" data-testid="audio-player-results">
+    <button class="play-btn" onclick="toggleAudio('audio4')" data-testid="play-btn-results">&#9654;</button>
+    <audio id="audio4" src="audio/results.mp3" preload="none"></audio>
+    <span class="audio-label">Listen to summary</span>
+  </div>
+  <div class="score-display" id="scoreDisplay">0 / 3</div>
+  <p id="scoreMessage">Complete the quizzes to see your score.</p>
+  <br>
+  <p><strong>This interactive page was created from a static IEEE PCS article using vibe coding — an AI agent transformed the content in minutes, with no traditional programming required.</strong></p>
+  <br>
+  <p style="color:var(--muted); font-size:0.85em;">Original article: <a href="https://procomm.ieee.org/listening-as-engineering-communication/" target="_blank">IEEE PCS — Listening as Engineering Communication</a><br>
+  Reference: J. Leydens and J. Lucena, "Listening as an Engineering Skill," IEEE Trans. Prof. Commun., vol. 52, no. 4, Dec. 2009.</p>
+  <div class="annotation" data-testid="annotation-results">
+    <div class="anno-title"><span class="anno-tag pita">PITA: Transform</span> Gamification — score tracking and adaptive messaging</div>
+    The score display and performance-based messages implement <strong>gamification</strong> — a representation format from the PITA framework. The AI agent generated four levels of feedback messages based on score, providing encouragement calibrated to performance rather than generic praise.
+    <br><br>
+    <span class="anno-tag google">Google</span> Google's efficacy study showed that <strong>active engagement</strong> (quizzes, self-checks) was a key factor in the 11-percentage-point retention gain. The score summary at the end reinforces learning by prompting self-assessment.
+    <br><br>
+    <span class="anno-tag vibe">Vibe coding</span> This entire page — 300+ lines of HTML, CSS, and JavaScript — was generated by an AI agent from natural language prompts in an IDE. No traditional programming was required. The transformation from a static 800-word article to this interactive experience took minutes, not hours.
+  </div>
+</div>
+</div>
+
+<div class="nav-buttons">
+  <button class="btn btn-outline" id="prevBtn" onclick="navigate(-1)" disabled>← Previous</button>
+  <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)">Next →</button>
+</div>
+
+</div>
+
+<script>
+let currentSection = 0;
+const totalSections = 4;
+let score = 0;
+let answered = {};
+let currentAudio = null;
+let annotationsVisible = false;
+
+function toggleAnnotations() {
+  annotationsVisible = !annotationsVisible;
+  document.body.classList.toggle('annotations-visible', annotationsVisible);
+  document.getElementById('annoToggle').classList.toggle('active', annotationsVisible);
+}
+
+function toggleAudio(audioId) {
+  const audio = document.getElementById(audioId);
+  const btn = audio.previousElementSibling;
+  if (currentAudio && currentAudio !== audio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio.previousElementSibling.innerHTML = '&#9654;';
+  }
+  if (audio.paused) {
+    audio.play();
+    btn.innerHTML = '&#9646;&#9646;';
+    currentAudio = audio;
+  } else {
+    audio.pause();
+    btn.innerHTML = '&#9654;';
+    currentAudio = null;
+  }
+  audio.onended = () => { btn.innerHTML = '&#9654;'; currentAudio = null; };
+}
+
+function navigate(dir) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.previousElementSibling.innerHTML = '&#9654;'; currentAudio = null; }
+  const sections = document.querySelectorAll('.section');
+  sections[currentSection].classList.remove('active');
+  currentSection += dir;
+  sections[currentSection].classList.add('active');
+  document.getElementById('prevBtn').disabled = currentSection === 0;
+  document.getElementById('nextBtn').textContent = currentSection === totalSections - 1 ? 'Finish' : 'Next →';
+  if (currentSection === totalSections - 1) {
+    document.getElementById('nextBtn').disabled = true;
+    updateScore();
+  }
+  document.getElementById('progressFill').style.width = ((currentSection + 1) / totalSections * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function checkAnswer(el, isCorrect, qId) {
+  if (answered[qId]) return;
+  answered[qId] = true;
+  const parent = el.parentElement;
+  const options = parent.querySelectorAll('.quiz-option');
+  options.forEach(o => {
+    o.classList.add('disabled');
+    if (o === el) o.classList.add(isCorrect ? 'correct' : 'wrong');
+  });
+  if (isCorrect) {
+    score++;
+    const fb = document.getElementById(qId + '-correct');
+    if (fb) fb.classList.add('show');
+  } else {
+    const fb = document.getElementById(qId + '-wrong');
+    if (fb) fb.classList.add('show');
+    options.forEach(o => {
+      if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
+    });
+  }
+}
+
+function updateScore() {
+  document.getElementById('scoreDisplay').textContent = score + ' / 3';
+  const msgs = [
+    'Keep exploring contextual listening — it takes practice!',
+    'Good start! Review the contextual vs. basic distinction.',
+    'Well done! You understand the importance of context.',
+    'Excellent! You demonstrate strong contextual listening awareness.'
+  ];
+  document.getElementById('scoreMessage').textContent = msgs[score];
+}
+</script>
+</body>
+</html>
