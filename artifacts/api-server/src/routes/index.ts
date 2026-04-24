@@ -12,6 +12,8 @@ import learningReportRouter from "./learning-report";
 import coursesRouter from "./courses";
 import certificatesRouter from "./certificates";
 import authRouter from "./auth";
+import xapiRouter from "./xapi";
+import demoCompletionsRouter from "./demo-completions";
 
 const router: IRouter = Router();
 
@@ -28,5 +30,7 @@ router.use(checkLessonRouter);
 router.use(learningReportRouter);
 router.use("/courses", coursesRouter);
 router.use("/certificates", certificatesRouter);
+router.use(xapiRouter);
+router.use(demoCompletionsRouter);
 
 export default router;

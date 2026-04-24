@@ -87,6 +87,66 @@
   .anno-tag.vibe { background: #ede9fe; color: #5b21b6; }
   .anno-tag.pita { background: #dcfce7; color: #166534; }
   .anno-title { font-weight: 700; margin-bottom: 4px; }
+
+  /* Certificate modal */
+  .cert-modal-backdrop {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    z-index: 2000; align-items: center; justify-content: center; padding: 16px;
+  }
+  .cert-modal-backdrop.open { display: flex; }
+  .cert-modal {
+    background: white; border-radius: 20px; padding: 36px 32px; max-width: 520px;
+    width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.25); position: relative;
+  }
+  .cert-modal h2 { color: var(--primary); font-size: 1.3em; margin-bottom: 6px; }
+  .cert-modal .cert-sub { color: var(--muted); font-size: 0.88em; margin-bottom: 20px; }
+  .cert-modal input[type="text"] {
+    width: 100%; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 8px;
+    font-size: 1em; font-family: inherit; margin-bottom: 14px; transition: border 0.2s;
+  }
+  .cert-modal input[type="text"]:focus { outline: none; border-color: var(--accent); }
+  .cert-modal .btn-cert {
+    width: 100%; padding: 13px; background: var(--accent); color: white;
+    border: none; border-radius: 10px; font-size: 1em; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .cert-modal .btn-cert:hover { background: var(--primary); }
+  .cert-modal .btn-cert:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Printable certificate card */
+  .cert-card {
+    display: none; border: 2px solid var(--accent); border-radius: 16px;
+    padding: 28px 24px; text-align: center; margin-top: 20px;
+    background: linear-gradient(135deg, #f0f7ff, #ffffff);
+  }
+  .cert-card.show { display: block; }
+  .cert-card .cert-award { font-size: 2.4em; margin-bottom: 8px; }
+  .cert-card h3 { color: var(--primary); font-size: 1.05em; text-transform: uppercase;
+    letter-spacing: 0.08em; font-weight: 700; margin-bottom: 4px; }
+  .cert-card .cert-name { font-size: 1.6em; font-weight: 800; color: var(--primary);
+    margin: 10px 0; font-family: Georgia, serif; }
+  .cert-card .cert-module { color: var(--muted); font-size: 0.85em; margin-bottom: 6px; }
+  .cert-card .cert-score { font-size: 1.1em; font-weight: 700;
+    color: var(--success); margin-bottom: 14px; }
+  .cert-card .cert-hash {
+    font-family: monospace; font-size: 0.65em; color: #aaa;
+    word-break: break-all; margin-top: 10px; line-height: 1.4;
+  }
+  .cert-card .cert-verify { font-size: 0.78em; color: var(--accent); margin-top: 8px; }
+  .cert-card .cert-verify a { color: var(--accent); }
+  .cert-print-btn {
+    margin-top: 12px; display: inline-block; padding: 9px 22px;
+    background: var(--primary); color: white; border: none; border-radius: 8px;
+    font-size: 0.88em; font-weight: 600; cursor: pointer;
+  }
+  @media print {
+    body > *:not(.cert-modal-backdrop) { display: none !important; }
+    .cert-modal-backdrop { display: flex !important; position: static !important;
+      background: none; padding: 0; }
+    .cert-modal { box-shadow: none; }
+    .cert-print-btn, .btn-cert, .cert-sub, h2 { display: none !important; }
+    .cert-card { display: block !important; border: 2px solid #000; }
+  }
 </style>
 </head>
 <body>
@@ -307,7 +367,32 @@
 
 </div>
 
+<!-- Certificate Modal -->
+<div class="cert-modal-backdrop" id="certBackdrop">
+  <div class="cert-modal">
+    <h2>🎓 Get Your Certificate</h2>
+    <p class="cert-sub">Enter your name to generate a verified completion certificate for this module.</p>
+    <input type="text" id="certName" placeholder="Your full name" maxlength="80" />
+    <button class="btn-cert" id="certBtn" onclick="issueCertificate()">Generate Certificate</button>
+    <div class="cert-card" id="certCard">
+      <div class="cert-award">🏅</div>
+      <h3>Certificate of Completion</h3>
+      <p class="cert-module">Listening as Engineering Communication<br>
+        <span style="font-size:0.9em;color:#718096;">Adapted from Leydens &amp; Lucena (2009), IEEE Trans. Prof. Commun.</span>
+      </p>
+      <p style="color:var(--muted);font-size:0.82em;margin-bottom:4px;">Awarded to</p>
+      <div class="cert-name" id="certDisplayName"></div>
+      <div class="cert-score" id="certDisplayScore"></div>
+      <p style="color:var(--muted);font-size:0.78em;" id="certDisplayDate"></p>
+      <p class="cert-hash" id="certDisplayHash"></p>
+      <p class="cert-verify" id="certVerifyLink"></p>
+      <button class="cert-print-btn" onclick="window.print()">🖨 Print Certificate</button>
+    </div>
+  </div>
+</div>
+
 <script>
+/* ── State ── */
 let currentSection = 0;
 const totalSections = 4;
 let score = 0;
@@ -315,12 +400,42 @@ let answered = {};
 let currentAudio = null;
 let annotationsVisible = false;
 
+/* ── xAPI ── */
+const MODULE_ID = 'https://smartextbook.replit.app/listening-demo.html';
+const MODULE_TITLE = 'Listening as Engineering Communication';
+const SESSION_ID = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+  (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+
+function xapiSend(verb, extra) {
+  const stmt = {
+    actor: { objectType: 'Agent', name: 'Learner', mbox: 'mailto:anonymous@smartextbook' },
+    verb: { id: 'http://adlnet.gov/expapi/verbs/' + verb, display: { 'en-US': verb } },
+    object: {
+      objectType: 'Activity', id: MODULE_ID,
+      definition: { name: { 'en-US': MODULE_TITLE }, type: 'http://adlnet.gov/expapi/activities/module' }
+    },
+    context: {
+      platform: 'SmartTextbook',
+      extensions: { sessionId: SESSION_ID, section: currentSection + 1 }
+    },
+    timestamp: new Date().toISOString(),
+    ...extra
+  };
+  fetch('/api/xapi', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(stmt)
+  }).catch(() => {});
+}
+
+/* ── Annotations ── */
 function toggleAnnotations() {
   annotationsVisible = !annotationsVisible;
   document.body.classList.toggle('annotations-visible', annotationsVisible);
   document.getElementById('annoToggle').classList.toggle('active', annotationsVisible);
 }
 
+/* ── Audio ── */
 function toggleAudio(audioId) {
   const audio = document.getElementById(audioId);
   const btn = audio.previousElementSibling;
@@ -341,6 +456,7 @@ function toggleAudio(audioId) {
   audio.onended = () => { btn.innerHTML = '&#9654;'; currentAudio = null; };
 }
 
+/* ── Navigation ── */
 function navigate(dir) {
   if (currentAudio) { currentAudio.pause(); currentAudio.previousElementSibling.innerHTML = '&#9654;'; currentAudio = null; }
   const sections = document.querySelectorAll('.section');
@@ -349,14 +465,23 @@ function navigate(dir) {
   sections[currentSection].classList.add('active');
   document.getElementById('prevBtn').disabled = currentSection === 0;
   document.getElementById('nextBtn').textContent = currentSection === totalSections - 1 ? 'Finish' : 'Next →';
+  const pct = Math.round((currentSection + 1) / totalSections * 100);
   if (currentSection === totalSections - 1) {
     document.getElementById('nextBtn').disabled = true;
     updateScore();
+    xapiSend('completed', { result: {
+      completion: true,
+      score: { raw: score, max: 3, scaled: score / 3 },
+      success: score >= 2
+    }});
+  } else {
+    xapiSend('progressed', { result: { extensions: { 'https://w3id.org/xapi/cmi5/result/extensions/progress': pct } } });
   }
-  document.getElementById('progressFill').style.width = ((currentSection + 1) / totalSections * 100) + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+/* ── Quiz ── */
 function checkAnswer(el, isCorrect, qId) {
   if (answered[qId]) return;
   answered[qId] = true;
@@ -377,8 +502,17 @@ function checkAnswer(el, isCorrect, qId) {
       if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
     });
   }
+  xapiSend('answered', {
+    result: { success: isCorrect, response: el.textContent.trim().slice(0, 100) },
+    object: {
+      objectType: 'Activity',
+      id: MODULE_ID + '#' + qId,
+      definition: { name: { 'en-US': 'Quiz: ' + qId }, type: 'http://adlnet.gov/expapi/activities/cmi.interaction' }
+    }
+  });
 }
 
+/* ── Score + certificate prompt ── */
 function updateScore() {
   document.getElementById('scoreDisplay').textContent = score + ' / 3';
   const msgs = [
@@ -388,7 +522,68 @@ function updateScore() {
     'Excellent! You demonstrate strong contextual listening awareness.'
   ];
   document.getElementById('scoreMessage').textContent = msgs[score];
+
+  setTimeout(() => {
+    document.getElementById('certBackdrop').classList.add('open');
+  }, 900);
 }
+
+/* ── Certificate generation ── */
+async function issueCertificate() {
+  const nameInput = document.getElementById('certName');
+  const name = nameInput.value.trim();
+  if (!name) { nameInput.focus(); return; }
+
+  const btn = document.getElementById('certBtn');
+  btn.disabled = true;
+  btn.textContent = 'Generating…';
+
+  try {
+    const res = await fetch('/api/demo-cert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        moduleId: 'listening-demo-v1',
+        moduleTitle: MODULE_TITLE,
+        learnerName: name,
+        score: Math.round(score / 3 * 100),
+        rawScore: score,
+        maxScore: 3,
+        sessionId: SESSION_ID
+      })
+    });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || 'Failed');
+
+    document.getElementById('certDisplayName').textContent = name;
+    document.getElementById('certDisplayScore').textContent = `Score: ${score} / 3 (${Math.round(score/3*100)}%)`;
+    document.getElementById('certDisplayDate').textContent =
+      'Issued on ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('certDisplayHash').textContent = 'SHA-256: ' + data.contentHash;
+
+    const verifyUrl = window.location.origin + '/demo-cert/' + data.id;
+    document.getElementById('certVerifyLink').innerHTML =
+      `Verify at: <a href="${verifyUrl}" target="_blank">${verifyUrl}</a>`;
+
+    document.getElementById('certCard').classList.add('show');
+    btn.textContent = '✓ Certificate Issued';
+
+    xapiSend('earned', {
+      result: { success: true, score: { raw: score, max: 3, scaled: score / 3 },
+        extensions: { certId: data.id } }
+    });
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Try Again';
+    alert('Could not issue certificate: ' + e.message);
+  }
+}
+
+/* ── Init: send launched statement ── */
+window.addEventListener('DOMContentLoaded', () => {
+  xapiSend('launched');
+});
 </script>
 </body>
 </html>

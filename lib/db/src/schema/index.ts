@@ -24,3 +24,5 @@ export * from "./courses";
 export * from "./certificates";
 export * from "./users";
 export * from "./email-otps";
+export * from "./xapi-statements";
+export * from "./demo-completions";
