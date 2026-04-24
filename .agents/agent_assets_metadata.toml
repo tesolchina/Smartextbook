@@ -72,3 +72,9 @@ id = "1QHtv2In-RO3KiBiOxUU8"
 uri = "file://docs/hku_scheme/pedagogical-principles.md"
 type = "text"
 title = "What We Believe About AI — 整合 Karamanis 更新版"
+
+[[outputs]]
+id = "J8XLjqYq25yrjoJ8zFwGw"
+uri = "file://projects/IEEE/procomm2026-workshop-paper-FINAL.docx"
+type = "word_document"
+title = "ProComm 2026 Workshop Paper — Camera-ready DOCX"
