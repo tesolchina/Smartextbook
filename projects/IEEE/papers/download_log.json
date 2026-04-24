@@ -1,0 +1,35 @@
+{
+  "10.48550/arxiv.2208.06213": {
+    "status": "ok",
+    "source": "OpenAlex",
+    "file": "sarkar2022programming.pdf",
+    "size_kb": 2625
+  },
+  "10.48550/arxiv.2509.10652": {
+    "status": "ok",
+    "source": "OpenAlex",
+    "file": "abubakar2025vibe.pdf",
+    "size_kb": 1327
+  },
+  "10.48550/arxiv.2506.23253": {
+    "status": "ok",
+    "source": "OpenAlex",
+    "file": "sarkar2025vibecoding2.pdf",
+    "size_kb": 386
+  },
+  "10.1145/3544548.3581388": {
+    "status": "ok",
+    "source": "arXiv-preprint",
+    "file": "subramonyam2023johnny.pdf",
+    "size_kb": 1132
+  },
+  "10.36227/techrxiv.174681482.27435614/v1": {
+    "status": "not-found"
+  },
+  "10.3390/su15031983": {
+    "status": "not-found"
+  },
+  "10.1007/s10639-024-12522-4": {
+    "status": "not-found"
+  }
+}
