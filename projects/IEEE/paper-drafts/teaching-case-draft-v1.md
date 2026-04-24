@@ -316,7 +316,21 @@ Future studies should examine:
 
 [6] J. M. Wing, "Computational Thinking," *Commun. ACM*, vol. 49, no. 3, pp. 33–35, Mar. 2006.
 
-*[Action: Add 8–12 more references covering: learnersourcing, BYOK policy, computational thinking in non-STEM education, ProComm AI research, 3+ teaching cases from IEEE TPC archive]*
+[7] S. S. Subramonyam, J. Seifert, E. Adar, and P. Rao, "Why Johnny Can't Prompt: How Non-AI Experts Try (and Fail) to Design LLM Prompts," in *Proc. ACM CHI Conf. Human Factors in Computing Systems*, Hamburg, Germany, 2023, doi: 10.1145/3544548.3581388.
+
+[8] A. Sarkar, "What is it like to program with artificial intelligence?" arXiv preprint arXiv:2208.06213, 2022.
+
+[9] M. S. Bin Mohamed Salleh, "A Review on Vibe Coding: Fundamentals, State-of-the-art, Challenges and Future Directions," *TechRxiv*, 2025, doi: 10.36227/techrxiv.174681482.27435614/v1.
+
+[10] S. Abubakar et al., "Vibe Coding for Product Design: Understanding Product Team Members' Perceptions of AI-Assisted Development," arXiv preprint arXiv:2509.10652, 2025.
+
+[11] D. Giannakos, K. Jaccheri, and I. Leftheriotis, "Computational Thinking Integrated into the English Language Curriculum in Primary Education," *Educ. Inf. Technol.*, 2024, doi: 10.1007/s10639-024-12522-4.
+
+[12] J. Kim, N. Bhatt, and P. Denny, "Learnersourcing: Student-generated Content @ Scale," in *Proc. ACM CHI Conf. Extended Abstracts*, 2022, doi: 10.1145/3491140.3528286.
+
+[13] Z. Liu et al., "Evaluating the Quality of Student-Generated Content in Learnersourcing: A Large Language Model Approach," *Educ. Inf. Technol.*, 2024, doi: 10.1007/s10639-024-12851-4.
+
+*[Action: Add 2–3 more Teaching Case examples from IEEE TPC archive (search IEEE Xplore for: "teaching case" source:IEEE Transactions on Professional Communication); also add IRB/ethics reference once approved]*
 
 ---
 

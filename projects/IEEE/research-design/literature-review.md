@@ -3,7 +3,24 @@
 **目标期刊**: IEEE Transactions on Professional Communication  
 **相关期刊**: British Journal of Educational Technology, Computers & Education, Journal of Learning Analytics, ACM ICER
 
-*最后更新：2026年4月（通过 OpenAlex + Brave Search 检索）*
+*最后更新：2026年4月24日（通过 OpenAlex API 批量检索，新增 Section 六、七、八）*
+
+---
+
+## 零、论文格式选择备忘
+
+**用户问题**：Teaching Case 还是 Research Article 更好？
+
+| 维度 | Teaching Case（IEEE TPC） | Research Article（IEEE TPC 或其他期刊） |
+|------|--------------------------|----------------------------------------|
+| 数据要求 | 可以 laissez-faire，工作坊观察 + 问卷即可 | 需要 IRB 批准的系统性数据收集 |
+| 分析深度 | 实践反思 + 主题分析 | 统计分析 / 严格质性分析 |
+| 字数 | 约 5000–7000 字 | 约 6000–9000 字 |
+| 编辑反馈 | Craig Baehr 已正面回应 Teaching Case | 需重新查询 |
+| 发表周期 | 约 4 周初审 | 同样约 4 周，但修改轮次更多 |
+| 建议 | ✅ **优先保持 Teaching Case** 投 IEEE TPC（Craig Baehr 邀请） | 可另写一篇 Research Article 投 BJET / C&E |
+
+**结论**：保持 Teaching Case 格式投 Craig Baehr；若要写 Research Article，另开一个新研究设计，目标期刊改为 BJET 或 Computers & Education。
 
 ---
 
@@ -95,10 +112,49 @@ Simon 项目直接对应 ProComm 官方列出的研究优先级：
 
 ---
 
+## 六、自然语言编程 / Vibe Coding（新增 2026年4月）
+
+| 论文 | 期刊/来源 | 年份 | DOI | 核心内容 |
+|------|----------|------|-----|---------|
+| **Why Johnny Can't Prompt: How Non-AI Experts Try (and Fail) to Design LLM Prompts** | CHI 2023 | 2023 | 10.1145/3544548.3581388 | 非 AI 专家设计 LLM prompt 的失败模式——与我们工作坊学生的挑战高度对应 |
+| **What is it like to program with artificial intelligence?** | arXiv | 2022 | 10.48550/arxiv.2208.06213 | 第一视角研究：用 AI 编程的主观体验 |
+| **A Review on Vibe Coding: Fundamentals, State-of-the-art, Challenges and Future Directions** | TechRxiv | 2025 | 10.36227/techrxiv.174681482.27435614/v1 | Vibe coding 综述——我们最重要的理论对话文献 |
+| **Vibe Coding for Product Design: Understanding Product Team Members' Perceptions** | arXiv | 2025 | 10.48550/arxiv.2509.10652 | 非程序员在产品设计中使用 vibe coding 的感知研究——与我们的 case 平行 |
+
+**对我们研究的意义**：
+- "Why Johnny Can't Prompt" 是与我们 Case 直接对话的文献：我们的 PITA 框架是专门解决 non-expert prompt design 失败问题的教学干预
+- Vibe Coding 2025 综述可以作为我们研究背景的核心引用
+
+---
+
+## 七、计算思维与语言教育（新增 2026年4月）
+
+| 论文 | 期刊 | 年份 | DOI | 核心内容 |
+|------|------|------|-----|---------|
+| **Computational thinking integrated into the English language curriculum in primary education** | Education and Information Technologies | 2024 | 10.1007/s10639-024-12522-4 | CT 整合进英语课程的实证研究——验证 CT 与语言学习可以融合 |
+| **FlowPilot: A Generative AI-Driven Visual Language for Computational Thinking Education** | VL/HCC 2024 | 2024 | 10.1109/vl/hcc60511.2024.00046 | 生成式 AI 驱动的可视化编程语言支持 CT 教育 |
+| **Tracking Visual Programming Language-Based Learning Progress for Computational Thinking** | Sustainability | 2023 | 10.3390/su15031983 | 用可视化编程追踪 CT 发展——与 xAPI 追踪学习进度的研究方向呼应 |
+
+---
+
+## 八、Learnersourcing 新文献（新增 2026年4月）
+
+| 论文 | 期刊/来源 | 年份 | DOI | 核心内容 |
+|------|----------|------|-----|---------|
+| **Learnersourcing: Student-generated Content @ Scale** | CHI Workshop 2022 | 2022 | 10.1145/3491140.3528286 | Learnersourcing 规模化研究——最新系统综述 |
+| **Evaluating the quality of student-generated content in learnersourcing: A large language model approach** | Education and Information Technologies | 2024 | 10.1007/s10639-024-12851-4 | 用 LLM 评估 learnersourcing 内容质量——与我们的 AI 评估 + 证书颁发直接相关 |
+| **Assessing the Quality of Student-Generated Short Answer Questions Using GPT-3** | AIED 2022 | 2022 | 10.1007/978-3-031-16290-9_18 | 用 GPT-3 评学生生成题目质量——技术参考 |
+
+**对我们研究的意义**：
+- 2024 年那篇"LLM 评估 learnersourcing 质量"是我们研究的最直接先行工作——我们是用 AI 对话评估学生能力，而不是评题目质量，差异明显，可作为研究对话入口
+
+---
+
 ## 待进一步查找
 
 - [ ] Kim (2015) Learnersourcing — MIT PhD thesis（核心理论）
 - [ ] Shah (2012) Learnersourcing — 概念起源论文
 - [ ] 更多 xAPI + LRS 在 IEEE ILN 或类似平台的实施案例
 - [ ] Automated Essay Scoring (AES) 综述 2023-2024（BJET/CE）
-- [ ] ORCID API 可以做什么？（作者身份验证 + 研究者画像）
+- [ ] Wing (2006) Computational Thinking — *Communications of the ACM*（必引）
+- [ ] Sarkar & Drosos (2025) Vibe coding — arXiv:2506.23253（已在草稿中引用，需确认 DOI）
