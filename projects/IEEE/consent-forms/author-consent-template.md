@@ -18,7 +18,7 @@ I am Simon Wang, a language and AI educator at Hong Kong Baptist University, wri
 I am leading an open-source project to transform IEEE ProComm's professional communication resources into interactive learning experiences — with quizzes, audio narration, and scenario exercises — using AI agents. Your article, **"[Article Title]"** (published [Year]), is among the resources we would like to transform.
 
 A live example of a transformed article can be seen here:  
-https://simon.hkbu.me/aiworkshop/listeningdemo
+https://smartextbook.replit.app/listening-demo.html
 
 **What we are asking**:  
 Your permission to create an interactive HTML version of your article, which would:

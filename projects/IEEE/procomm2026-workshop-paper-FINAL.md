@@ -8,7 +8,7 @@
 
 ## Abstract
 
-The IEEE Professional Communication Society hosts over 127 static articles of significant pedagogical value. This workshop introduces the PITA framework—Parse, Identify, Transform, Augment—a structured, no-code methodology for transforming these articles into interactive learning modules using agentic AI and vibe coding. Participants without programming backgrounds will direct an AI agent through each PITA stage using natural language instructions, producing a complete browser-based interactive lesson within the 75-minute session. A working prototype demonstrating the full workflow is available at https://simon.hkbu.me/aiworkshop/listeningdemo.
+The IEEE Professional Communication Society hosts over 127 static articles of significant pedagogical value. This workshop introduces the PITA framework—Parse, Identify, Transform, Augment—a structured, no-code methodology for transforming these articles into interactive learning modules using agentic AI and vibe coding. Participants without programming backgrounds will direct an AI agent through each PITA stage using natural language instructions, producing a complete browser-based interactive lesson within the 75-minute session. A working prototype demonstrating the full workflow is available at https://smartextbook.replit.app/listening-demo.html.
 
 ---
 

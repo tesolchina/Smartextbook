@@ -123,7 +123,7 @@ By the end of the workshop, participants will be able to:
 
 The workshop builds on a working prototype: an interactive transformation of Ly-dens and Lucena's 2009 IEEE Transactions on Professional Communication article, "Listening as an Engineering Skill" [9].
 
-The prototype, accessible at [https://simon.hkbu.me/aiworkshop/listeningdemo], demonstrates all four PITA stages in a completed artifact:
+The prototype, accessible at [https://smartextbook.replit.app/listening-demo.html], demonstrates all four PITA stages in a completed artifact:
 
 - **Parse**: The original article's five core concepts (basic vs. contextual listening, engineering communication failure modes, listening as a learnable skill) are organized into a four-section navigable structure.
 - **Identify**: Each section includes two to three quiz items targeting Bloom's Apply level—scenario-based questions asking learners to classify real engineering communication situations rather than recall definitions.

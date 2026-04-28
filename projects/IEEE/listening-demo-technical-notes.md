@@ -1,6 +1,6 @@
 # Listening Demo — 技术分析
 
-**URL**: https://simon.hkbu.me/aiworkshop/listeningdemo  
+**URL**: https://smartextbook.replit.app/listening-demo.html  
 **原文**: https://procomm.ieee.org/listening-as-engineering-communication/  
 **状态**: 已完成，是整个项目的样板 (Model Example)
 

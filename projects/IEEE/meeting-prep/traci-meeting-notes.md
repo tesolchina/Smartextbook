@@ -17,7 +17,7 @@
 ## Simon 的三件事要清楚说
 
 ### 1. 已经做了什么
-- 已将一篇文章完整转化为互动页面：[Listening as Engineering Communication](https://simon.hkbu.me/aiworkshop/listeningdemo)
+- 已将一篇文章完整转化为互动页面：[Listening as Engineering Communication](https://smartextbook.replit.app/listening-demo.html)
 - 原文来自 ProComm 网站，由 AI agent 自动处理
 - 包含：分段导航、测验、音频旁白、设计评注、得分追踪
 

@@ -27,7 +27,7 @@
 ---
 
 ## 关键资源
-- 工作坊演示: https://simon.hkbu.me/aiworkshop/listeningdemo
+- 工作坊演示: https://smartextbook.replit.app/listening-demo.html
 - 原文来源: https://procomm.ieee.org/resources-intro/
 - 会议网站: https://attend.ieee.org/procomm-2026/
 - GitHub: https://github.com/tesolchina/genai2026
