@@ -78,3 +78,9 @@ id = "J8XLjqYq25yrjoJ8zFwGw"
 uri = "file://projects/IEEE/procomm2026-workshop-paper-FINAL.docx"
 type = "word_document"
 title = "ProComm 2026 Workshop Paper — Camera-ready DOCX"
+
+[[outputs]]
+id = "or3rfWAxr-A7qcKwHhTEk"
+uri = "file://.local/tasks/reconciliation-proposal.md"
+type = "text"
+title = "SmartTextbook × Listening Demo — Reconciliation Proposal (updated)"
