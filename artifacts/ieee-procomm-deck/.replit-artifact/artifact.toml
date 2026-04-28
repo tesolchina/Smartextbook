@@ -1,0 +1,31 @@
+kind = "slides"
+previewPath = "/ieee-procomm-deck/"
+title = "IEEE ProComm Pitch Deck"
+version = "1.0.0"
+id = "artifacts/ieee-procomm-deck"
+router = "path"
+
+[[integratedSkills]]
+name = "slides"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/ieee-procomm-deck/" ]
+localPort = 19918
+
+[services.development]
+run = "pnpm --filter @workspace/ieee-procomm-deck run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ieee-procomm-deck", "run", "build" ]
+publicDir = "artifacts/ieee-procomm-deck/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19918"
+BASE_PATH = "/ieee-procomm-deck/"

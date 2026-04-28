@@ -1,0 +1,74 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "position": 1,
+    "filepath": "src/pages/slides/Slide1Title.tsx",
+    "title": "Title",
+    "description": "IEEE ProComm Interactive Lesson Platform hero slide with terracotta gradient background and gold accent.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "position": 2,
+    "filepath": "src/pages/slides/Slide2Problem.tsx",
+    "title": "The Problem",
+    "description": "Teaching Cases are published as PDFs with no pathway to interactive learner experience.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+    "position": 3,
+    "filepath": "src/pages/slides/Slide3Platform.tsx",
+    "title": "The Platform",
+    "description": "One-paragraph overview: authoring environment, learner delivery, and xAPI compliance built on SmartTextbook.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
+    "position": 4,
+    "filepath": "src/pages/slides/Slide4Roles.tsx",
+    "title": "Three Roles",
+    "description": "Three-column layout covering Volunteer Author, Learner, and Administrator roles.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "e5f6a7b8-c9d0-1234-efab-345678901234",
+    "position": 5,
+    "filepath": "src/pages/slides/Slide5ModuleStructure.tsx",
+    "title": "Modular Lesson Structure",
+    "description": "Eight lesson modules mapped to xAPI Activity Types in a split-panel layout.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "f6a7b8c9-d0e1-2345-fabc-456789012345",
+    "position": 6,
+    "filepath": "src/pages/slides/Slide6Workflow.tsx",
+    "title": "Volunteer Workflow",
+    "description": "Horizontal flow from article upload through auto-parse, AI draft, author edits, submit, admin review, to published.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a7b8c9d0-e1f2-3456-abcd-567890123456",
+    "position": 7,
+    "filepath": "src/pages/slides/Slide7PhasedDelivery.tsx",
+    "title": "Phased Delivery",
+    "description": "Three-phase roadmap: Proof of Concept (4-6 wks), Volunteer Platform (6-8 wks), Ecosystem Integration (ongoing).",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b8c9d0e1-f2a3-4567-bcde-678901234567",
+    "position": 8,
+    "filepath": "src/pages/slides/Slide8Research.tsx",
+    "title": "Research Study",
+    "description": "Three research questions covering learning effectiveness, authoring experience, and xAPI trace analysis.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c9d0e1f2-a3b4-5678-cdef-789012345678",
+    "position": 9,
+    "filepath": "src/pages/slides/Slide9LiveDemo.tsx",
+    "title": "Live Demo",
+    "description": "Closing slide with terracotta background, Try It Now heading, and clickable live demo link.",
+    "speakerNotes": ""
+  }
+]
