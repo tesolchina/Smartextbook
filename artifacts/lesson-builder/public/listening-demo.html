@@ -184,7 +184,7 @@
   <h2>1. Why Listening Matters in Engineering</h2>
   <div class="audio-player" data-testid="audio-player-section1">
     <button class="play-btn" onclick="toggleAudio('audio1')" data-testid="play-btn-section1">&#9654;</button>
-    <audio id="audio1" src="https://simon.hkbu.me/aiworkshop/listeningdemo/audio/section1.mp3" preload="none"></audio>
+    <span id="audio1" class="tts-script" hidden>Welcome to this interactive lesson on listening as an engineering skill. Engineering is often thought of as a discipline built on hard facts, calculations, and technical precision. But there's a softer skill that's just as critical — one that's rarely formally taught: the ability to listen. Researchers Jon Ly-dens and Juan Lucena, in their landmark 2009 paper in IEEE Transactions on Professional Communication, found that despite listening being explicitly identified as a key attribute by major engineering bodies, it almost never appears in formal engineering curricula. Think about that. We train engineers to calculate, design, and build. But we rarely train them to hear what their stakeholders are actually saying. The key insight: "The skill of listening is crucial to understanding engineering problems, which is the first step to doing engineering right." Let's see what this looks like in practice.</span>
     <span class="audio-label">Listen to narration</span>
   </div>
   <div class="annotation" data-testid="annotation-audio">
@@ -232,7 +232,7 @@
   <h2>2. Two Types of Listening</h2>
   <div class="audio-player" data-testid="audio-player-section2">
     <button class="play-btn" onclick="toggleAudio('audio2')" data-testid="play-btn-section2">&#9654;</button>
-    <audio id="audio2" src="https://simon.hkbu.me/aiworkshop/listeningdemo/audio/section2.mp3" preload="none"></audio>
+    <span id="audio2" class="tts-script" hidden>Ly-dens and Lucena draw a critical distinction between two types of listening: basic listening and contextual listening. Basic listening means hearing the literal content of what someone says. You receive the words, you process the request, and you respond to exactly what was asked — no more, no less. Contextual listening goes deeper. It means understanding not just what is said, but why it's being said — the historical, cultural, political, and social forces that shape what stakeholders actually need. Here's why this matters. Think about the PlayPump project in sub-Saharan Africa. Well-meaning engineers heard the basic need: communities needed access to water. So they designed a brilliant solution — a merry-go-round that would pump water while children played. But they failed to listen contextually. They didn't hear that children don't play for nearly enough hours to produce sufficient water. The result? PlayPumps were abandoned or replaced by the hand pumps they had replaced. A well-intentioned project failed because engineers listened basically, not contextually. According to Ly-dens and Lucena, contextual listening helps engineers collaborate more effectively with communities, design solutions that actually fit real needs, and build trust with the people they serve.</span>
     <span class="audio-label">Listen to narration</span>
   </div>
   <p>Leydens and Lucena make a critical distinction between <strong>basic</strong> and <strong>contextual</strong> listening:</p>
@@ -296,7 +296,7 @@
   <h2>3. Applying Contextual Listening</h2>
   <div class="audio-player" data-testid="audio-player-section3">
     <button class="play-btn" onclick="toggleAudio('audio3')" data-testid="play-btn-section3">&#9654;</button>
-    <audio id="audio3" src="https://simon.hkbu.me/aiworkshop/listeningdemo/audio/section3.mp3" preload="none"></audio>
+    <span id="audio3" class="tts-script" hidden>So how do you apply contextual listening in your own engineering work? Ly-dens and Lucena suggest thinking of listening not as a passive act, but as an active, investigative skill. Here are the key practices. First — listen for what is not said. Stakeholders often can't articulate their deepest needs directly. Pay attention to hesitations, omissions, and what gets redirected. Second — listen across difference. Power, culture, and language create asymmetries in how people communicate. Make space for voices that are less likely to be heard. Third — listen iteratively. Don't assume you understood correctly on the first pass. Return to stakeholders with your interpretation and check whether you got it right. Fourth — document what you hear. Engineering culture values quantitative data. Make qualitative listening data visible by writing it down and incorporating it into your design process. The bottom line: contextual listening is a learnable skill. And like any engineering skill, it improves with deliberate practice. Now let's check your understanding.</span>
     <span class="audio-label">Listen to narration</span>
   </div>
   <div class="scenario">
@@ -339,7 +339,7 @@
   <h2>Your Results</h2>
   <div class="audio-player" style="justify-content:center;" data-testid="audio-player-results">
     <button class="play-btn" onclick="toggleAudio('audio4')" data-testid="play-btn-results">&#9654;</button>
-    <audio id="audio4" src="audio/results.mp3" preload="none"></audio>
+    <span id="audio4" class="tts-script" hidden>Well done for completing this lesson on listening as an engineering skill. You've explored why listening matters in engineering communication, the distinction between basic and contextual listening, and practical strategies for applying contextual listening in professional settings. The key takeaway from Ly-dens and Lucena is this: engineers who listen contextually — who go beyond the literal words to understand the deeper needs of communities and stakeholders — produce better solutions and build stronger professional relationships. Listening isn't a soft skill. It's a professional communication competency that can be learned, practised, and improved. Thank you for engaging with this material.</span>
     <span class="audio-label">Listen to summary</span>
   </div>
   <div class="score-display" id="scoreDisplay">0 / 3</div>
@@ -397,7 +397,6 @@ let currentSection = 0;
 const totalSections = 4;
 let score = 0;
 let answered = {};
-let currentAudio = null;
 let annotationsVisible = false;
 
 /* ── xAPI ── */
@@ -435,30 +434,59 @@ function toggleAnnotations() {
   document.getElementById('annoToggle').classList.toggle('active', annotationsVisible);
 }
 
-/* ── Audio ── */
+/* ── Audio (Web Speech API TTS) ── */
+let currentUtterance = null;
+let currentPlayBtn = null;
+
 function toggleAudio(audioId) {
-  const audio = document.getElementById(audioId);
-  const btn = audio.previousElementSibling;
-  if (currentAudio && currentAudio !== audio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
-    currentAudio.previousElementSibling.innerHTML = '&#9654;';
+  const scriptEl = document.getElementById(audioId);
+  const btn = scriptEl.previousElementSibling;
+  const text = scriptEl.textContent.trim();
+
+  // If something is already playing, stop it
+  if (currentUtterance) {
+    window.speechSynthesis.cancel();
+    if (currentPlayBtn) currentPlayBtn.innerHTML = '&#9654;';
+    // If we clicked the same button, just stop
+    if (currentPlayBtn === btn) {
+      currentUtterance = null;
+      currentPlayBtn = null;
+      return;
+    }
   }
-  if (audio.paused) {
-    audio.play();
-    btn.innerHTML = '&#9646;&#9646;';
-    currentAudio = audio;
-  } else {
-    audio.pause();
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.95;
+  utter.pitch = 1;
+  utter.lang = 'en-US';
+
+  // Prefer a natural-sounding voice if available
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v =>
+    v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Natural'))
+  ) || voices.find(v => v.lang.startsWith('en'));
+  if (preferred) utter.voice = preferred;
+
+  utter.onend = () => {
     btn.innerHTML = '&#9654;';
-    currentAudio = null;
-  }
-  audio.onended = () => { btn.innerHTML = '&#9654;'; currentAudio = null; };
+    currentUtterance = null;
+    currentPlayBtn = null;
+  };
+  utter.onerror = () => {
+    btn.innerHTML = '&#9654;';
+    currentUtterance = null;
+    currentPlayBtn = null;
+  };
+
+  window.speechSynthesis.speak(utter);
+  btn.innerHTML = '&#9646;&#9646;';
+  currentUtterance = utter;
+  currentPlayBtn = btn;
 }
 
 /* ── Navigation ── */
 function navigate(dir) {
-  if (currentAudio) { currentAudio.pause(); currentAudio.previousElementSibling.innerHTML = '&#9654;'; currentAudio = null; }
+  if (currentUtterance) { window.speechSynthesis.cancel(); if (currentPlayBtn) currentPlayBtn.innerHTML = '&#9654;'; currentUtterance = null; currentPlayBtn = null; }
   const sections = document.querySelectorAll('.section');
   sections[currentSection].classList.remove('active');
   currentSection += dir;
