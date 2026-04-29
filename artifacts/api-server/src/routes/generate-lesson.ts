@@ -3,6 +3,22 @@ import { GenerateLessonBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
 import { jsonrepair } from "jsonrepair";
 import { logger } from "../lib/logger";
+import OpenAI from "openai";
+
+/** Build an OpenAI-compatible client pointed at the server-side AI proxy for IEEE2026 access. */
+function createIEEEClient(): { client: OpenAI; model: string } {
+  const deepseekKey = process.env.DEEPSEEK_API_KEY;
+  if (deepseekKey) {
+    return {
+      client: new OpenAI({ apiKey: deepseekKey, baseURL: "https://api.deepseek.com/v1" }),
+      model: "deepseek-chat",
+    };
+  }
+  const baseURL = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
+  const apiKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
+  if (!baseURL || !apiKey) throw new Error("Server-side AI proxy not configured.");
+  return { client: new OpenAI({ apiKey, baseURL }), model: "gpt-4.1" };
+}
 
 const router: IRouter = Router();
 
@@ -241,13 +257,15 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
     ? buildLanguagePrompt(title, chapterText, prefs, teachingPrompt)
     : buildGeneralPrompt(title, chapterText, prefs, teachingPrompt);
 
+  const isIEEECode = llmConfig.apiKey.trim() === "IEEE2026";
+
   logger.info(
-    { provider: llmConfig.provider, model: llmConfig.model, hasKey: Boolean(llmConfig.apiKey), prefs },
+    { provider: isIEEECode ? "ieee2026-proxy" : llmConfig.provider, model: llmConfig.model, hasKey: Boolean(llmConfig.apiKey), prefs },
     "generate-lesson: starting AI call"
   );
 
   try {
-    const { client, model } = createLLMClient(llmConfig);
+    const { client, model } = isIEEECode ? createIEEEClient() : createLLMClient(llmConfig);
     const response = await client.chat.completions.create({
       model,
       messages: [{ role: "user", content: prompt }],

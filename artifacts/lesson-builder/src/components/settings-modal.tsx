@@ -241,6 +241,24 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
                   {currentProvider?.keyHint && (
                     <p className="text-xs text-muted-foreground mt-1">{currentProvider.keyHint}</p>
                   )}
+                  {apiKey.trim() !== "IEEE2026" && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">Workshop participant?</span>
+                      <button
+                        type="button"
+                        onClick={() => { setApiKey("IEEE2026"); setTestStatus("idle"); setTestMessage(""); }}
+                        className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors border border-primary/20"
+                      >
+                        Use IEEE2026
+                      </button>
+                    </div>
+                  )}
+                  {apiKey.trim() === "IEEE2026" && (
+                    <div className="mt-2 flex items-center gap-2 px-3 py-2 rounded-xl bg-green-500/10 border border-green-500/20 text-green-700 dark:text-green-400 text-xs">
+                      <CheckCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>IEEE2026 access code — AI compute provided server-side. No personal API key needed.</span>
+                    </div>
+                  )}
                 </div>
 
                 {provider === "poe" && (
@@ -331,8 +349,12 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
                 </div>
 
                 <div className="p-3 rounded-xl bg-secondary/60 border border-border/50 text-xs text-muted-foreground leading-relaxed">
-                  <strong className="text-foreground">Privacy:</strong> Your API key is stored only in your browser&apos;s local storage. It is sent directly to{" "}
-                  {currentProvider ? <strong className="text-foreground">{currentProvider.name}</strong> : "your chosen provider"} and never to our servers.
+                  {apiKey.trim() === "IEEE2026" ? (
+                    <><strong className="text-foreground">Privacy:</strong> The IEEE2026 code is stored in your browser only. AI requests are processed server-side — no personal credentials are required or stored.</>
+                  ) : (
+                    <><strong className="text-foreground">Privacy:</strong> Your API key is stored only in your browser&apos;s local storage. It is sent directly to{" "}
+                    {currentProvider ? <strong className="text-foreground">{currentProvider.name}</strong> : "your chosen provider"} and never to our servers.</>
+                  )}
                 </div>
               </div>
             </div>
