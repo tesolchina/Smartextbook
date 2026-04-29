@@ -12,7 +12,6 @@ export default function Slide1Title() {
           background: "radial-gradient(ellipse at 80% 20%, rgba(212,160,32,0.15) 0%, transparent 60%)",
         }}
       />
-
       <div
         className="absolute"
         style={{
@@ -24,30 +23,30 @@ export default function Slide1Title() {
         }}
       />
 
-      <div className="absolute" style={{ left: "7vw", top: "12vh", right: "8vw" }}>
+      <div className="absolute" style={{ left: "7vw", top: "11vh", right: "8vw" }}>
         <div
           style={{
             fontFamily: "var(--font-body-family)",
-            fontSize: "1.5vw",
+            fontSize: "1.3vw",
             fontWeight: 600,
-            color: "rgba(245,232,192,0.85)",
-            letterSpacing: "0.2em",
+            color: "rgba(245,232,192,0.75)",
+            letterSpacing: "0.22em",
             textTransform: "uppercase",
-            marginBottom: "3vh",
+            marginBottom: "2vh",
           }}
         >
-          IEEE Transactions on Professional Communication
+          Project Update · May 2026
         </div>
 
         <div
           style={{
             fontFamily: "var(--font-display-family)",
-            fontSize: "5.5vw",
+            fontSize: "5.2vw",
             fontWeight: 900,
             color: "#faf8f5",
             lineHeight: 1.08,
             textWrap: "balance",
-            marginBottom: "3vh",
+            marginBottom: "2.5vh",
           }}
         >
           IEEE ProComm
@@ -63,7 +62,7 @@ export default function Slide1Title() {
             height: "0.4vh",
             background: "linear-gradient(to right, #d4a020, #f5e8c0)",
             borderRadius: "9999px",
-            marginBottom: "3.5vh",
+            marginBottom: "3vh",
           }}
         />
 
@@ -71,55 +70,82 @@ export default function Slide1Title() {
           style={{
             fontFamily: "var(--font-display-family)",
             fontStyle: "italic",
-            fontSize: "2.2vw",
+            fontSize: "2.1vw",
             fontWeight: 700,
             color: "rgba(245,232,192,0.9)",
-            textWrap: "balance",
-            marginBottom: "6vh",
+            marginBottom: "5vh",
           }}
         >
-          From Teaching Case to Interactive Self-Study Lesson
+          Turning ProComm articles into interactive self-study lessons
         </div>
 
-        <div
-          style={{
-            fontFamily: "var(--font-body-family)",
-            fontSize: "1.6vw",
-            fontWeight: 400,
-            color: "rgba(250,248,245,0.7)",
-          }}
-        >
-          A platform for volunteer authors, learners, and administrators
+        <div style={{ display: "flex", gap: "4vw", alignItems: "flex-start" }}>
+          <div>
+            <div
+              style={{
+                fontFamily: "var(--font-body-family)",
+                fontSize: "1.4vw",
+                fontWeight: 700,
+                color: "#d4a020",
+              }}
+            >
+              Traci Nathans-Kelly
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-body-family)",
+                fontSize: "1.2vw",
+                color: "rgba(250,248,245,0.6)",
+              }}
+            >
+              VP Content, IEEE ProComm · Cornell
+            </div>
+          </div>
+          <div
+            style={{
+              width: "0.2vw",
+              height: "4vh",
+              background: "rgba(212,160,32,0.3)",
+              marginTop: "0.3vh",
+            }}
+          />
+          <div>
+            <div
+              style={{
+                fontFamily: "var(--font-body-family)",
+                fontSize: "1.4vw",
+                fontWeight: 700,
+                color: "#d4a020",
+              }}
+            >
+              Dr Simon Wang
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-body-family)",
+                fontSize: "1.2vw",
+                color: "rgba(250,248,245,0.6)",
+              }}
+            >
+              Language Centre, HKBU
+            </div>
+          </div>
         </div>
       </div>
 
       <div
         className="absolute"
-        style={{
-          right: "7vw",
-          bottom: "6vh",
-          textAlign: "right",
-        }}
+        style={{ right: "7vw", bottom: "6vh", textAlign: "right" }}
       >
         <div
           style={{
             fontFamily: "var(--font-body-family)",
-            fontSize: "1.5vw",
+            fontSize: "1.2vw",
             fontWeight: 600,
-            color: "rgba(212,160,32,0.8)",
+            color: "rgba(212,160,32,0.7)",
           }}
         >
-          SmartTextbook
-        </div>
-        <div
-          style={{
-            fontFamily: "var(--font-body-family)",
-            fontSize: "1.5vw",
-            fontWeight: 400,
-            color: "rgba(250,248,245,0.5)",
-          }}
-        >
-          2026
+          Open Source · BYOK · xAPI
         </div>
       </div>
     </div>

@@ -4,71 +4,71 @@
     "position": 1,
     "filepath": "src/pages/slides/Slide1Title.tsx",
     "title": "Title",
-    "description": "IEEE ProComm Interactive Lesson Platform hero slide with terracotta gradient background and gold accent.",
-    "speakerNotes": ""
+    "description": "Project update cover slide — May 2026, Traci Nathans-Kelly and Dr Simon Wang, terracotta gradient.",
+    "speakerNotes": "Welcome Traci and collaborators. This is a snapshot of where we are — everything covered here either already exists or is one step from being done."
   },
   {
     "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
     "position": 2,
-    "filepath": "src/pages/slides/Slide2Problem.tsx",
-    "title": "The Problem",
-    "description": "Teaching Cases are published as PDFs with no pathway to interactive learner experience.",
-    "speakerNotes": ""
+    "filepath": "src/pages/slides/Slide2Progress.tsx",
+    "title": "Where We Are",
+    "description": "Four completed deliverables: Listening Demo, Content Library, Authors Found, Permission Letter Template.",
+    "speakerNotes": "These four things are already done — not planned, done. The listening demo is live, all 127 articles are catalogued, and the permission letter is ready to send the moment you're happy with it."
   },
   {
     "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
     "position": 3,
-    "filepath": "src/pages/slides/Slide3Platform.tsx",
-    "title": "The Platform",
-    "description": "One-paragraph overview: authoring environment, learner delivery, and xAPI compliance built on SmartTextbook.",
-    "speakerNotes": ""
+    "filepath": "src/pages/slides/Slide3Demo.tsx",
+    "title": "Live Demo",
+    "description": "The learner experience — AI-narrated audio, comprehension check, xAPI tracking, PDF certificate.",
+    "speakerNotes": "Let me show you the demo. A learner clicks play, listens to the AI-narrated overview, answers a few comprehension questions, and receives a certificate. Every step is recorded in xAPI."
   },
   {
     "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
     "position": 4,
-    "filepath": "src/pages/slides/Slide4Roles.tsx",
-    "title": "Three Roles",
-    "description": "Three-column layout covering Volunteer Author, Learner, and Administrator roles.",
-    "speakerNotes": ""
+    "filepath": "src/pages/slides/Slide4ContentLibrary.tsx",
+    "title": "Content Library",
+    "description": "127 ProComm resources classified — 65 Articles, 44 Resource Links, 9 Podcasts. Top authors by article count.",
+    "speakerNotes": "We went through every single article on the ProComm resources page — all 127. 65 are full articles suitable for conversion into lessons. And the top six authors account for about half the content."
   },
   {
     "id": "e5f6a7b8-c9d0-1234-efab-345678901234",
     "position": 5,
-    "filepath": "src/pages/slides/Slide5ModuleStructure.tsx",
-    "title": "Modular Lesson Structure",
-    "description": "Eight lesson modules mapped to xAPI Activity Types in a split-panel layout.",
-    "speakerNotes": ""
+    "filepath": "src/pages/slides/Slide5Outreach.tsx",
+    "title": "Author Outreach",
+    "description": "Permission letter plan — Traci as sender, 14 confirmed emails, attribution terms, trust signal.",
+    "speakerNotes": "The key insight here is that the letters come from you as IEEE ProComm VP Content — not from a researcher at HKBU. That trust signal is huge. We've already confirmed 14 email addresses."
   },
   {
     "id": "f6a7b8c9-d0e1-2345-fabc-456789012345",
     "position": 6,
-    "filepath": "src/pages/slides/Slide6Workflow.tsx",
-    "title": "Volunteer Workflow",
-    "description": "Horizontal flow from article upload through auto-parse, AI draft, author edits, submit, admin review, to published.",
-    "speakerNotes": ""
+    "filepath": "src/pages/slides/Slide6Research.tsx",
+    "title": "Research Study",
+    "description": "Three research questions — comprehension, engagement, xAPI learning analytics. Traci's suggestion.",
+    "speakerNotes": "This study design comes directly from Traci's suggestion. Three clean research questions that fit naturally into what the platform already produces — no extra instrumentation needed beyond what xAPI gives us."
   },
   {
     "id": "a7b8c9d0-e1f2-3456-abcd-567890123456",
     "position": 7,
-    "filepath": "src/pages/slides/Slide7PhasedDelivery.tsx",
-    "title": "Phased Delivery",
-    "description": "Three-phase roadmap: Proof of Concept (4-6 wks), Volunteer Platform (6-8 wks), Ecosystem Integration (ongoing).",
-    "speakerNotes": ""
+    "filepath": "src/pages/slides/Slide7Publications.tsx",
+    "title": "Publication Pipeline",
+    "description": "Three outputs — ProComm 2026 workshop paper (done), TPC Teaching Case (June), companion empirical study (proposed).",
+    "speakerNotes": "One platform, three publications. The workshop paper is already submitted. The Teaching Case is in preparation for June. The empirical study is the one we'd co-author together."
   },
   {
     "id": "b8c9d0e1-f2a3-4567-bcde-678901234567",
     "position": 8,
-    "filepath": "src/pages/slides/Slide8Research.tsx",
-    "title": "Research Study",
-    "description": "Three research questions covering learning effectiveness, authoring experience, and xAPI trace analysis.",
-    "speakerNotes": ""
+    "filepath": "src/pages/slides/Slide8Timeline.tsx",
+    "title": "Timeline",
+    "description": "April–Fall 2026 milestones — paper done, outreach in May, Teaching Case in June, ProComm Edmonton July 12–15.",
+    "speakerNotes": "The camera-ready deadline was April 30 — that's already done. The most pressing next step is the outreach in May, which is why we're meeting now."
   },
   {
     "id": "c9d0e1f2-a3b4-5678-cdef-789012345678",
     "position": 9,
-    "filepath": "src/pages/slides/Slide9LiveDemo.tsx",
-    "title": "Live Demo",
-    "description": "Closing slide with terracotta background, Try It Now heading, and clickable live demo link.",
-    "speakerNotes": ""
+    "filepath": "src/pages/slides/Slide9NextSteps.tsx",
+    "title": "Next Steps",
+    "description": "Five asks from Traci — send permissions, LinkedIn outreach, research proposal, Alan Chong intro, Edmonton presentation.",
+    "speakerNotes": "Five concrete asks. Most of them are quick — reviewing and sending emails you've already reviewed once. The bigger commitment is co-authoring the research study, which I'd love to discuss today."
   }
 ]
