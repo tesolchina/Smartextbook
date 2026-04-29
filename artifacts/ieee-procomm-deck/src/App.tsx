@@ -125,7 +125,7 @@ function SlideEditor() {
   }, [currentIndex, navigate]);
 
   return (
-    <div className="select-none">
+    <div className="select-none" style={{ position: "relative" }}>
       {slides.map((slide, index) => (
         <div
           key={slide.id}
@@ -134,6 +134,30 @@ function SlideEditor() {
           <slide.Component />
         </div>
       ))}
+      {/* Slide number pill — sits above every slide, never interferes with layout */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: "2.2vh",
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "rgba(0,0,0,0.42)",
+          color: "rgba(255,255,255,0.72)",
+          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontSize: "1vw",
+          fontWeight: 700,
+          padding: "0.45vh 1.4vw",
+          borderRadius: "9999px",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          pointerEvents: "none",
+          zIndex: 9999,
+          letterSpacing: "0.12em",
+          userSelect: "none",
+        }}
+      >
+        {currentIndex + 1} / {slides.length}
+      </div>
     </div>
   );
 }

@@ -130,12 +130,15 @@ export default function Slide3Demo() {
             ))}
           </div>
 
-          <div
+          <a
+            href="/listening-demo.html"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               flexShrink: 0,
               width: "34vw",
               background: "rgba(250,248,245,0.05)",
-              border: "1px solid rgba(212,160,32,0.2)",
+              border: "1px solid rgba(212,160,32,0.35)",
               borderRadius: "1vw",
               display: "flex",
               flexDirection: "column",
@@ -143,6 +146,9 @@ export default function Slide3Demo() {
               justifyContent: "center",
               padding: "3vh 2vw",
               gap: "2vh",
+              textDecoration: "none",
+              cursor: "pointer",
+              transition: "background 0.2s",
             }}
           >
             <div
@@ -164,26 +170,25 @@ export default function Slide3Demo() {
             <div
               style={{
                 fontFamily: "var(--font-body-family)",
-                fontSize: "1.3vw",
-                fontWeight: 600,
-                color: "rgba(245,232,192,0.8)",
+                fontSize: "1.4vw",
+                fontWeight: 700,
+                color: "#d4a020",
                 textAlign: "center",
               }}
             >
-              Listening Demo
+              Open Listening Demo →
             </div>
             <div
               style={{
                 fontFamily: "var(--font-body-family)",
-                fontSize: "1.1vw",
-                color: "rgba(245,232,192,0.5)",
+                fontSize: "1vw",
+                color: "rgba(245,232,192,0.45)",
                 textAlign: "center",
-                wordBreak: "break-all",
               }}
             >
-              /lesson-builder
+              /listening-demo.html
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
