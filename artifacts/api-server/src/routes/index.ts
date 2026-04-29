@@ -15,6 +15,7 @@ import authRouter from "./auth";
 import xapiRouter from "./xapi";
 import demoCompletionsRouter from "./demo-completions";
 import aiTutorRouter from "./ai-tutor";
+import ieeeRouter from "./ieee";
 
 const router: IRouter = Router();
 
@@ -34,5 +35,6 @@ router.use("/certificates", certificatesRouter);
 router.use(xapiRouter);
 router.use(demoCompletionsRouter);
 router.use(aiTutorRouter);
+router.use(ieeeRouter);
 
 export default router;

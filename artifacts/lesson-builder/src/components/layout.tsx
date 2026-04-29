@@ -27,6 +27,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Link href="/app" className="hidden sm:inline text-sm font-semibold text-muted-foreground hover:text-primary transition-colors outline-none focus-visible:text-primary">
               My Lessons
             </Link>
+            <Link href="/ieee" className="hidden md:inline text-sm font-semibold text-muted-foreground hover:text-primary transition-colors outline-none focus-visible:text-primary">
+              IEEE ProComm
+            </Link>
             <Link href="/credits" className="hidden md:inline text-sm font-semibold text-muted-foreground hover:text-primary transition-colors outline-none focus-visible:text-primary">
               Credits
             </Link>

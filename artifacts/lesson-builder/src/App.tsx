@@ -16,6 +16,13 @@ import CertLookup from "@/pages/cert-lookup";
 import Credits from "@/pages/credits";
 import TalkPage from "@/pages/talk";
 import NotFound from "@/pages/not-found";
+import IeeeLanding from "@/pages/ieee/landing";
+import IeeeCatalog from "@/pages/ieee/catalog";
+import IeeeLesson from "@/pages/ieee/lesson";
+import IeeeAuthor from "@/pages/ieee/author";
+import IeeeAuthorNew from "@/pages/ieee/author-new";
+import IeeeAdmin from "@/pages/ieee/admin";
+import IeeeAuthorEdit from "@/pages/ieee/author-edit";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +48,13 @@ function Router() {
       <Route path="/credits" component={Credits} />
       <Route path="/talk" component={TalkPage} />
       <Route path="/talk15Apr" component={TalkPage} />
+      <Route path="/ieee" component={IeeeLanding} />
+      <Route path="/ieee/catalog" component={IeeeCatalog} />
+      <Route path="/ieee/lesson/:id" component={IeeeLesson} />
+      <Route path="/ieee/author" component={IeeeAuthor} />
+      <Route path="/ieee/author/new" component={IeeeAuthorNew} />
+      <Route path="/ieee/author/edit/:id" component={IeeeAuthorEdit} />
+      <Route path="/ieee/admin" component={IeeeAdmin} />
       <Route component={NotFound} />
     </Switch>
   );

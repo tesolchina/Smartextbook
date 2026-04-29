@@ -98,6 +98,15 @@ Supported: OpenAI, Google Gemini, DeepSeek ✓ HK, OpenRouter, Groq, Mistral, To
 - `POST /api/share` — Store lesson in DB
 - `GET /api/shared/:id` — Retrieve shared lesson
 - `GET/POST /api/shared/:id/comments` — Comments on shared lessons
+- `POST /api/ieee/parse-teaching-case` — AI-parse article into IEEE Teaching Case sections
+- `POST /api/ieee/generate-lesson` — Generate interactive lesson from Teaching Case
+- `GET /api/ieee/catalog` — Public catalog of approved lessons
+- `POST /api/ieee/submissions` — Create draft submission (auth required)
+- `POST /api/ieee/submissions/:id/submit` — Submit draft for review (auth required)
+- `POST /api/ieee/submissions/:id/resubmit` — Resubmit rejected submission (auth required)
+- `GET /api/ieee/submissions/:id` — Get submission detail (admin/owner/approved)
+- `GET /api/ieee/submissions` — List submissions (admin sees all, author sees own)
+- `PATCH /api/ieee/submissions/:id` — Update submission (admin: any field; author: draft/rejected only)
 
 ## Frontend Routes (Lesson Builder)
 
@@ -109,6 +118,15 @@ Supported: OpenAI, Google Gemini, DeepSeek ✓ HK, OpenRouter, Groq, Mistral, To
 - `/listening-demo.html` — IEEE ProComm Demo 1 (Leydens & Lucena 2009)
 - `/style-congruency-demo.html` — IEEE ProComm Demo 2 (Hendriks et al. 2012)
 - `/procomm2026.html` — IEEE ProComm 2026 workshop page
+
+### IEEE ProComm Platform Routes
+- `/ieee` — Platform landing page explaining the IEEE Teaching Case → Interactive Lesson workflow
+- `/ieee/catalog` — Public catalog of approved IEEE ProComm lessons (searchable, filterable by topic/Bloom's level/year)
+- `/ieee/lesson/:id` — Modular learner experience: Introduction → Case Narrative → Key Concepts → Knowledge Check → Reflection → AI Tutor → Summary, with full xAPI statement emission
+- `/ieee/author` — Volunteer author dashboard (shows submissions by email with status tracking)
+- `/ieee/author/new` — 3-step submission wizard: upload article → parse IEEE Teaching Case sections → generate lesson → review & submit for review
+- `/ieee/author/edit/:id` — Edit rejected submission and resubmit for review
+- `/ieee/admin` — Admin review queue (key-protected): lists all submissions, inline content preview, approve/reject with notes
 
 ## IEEE ProComm Pitch Deck
 
@@ -124,6 +142,10 @@ Supported: OpenAI, Google Gemini, DeepSeek ✓ HK, OpenRouter, Groq, Mistral, To
 - Slide 9: IEEE Learning Network context
 - Slide 10: Next Steps
 - Slides 11–12: Additional context
+
+### Credits & Inspiration
+- `/credits` route — shows Google Research's "Learn Your Way" and LearnLM as primary inspiration, learning science foundations (Dual Coding Theory, Active Recall), and 8 related open-source GitHub projects
+- Landing page credits: **Dr. Simon Wang**, Lecturer in English & Innovation Officer, The Language Centre, Hong Kong Baptist University. GitHub: https://github.com/tesolchina/Smartextbook · Replit: https://replit.com/@SimonWang23/Smartextbook?v=1
 
 ## Development Commands
 

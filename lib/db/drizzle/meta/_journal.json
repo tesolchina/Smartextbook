@@ -36,6 +36,13 @@
       "when": 1776168218593,
       "tag": "0004_famous_zodiak",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777392784575,
+      "tag": "0005_ieee_submissions",
+      "breakpoints": true
     }
   ]
 }

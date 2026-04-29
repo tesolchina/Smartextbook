@@ -26,3 +26,4 @@ export * from "./users";
 export * from "./email-otps";
 export * from "./xapi-statements";
 export * from "./demo-completions";
+export * from "./ieee-submissions";
