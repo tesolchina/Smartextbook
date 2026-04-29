@@ -79,6 +79,9 @@
   .cert-modal .cert-sub{color:var(--muted);font-size:.85em;margin-bottom:18px;}
   .cert-modal input[type="text"]{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:1em;margin-bottom:12px;}
   .cert-modal input:focus{outline:none;border-color:var(--accent);}
+  .cert-close-btn{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.3em;color:#94a3b8;cursor:pointer;line-height:1;border-radius:6px;padding:2px 6px;}
+  .cert-close-btn:hover{color:#4a5568;background:#f7fafc;}
+  .cert-modal{position:relative;}
   .btn-cert{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:1em;font-weight:600;cursor:pointer;}
   .btn-cert:hover{background:var(--primary);}
   .btn-cert:disabled{opacity:.5;cursor:not-allowed;}
@@ -326,8 +329,9 @@
 </div><!-- /container -->
 
 <!-- ── Certificate Modal ── -->
-<div class="cert-modal-backdrop" id="certBackdrop">
-  <div class="cert-modal">
+<div class="cert-modal-backdrop" id="certBackdrop" onclick="closeCert()">
+  <div class="cert-modal" onclick="event.stopPropagation()">
+    <button class="cert-close-btn" onclick="closeCert()" aria-label="Close">✕</button>
     <h2>🏅 Get Your Certificate</h2>
     <p class="cert-sub">Enter your name to generate a verified completion record for this module.</p>
     <input type="text" id="certName" placeholder="Your full name" maxlength="80"/>
@@ -511,6 +515,10 @@ function updateScore() {
   const msgs = ['Review the lesson again — the key finding on localization is worth revisiting!', 'Good effort! Focus on the difference between the theoretical prediction and the empirical findings.', 'Well done! You have a solid grasp of the study\'s main conclusions.', '🌟 Excellent! You understand both the methodology and the nuanced practical implications.'];
   document.getElementById('scoreMessage').textContent = msgs[score];
   setTimeout(() => document.getElementById('certBackdrop').classList.add('open'), 900);
+}
+
+function closeCert() {
+  document.getElementById('certBackdrop').classList.remove('open');
 }
 
 async function issueCertificate() {
