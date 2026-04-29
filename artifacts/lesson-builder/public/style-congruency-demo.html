@@ -361,11 +361,11 @@
   </div>
   <div class="tutor-key-row" id="keyRow">
     <select class="tutor-provider" id="providerSelect">
-      <option value="deepseek">DeepSeek</option>
-      <option value="openai">OpenAI</option>
-      <option value="gemini">Gemini</option>
+      <option value="deepseek">DeepSeek ✓ HK</option>
+      <option value="gemini">Gemini ✓ HK</option>
+      <option value="openai">OpenAI (VPN req. in HK)</option>
     </select>
-    <input type="password" id="apiKeyInput" placeholder="Paste API key…"/>
+    <input type="password" id="apiKeyInput" placeholder="API key · or enter IEEE2026"/>
     <button class="tutor-key-btn" onclick="saveKey()">Set Key</button>
   </div>
   <div class="tutor-messages" id="tutorMessages">
@@ -373,7 +373,8 @@
       Hi! I'm your AI tutor for this lesson on Hendriks et al. (2012). Ask me anything about style congruency, the study methodology, or the practical implications for professional communicators. 👋
     </div>
     <div class="tutor-no-key" id="tutorNoKey">
-      Set an API key above to start chatting. Supports DeepSeek, OpenAI, and Gemini. Your key stays in your browser only.
+      Enter your API key above, or type <strong style="color:#e2e8f0;">IEEE2026</strong> for instant access (no key needed).<br>
+      <span style="font-size:0.88em;opacity:0.7;">DeepSeek & Gemini work from HK/mainland · OpenAI requires VPN</span>
     </div>
   </div>
   <div class="tutor-input-row">
@@ -580,11 +581,17 @@ function saveKey() {
   if (!keyVal) return;
   apiKey = keyVal;
   hasKey = true;
+  const isCode = keyVal === 'IEEE2026';
   document.getElementById('keyRow').classList.add('hidden');
   document.getElementById('tutorNoKey').style.display = 'none';
   document.getElementById('tutorSend').disabled = false;
+  // Show which provider is active
+  const activeLabel = document.createElement('div');
+  activeLabel.style.cssText = 'padding:6px 16px;font-size:0.74em;color:#64748b;border-bottom:1px solid rgba(255,255,255,0.08);';
+  activeLabel.textContent = isCode ? '🔑 Access granted via IEEE2026 · Replit AI' : `🔑 ${provider.charAt(0).toUpperCase()+provider.slice(1)} API key set`;
+  document.getElementById('tutorPanel').insertBefore(activeLabel, document.getElementById('tutorMessages'));
   document.getElementById('tutorInput').focus();
-  xapiSend('interacted', { result: { extensions: { tutorActivated: true, provider } } });
+  xapiSend('interacted', { result: { extensions: { tutorActivated: true, provider: isCode ? 'replit' : provider } } });
 }
 
 function tutorKeyDown(e) {
@@ -616,16 +623,28 @@ async function sendTutor() {
   document.getElementById('tutorSend').disabled = true;
 
   try {
-    const ep = ENDPOINTS[provider];
     const messages = [{ role: 'system', content: SYSTEM_PROMPT }, ...chatHistory.slice(-12)];
-    const res = await fetch(ep.url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-      body: JSON.stringify({ model: ep.model, messages, max_tokens: 400, temperature: 0.5 })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'API error ' + res.status);
-    const reply = data.choices?.[0]?.message?.content?.trim() || 'Sorry, I could not generate a response.';
+    let reply;
+    if (apiKey === 'IEEE2026') {
+      const res = await fetch('/api/ai-tutor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, code: 'IEEE2026' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error ' + res.status);
+      reply = data.reply || 'Sorry, I could not generate a response.';
+    } else {
+      const ep = ENDPOINTS[provider];
+      const res = await fetch(ep.url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+        body: JSON.stringify({ model: ep.model, messages, max_tokens: 400, temperature: 0.5 })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'API error ' + res.status);
+      reply = data.choices?.[0]?.message?.content?.trim() || 'Sorry, I could not generate a response.';
+    }
     thinking.textContent = reply;
     thinking.classList.remove('msg-thinking');
     chatHistory.push({ role: 'assistant', content: reply });

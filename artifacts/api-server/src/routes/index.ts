@@ -14,6 +14,7 @@ import certificatesRouter from "./certificates";
 import authRouter from "./auth";
 import xapiRouter from "./xapi";
 import demoCompletionsRouter from "./demo-completions";
+import aiTutorRouter from "./ai-tutor";
 
 const router: IRouter = Router();
 
@@ -32,5 +33,6 @@ router.use("/courses", coursesRouter);
 router.use("/certificates", certificatesRouter);
 router.use(xapiRouter);
 router.use(demoCompletionsRouter);
+router.use(aiTutorRouter);
 
 export default router;
