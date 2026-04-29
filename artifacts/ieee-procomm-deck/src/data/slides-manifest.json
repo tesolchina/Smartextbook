@@ -60,8 +60,8 @@
     "position": 8,
     "filepath": "src/pages/slides/Slide6Research.tsx",
     "title": "Research Study",
-    "description": "Three research questions — comprehension, engagement, xAPI learning analytics. Link to research plan Google Doc.",
-    "speakerNotes": "This study design comes directly from Traci's suggestion. Three clean research questions that fit naturally into what the platform already produces — no extra instrumentation needed beyond what xAPI gives us."
+    "description": "Three research studies — RQ1 quasi-experimental learning outcomes (n=60–80, xAPI lesson vs PDF), RQ2 volunteer author experience (mixed methods, n=10–15), RQ3 exploratory xAPI trace analysis. Dissemination targets: IEEE TPC, IPCC, and Journal of Learning Analytics.",
+    "speakerNotes": "The proposal has three interlocking studies. RQ1 is a quasi-experimental comparison — one group reads the PDF, the other completes the interactive lesson — same post-test for both. RQ2 is a mixed-methods look at what it's actually like for a volunteer to author a lesson using the AI workflow. RQ3 is exploratory: once we have real learners, we analyse the xAPI trace data to see where people get stuck, what they replay, what they ask the AI tutor. The IRB path is Cornell plus HKBU, and no PII is collected beyond an anonymous demographic survey."
   },
   {
     "id": "a7b8c9d0-2222-0002-0002-000000000002",
