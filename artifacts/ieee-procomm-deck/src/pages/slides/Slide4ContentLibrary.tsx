@@ -69,6 +69,44 @@ export default function Slide4ContentLibrary() {
           }}
         />
 
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.8vw",
+            marginBottom: "2vh",
+            background: "#fff",
+            border: "1px solid rgba(184,90,42,0.15)",
+            borderRadius: "0.5vw",
+            padding: "0.8vh 1.2vw",
+          }}
+        >
+          <span style={{ fontSize: "1.3vw" }}>📊</span>
+          <a
+            href="https://docs.google.com/spreadsheets/d/1-QZA_CsFZsxfR7_Iv6P7BqSxQB21EWCfVw3qA4IaY_g/edit"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: "var(--font-body-family)",
+              fontSize: "1.2vw",
+              color: "#b85a2a",
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            Open full spreadsheet →
+          </a>
+          <span
+            style={{
+              fontFamily: "var(--font-body-family)",
+              fontSize: "1.1vw",
+              color: "rgba(42,31,24,0.4)",
+            }}
+          >
+            127 rows · Content Type · Author Status · Emails
+          </span>
+        </div>
+
         <div style={{ display: "flex", gap: "4vw" }}>
           <div style={{ flex: 1 }}>
             <div

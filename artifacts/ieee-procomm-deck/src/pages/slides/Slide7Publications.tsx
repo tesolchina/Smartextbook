@@ -13,10 +13,10 @@ export default function Slide7Publications() {
     {
       badge: "Teaching Case",
       badgeColor: "#d4a020",
-      title: "IEEE TPC — Transactions on Professional Communication",
-      subtitle: "Teaching Case Track · Target: June 2026",
+      title: "IEEE Transactions on Professional Communication",
+      subtitle: "Teaching Case Submission · Target: June 2026",
       detail:
-        "Full case submission documenting the platform design, learner outcomes, and volunteer authoring workflow. Leydens & Lucena consent secured.",
+        "A Teaching Case documents a real instructional problem and its solution — here, converting a published engineering communication case study (Leydens & Lucena) into an interactive lesson. Consent from original authors already secured. Submitted to the IEEE TPC Teaching Case Track.",
       status: "In preparation",
       statusColor: "#b85a2a",
     },

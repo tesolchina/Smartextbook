@@ -124,16 +124,40 @@ export default function Slide6Research() {
           ))}
         </div>
 
-        <div
-          style={{
-            marginTop: "3vh",
-            fontFamily: "var(--font-body-family)",
-            fontSize: "1.3vw",
-            color: "rgba(42,31,24,0.45)",
-            fontStyle: "italic",
-          }}
-        >
-          Target venue: IEEE Transactions on Professional Communication or Computers &amp; Education
+        <div style={{ marginTop: "2.5vh", display: "flex", alignItems: "center", gap: "3vw" }}>
+          <div
+            style={{
+              fontFamily: "var(--font-body-family)",
+              fontSize: "1.25vw",
+              color: "rgba(42,31,24,0.45)",
+              fontStyle: "italic",
+            }}
+          >
+            Target venue: IEEE Transactions on Professional Communication or Computers &amp; Education
+          </div>
+          <a
+            href="https://docs.google.com/document/d/1daIdioS7onsLIfg2jQWetC1cZ9mEpDYE0syH7NGmguU/edit"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.6vw",
+              fontFamily: "var(--font-body-family)",
+              fontSize: "1.2vw",
+              color: "#b85a2a",
+              fontWeight: 600,
+              textDecoration: "none",
+              background: "#fff",
+              border: "1px solid rgba(184,90,42,0.2)",
+              borderRadius: "0.5vw",
+              padding: "0.7vh 1.2vw",
+              flexShrink: 0,
+            }}
+          >
+            <span>📋</span>
+            <span>Full research plan (Google Docs) →</span>
+          </a>
         </div>
       </div>
     </div>

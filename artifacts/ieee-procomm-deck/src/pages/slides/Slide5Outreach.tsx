@@ -26,7 +26,7 @@ export default function Slide5Outreach() {
     <div
       className="w-screen h-screen overflow-hidden relative"
       style={{
-        background: "linear-gradient(150deg, #4a1a08 0%, #7a2c0e 50%, #3a1205 100%)",
+        background: "linear-gradient(150deg, #1e0c04 0%, #3a1808 50%, #120804 100%)",
       }}
     >
       <div
@@ -124,28 +124,69 @@ export default function Slide5Outreach() {
           ))}
         </div>
 
-        <div
-          style={{
-            marginTop: "4vh",
-            background: "rgba(212,160,32,0.1)",
-            border: "1px solid rgba(212,160,32,0.25)",
-            borderRadius: "0.8vw",
-            padding: "1.8vh 2.2vw",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "1.2vw",
-          }}
-        >
-          <span style={{ fontSize: "1.8vw" }}>💡</span>
-          <span
+        <div style={{ marginTop: "3.5vh", display: "flex", gap: "2vw", alignItems: "stretch" }}>
+          <div
             style={{
-              fontFamily: "var(--font-body-family)",
-              fontSize: "1.3vw",
-              color: "rgba(245,232,192,0.85)",
+              flex: 1,
+              background: "rgba(212,160,32,0.1)",
+              border: "1px solid rgba(212,160,32,0.25)",
+              borderRadius: "0.8vw",
+              padding: "1.8vh 2.2vw",
+              display: "flex",
+              alignItems: "center",
+              gap: "1.2vw",
             }}
           >
-            The IEEE ProComm name is the key trust signal — authors are likely to say yes
-          </span>
+            <span style={{ fontSize: "1.8vw" }}>💡</span>
+            <span
+              style={{
+                fontFamily: "var(--font-body-family)",
+                fontSize: "1.3vw",
+                color: "rgba(245,232,192,0.85)",
+              }}
+            >
+              The IEEE ProComm name is the key trust signal — authors are likely to say yes
+            </span>
+          </div>
+          <a
+            href="https://docs.google.com/document/d/1o-JgbqSw7hOO4ufi9ad37azcFczAso57p86Q_EwlcO8/edit"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.8vw",
+              background: "rgba(250,248,245,0.07)",
+              border: "1px solid rgba(212,160,32,0.3)",
+              borderRadius: "0.8vw",
+              padding: "1.8vh 2vw",
+              textDecoration: "none",
+              flexShrink: 0,
+            }}
+          >
+            <span style={{ fontSize: "1.6vw" }}>📝</span>
+            <div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body-family)",
+                  fontSize: "1.2vw",
+                  fontWeight: 700,
+                  color: "#d4a020",
+                }}
+              >
+                Open permission letter template →
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body-family)",
+                  fontSize: "1vw",
+                  color: "rgba(245,232,192,0.45)",
+                }}
+              >
+                Google Docs · ready to personalise
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>

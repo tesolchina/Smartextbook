@@ -3,7 +3,7 @@ export default function Slide1Title() {
     <div
       className="w-screen h-screen overflow-hidden relative"
       style={{
-        background: "linear-gradient(135deg, #7a2c0e 0%, #b85a2a 45%, #5a1a06 100%)",
+        background: "linear-gradient(135deg, #2a0e04 0%, #4e1e0a 50%, #180802 100%)",
       }}
     >
       <div
