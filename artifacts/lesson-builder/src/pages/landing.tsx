@@ -383,24 +383,39 @@ export default function Landing() {
               Talks, seminars, and reflections on AI in education — by Simon Wang and collaborators.
             </p>
           </div>
-          {/* Talk slides link */}
-          <div className="bg-card border border-primary/20 rounded-3xl p-6 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 relative overflow-hidden">
+          {/* IEEE ProComm deck — featured */}
+          <a href="/ieee-procomm-deck/" target="_blank" rel="noopener noreferrer"
+            className="group block bg-card border border-primary/20 rounded-3xl p-7 mb-4 relative overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <Presentation className="w-6 h-6" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                <Presentation className="w-7 h-7" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold uppercase tracking-widest text-primary">Project Deck · May 2026</span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold">New</span>
+                </div>
+                <h3 className="font-serif font-black text-xl leading-tight mb-1.5">
+                  IEEE ProComm Interactive Lesson Platform — Update for Traci Nathans-Kelly
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  11-slide project status deck: live demo, content library, author outreach plan, research study design, IEEE Learning Network context, and publication pipeline. With Traci Nathans-Kelly (Cornell / IEEE ProComm VP Content).
+                </p>
+              </div>
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold group-hover:bg-primary/90 transition-all group-hover:-translate-y-0.5 shadow-md shadow-primary/20 shrink-0">
+                View Deck <ArrowRight className="w-4 h-4" />
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="text-xs font-bold uppercase tracking-widest text-primary mb-0.5">Slide Deck</p>
-              <h3 className="font-serif font-black text-lg leading-tight mb-1">
-                Democratising AI-Augmented Textbook Creation Through No-Code Chatbot Customisation
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                The full 12-slide presentation by Simon Wang — includes a live interactive demo you can try directly in the slide.
-              </p>
-            </div>
+          </a>
+
+          {/* Previous talk — compact */}
+          <div className="flex items-center gap-3 mb-8 px-1">
+            <Presentation className="w-4 h-4 text-muted-foreground shrink-0" />
+            <span className="text-sm text-muted-foreground">Earlier talk:</span>
             <Link href="/talk15Apr"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-all hover:-translate-y-0.5 shadow-md shadow-primary/20 shrink-0">
-              View Slides <ArrowRight className="w-4 h-4" />
+              className="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1">
+              Democratising AI-Augmented Textbook Creation (Apr 15) <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
