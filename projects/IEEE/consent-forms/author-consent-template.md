@@ -3,7 +3,7 @@
 **Project**: ProComm Interactive — Transforming IEEE ProComm Resources into Interactive Learning Experiences  
 **Principal Investigator**: Dr Simon Wang, Language Centre, Hong Kong Baptist University  
 **Collaborating Organisation**: IEEE Professional Communication Society  
-**Contact**: [simon's email] | Traci Nathans-Kelly, tracink.ieee@gmail.com
+**Contact**: [simon's email] | Dr Traci Nathans-Kelly, tracink.ieee@gmail.com
 
 ---
 
@@ -13,7 +13,7 @@
 
 Dear [Author Name],
 
-I am Simon Wang, a language and AI educator at Hong Kong Baptist University, writing with the support of Traci Nathans-Kelly, IEEE ProComm VP of Content.
+I am Simon Wang, a language and AI educator at Hong Kong Baptist University, writing with the support of Dr Traci Nathans-Kelly, IEEE ProComm VP of Content.
 
 I am leading an open-source project to transform IEEE ProComm's professional communication resources into interactive learning experiences — with quizzes, audio narration, and scenario exercises — using AI agents. Your article, **"[Article Title]"** (published [Year]), is among the resources we would like to transform.
 

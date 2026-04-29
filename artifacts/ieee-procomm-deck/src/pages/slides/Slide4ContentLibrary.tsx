@@ -8,7 +8,7 @@ export default function Slide4ContentLibrary() {
 
   const authors = [
     { name: "Alan Chong", n: 23, org: "U of Toronto" },
-    { name: "Traci Nathans-Kelly", n: 15, org: "Cornell / IEEE ProComm" },
+    { name: "Dr Traci Nathans-Kelly", n: 15, org: "Cornell / IEEE ProComm" },
     { name: "Bob Lyons", n: 4, org: "Independent" },
     { name: "Kohava Mendelsohn", n: 2, org: "IEEE Spectrum" },
     { name: "Kristin Zibell", n: 2, org: "IA Collaborative" },

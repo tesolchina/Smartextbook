@@ -26,7 +26,7 @@ export default function Slide7Publications() {
       title: "Companion Empirical Study",
       subtitle: "Target venue: Computers & Education or IEEE TPC",
       detail:
-        "Quasi-experimental study on interactive vs. static article engagement, learning analytics from xAPI traces, with Traci as co-author.",
+        "Quasi-experimental study on interactive vs. static article engagement, learning analytics from xAPI traces, with Dr Traci as co-author.",
       status: "Proposed",
       statusColor: "rgba(42,31,24,0.45)",
     },

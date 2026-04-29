@@ -5,7 +5,7 @@
 **核心目标**: 把 IEEE ProComm 网站上 127 篇静态专业沟通文章，用 Agentic AI（vibe coding）转化为互动学习页面
 
 **主要联系人**:
-- **Traci Nathans-Kelly** (IEEE ProComm VP, Content) — tracink.ieee@gmail.com
+- **Dr Traci Nathans-Kelly** (IEEE ProComm VP, Content) — tracink.ieee@gmail.com
 - 由 George Hayhoe（前编辑）介绍引荐
 
 ---

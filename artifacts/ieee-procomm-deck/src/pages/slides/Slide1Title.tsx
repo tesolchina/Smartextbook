@@ -89,7 +89,7 @@ export default function Slide1Title() {
                 color: "#d4a020",
               }}
             >
-              Traci Nathans-Kelly
+              Dr Traci Nathans-Kelly
             </div>
             <div
               style={{

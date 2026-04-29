@@ -397,10 +397,10 @@ export default function Landing() {
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold">New</span>
                 </div>
                 <h3 className="font-serif font-black text-xl leading-tight mb-1.5">
-                  IEEE ProComm Interactive Lesson Platform — Update for Traci Nathans-Kelly
+                  IEEE ProComm Interactive Lesson Platform — Update for Dr Traci Nathans-Kelly
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  11-slide project status deck: live demo, content library, author outreach plan, research study design, IEEE Learning Network context, and publication pipeline. With Traci Nathans-Kelly (Cornell / IEEE ProComm VP Content).
+                  11-slide project status deck: live demo, content library, author outreach plan, research study design, IEEE Learning Network context, and publication pipeline. With Dr Traci Nathans-Kelly (Cornell / IEEE ProComm VP Content).
                 </p>
               </div>
               <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold group-hover:bg-primary/90 transition-all group-hover:-translate-y-0.5 shadow-md shadow-primary/20 shrink-0">
