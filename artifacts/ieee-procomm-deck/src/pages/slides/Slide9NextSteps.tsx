@@ -4,13 +4,7 @@ export default function Slide9NextSteps() {
       icon: "✉️",
       who: "Traci",
       label: "Send permission letters",
-      detail: "Review & personalise the 14 ready-to-send emails — we prepare, you send",
-    },
-    {
-      icon: "🔗",
-      who: "Both",
-      label: "Reach Bob Lyons & Samartha Vashishtha",
-      detail: "LinkedIn outreach for the 2 authors without public emails",
+      detail: "Review & personalise the 14 ready-to-send emails — we prepare, you send (includes LinkedIn messages to Bob Lyons and Samartha Vashishtha)",
     },
     {
       icon: "🎓",
@@ -25,10 +19,10 @@ export default function Slide9NextSteps() {
       detail: "Largest contributor — key partner for content permissions and research",
     },
     {
-      icon: "🎤",
-      who: "Both",
-      label: "Confirm joint presentation at ProComm 2026",
-      detail: "Edmonton, July 12–15 — live demo of the platform at the workshop",
+      icon: "💡",
+      who: "Traci",
+      label: "Share your thinking on the eLearning lesson conversion plan",
+      detail: "Who decides which articles become lessons, at what cadence, and whether there is an IEEE editorial process for publishing to the eLearning Library",
     },
   ];
 
@@ -72,7 +66,7 @@ export default function Slide9NextSteps() {
             marginBottom: "1vh",
           }}
         >
-          Five asks from Traci.
+          Four asks from Traci.
         </div>
         <div
           style={{

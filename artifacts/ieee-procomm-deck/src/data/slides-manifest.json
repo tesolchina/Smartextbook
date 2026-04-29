@@ -16,16 +16,24 @@
     "speakerNotes": "These four things are already done — not planned, done. The listening demo is live, all 127 articles are catalogued, and the permission letter is ready to send the moment you're happy with it."
   },
   {
-    "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+    "id": "dest0001-0000-0003-0003-000000000003",
     "position": 3,
+    "filepath": "src/pages/slides/SlideDestination.tsx",
+    "title": "Where This Goes",
+    "description": "Destination slide — lessons published to the IEEE eLearning Library; two-column layout showing the Library context and the article → lesson → library pipeline.",
+    "speakerNotes": "Before the demo, it's worth anchoring where all of this ends up. The IEEE eLearning Library already hosts hundreds of courses — engineers, faculty, and students worldwide use it for continuing education. ProComm-generated interactive lessons fit naturally into that catalog. This is the distribution channel that makes the whole pipeline worthwhile."
+  },
+  {
+    "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+    "position": 4,
     "filepath": "src/pages/slides/Slide3Demo.tsx",
     "title": "Learner Experience",
-    "description": "The learner experience — AI-narrated audio, comprehension check, xAPI tracking, PDF certificate.",
-    "speakerNotes": "Let me show you the demo. A learner clicks play, listens to the AI-narrated overview, answers a few comprehension questions, and receives a certificate. Every step is recorded in xAPI."
+    "description": "The learner experience — AI-narrated audio, comprehension check, xAPI tracking, PDF certificate. Prototype lesson: Listening as Engineering Communication (Leydens & Lucena, 2009).",
+    "speakerNotes": "Let me show you the demo. The prototype lesson is based on Leydens and Lucena's 2009 paper in IEEE Transactions on Professional Communication — 'Listening as Engineering Communication'. A learner clicks play, listens to the AI-narrated overview, answers a few comprehension questions, and receives a certificate. Every step is recorded in xAPI."
   },
   {
     "id": "d4e5f6a7-1111-0001-0001-000000000001",
-    "position": 4,
+    "position": 5,
     "filepath": "src/pages/slides/Slide4LessonCreation.tsx",
     "title": "Lesson Creation",
     "description": "Author workflow — paste article, AI drafts lesson, author edits, admin publishes. Under 20 minutes.",
@@ -33,7 +41,7 @@
   },
   {
     "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
-    "position": 5,
+    "position": 6,
     "filepath": "src/pages/slides/Slide4ContentLibrary.tsx",
     "title": "Content Library",
     "description": "127 ProComm resources classified — 65 Articles, 44 Resource Links, 9 Podcasts. Top authors. Link to Google Sheet.",
@@ -41,7 +49,7 @@
   },
   {
     "id": "e5f6a7b8-c9d0-1234-efab-345678901234",
-    "position": 6,
+    "position": 7,
     "filepath": "src/pages/slides/Slide5Outreach.tsx",
     "title": "Author Outreach",
     "description": "Permission letter plan — Traci as sender, 14 confirmed emails, Google Doc link to letter template.",
@@ -49,7 +57,7 @@
   },
   {
     "id": "f6a7b8c9-d0e1-2345-fabc-456789012345",
-    "position": 7,
+    "position": 8,
     "filepath": "src/pages/slides/Slide6Research.tsx",
     "title": "Research Study",
     "description": "Three research questions — comprehension, engagement, xAPI learning analytics. Link to research plan Google Doc.",
@@ -57,7 +65,7 @@
   },
   {
     "id": "a7b8c9d0-2222-0002-0002-000000000002",
-    "position": 8,
+    "position": 9,
     "filepath": "src/pages/slides/Slide9IEEEiln.tsx",
     "title": "What to Teach",
     "description": "IEEE Learning Network (ILN) existing ProComm courses and the 9 topic categories our platform extends.",
@@ -65,7 +73,7 @@
   },
   {
     "id": "a7b8c9d0-e1f2-3456-abcd-567890123456",
-    "position": 9,
+    "position": 10,
     "filepath": "src/pages/slides/Slide7Publications.tsx",
     "title": "Publication Pipeline",
     "description": "Three outputs — ProComm 2026 workshop paper (done), TPC Teaching Case Submission (June), companion study (proposed).",
@@ -73,7 +81,7 @@
   },
   {
     "id": "b8c9d0e1-f2a3-4567-bcde-678901234567",
-    "position": 10,
+    "position": 11,
     "filepath": "src/pages/slides/Slide8Timeline.tsx",
     "title": "Timeline",
     "description": "April–Fall 2026 milestones — paper done, outreach in May, Teaching Case in June, ProComm Edmonton July 12–15.",
@@ -81,10 +89,10 @@
   },
   {
     "id": "c9d0e1f2-a3b4-5678-cdef-789012345678",
-    "position": 11,
+    "position": 12,
     "filepath": "src/pages/slides/Slide9NextSteps.tsx",
     "title": "Next Steps",
-    "description": "Five asks from Traci — send permissions, LinkedIn outreach, research proposal, Alan Chong intro, Edmonton presentation.",
-    "speakerNotes": "Five concrete asks. Most of them are quick — reviewing and sending emails you've already reviewed once. The bigger commitment is co-authoring the research study, which I'd love to discuss today."
+    "description": "Four asks from Traci — send permissions (including LinkedIn outreach to Bob Lyons and Samartha Vashishtha), research proposal, Alan Chong intro, eLearning conversion plan.",
+    "speakerNotes": "Four concrete asks. The most immediate is the permission letters — review and send the 14 emails we've prepared, and we'll handle the LinkedIn messages to Bob Lyons and Samartha Vashishtha at the same time. The bigger open question I'd love your thinking on today is how you see the eLearning Library conversion working — who decides, at what cadence, and whether there's an IEEE editorial process we should be designing around."
   }
 ]

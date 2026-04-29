@@ -92,7 +92,7 @@ export default function Slide3Demo() {
                   marginBottom: "0.5vh",
                 }}
               >
-                "Teaching Oral Presentation Skills<br />with NLP Technologies"
+                "Listening as Engineering Communication"
               </div>
               <div
                 style={{
@@ -101,7 +101,7 @@ export default function Slide3Demo() {
                   color: "rgba(245,232,192,0.6)",
                 }}
               >
-                Based on Simon's TDG grant project · HKBU
+                Leydens & Lucena, 2009 · IEEE Trans. Prof. Commun.
               </div>
             </div>
 
