@@ -166,65 +166,152 @@ export default function Slide3Demo() {
             </div>
           </div>
 
-          <a
-            href="/listening-demo.html"
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Two demo cards stacked */}
+          <div
             style={{
               flexShrink: 0,
               width: "34vw",
-              background: "rgba(250,248,245,0.05)",
-              border: "1px solid rgba(212,160,32,0.35)",
-              borderRadius: "1vw",
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "3vh 2vw",
-              gap: "2vh",
-              textDecoration: "none",
-              cursor: "pointer",
-              transition: "background 0.2s",
+              gap: "1.5vh",
             }}
           >
-            <div
+            {/* Demo 1 — Listening */}
+            <a
+              href="/listening-demo.html"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                width: "7vw",
-                height: "7vw",
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #d4a020, #b85a2a)",
+                background: "rgba(250,248,245,0.05)",
+                border: "1px solid rgba(212,160,32,0.35)",
+                borderRadius: "1vw",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
+                gap: "1.4vw",
+                padding: "2vh 2vw",
+                textDecoration: "none",
+                cursor: "pointer",
+                flex: 1,
               }}
             >
-              <svg viewBox="0 0 40 40" fill="none" style={{ width: "3.5vw", height: "3.5vw" }}>
-                <circle cx="20" cy="20" r="18" stroke="#faf8f5" strokeWidth="2" />
-                <path d="M16 13l12 7-12 7V13z" fill="#faf8f5" />
-              </svg>
-            </div>
-            <div
+              <div
+                style={{
+                  width: "4.5vw",
+                  height: "4.5vw",
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, #d4a020, #b85a2a)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <svg viewBox="0 0 40 40" fill="none" style={{ width: "2.2vw", height: "2.2vw" }}>
+                  <circle cx="20" cy="20" r="18" stroke="#faf8f5" strokeWidth="2" />
+                  <path d="M16 13l12 7-12 7V13z" fill="#faf8f5" />
+                </svg>
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body-family)",
+                    fontSize: "1.2vw",
+                    fontWeight: 700,
+                    color: "#d4a020",
+                    marginBottom: "0.3vh",
+                  }}
+                >
+                  Demo 1: Listening as Engineering Communication →
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body-family)",
+                    fontSize: "0.95vw",
+                    color: "rgba(245,232,192,0.45)",
+                  }}
+                >
+                  Leydens &amp; Lucena (2009) · /listening-demo.html
+                </div>
+              </div>
+            </a>
+
+            {/* Demo 2 — Style Congruency (new) */}
+            <a
+              href="/style-congruency-demo.html"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                fontFamily: "var(--font-body-family)",
-                fontSize: "1.4vw",
-                fontWeight: 700,
-                color: "#d4a020",
-                textAlign: "center",
+                background: "rgba(212,160,32,0.07)",
+                border: "1px solid rgba(212,160,32,0.5)",
+                borderRadius: "1vw",
+                display: "flex",
+                alignItems: "center",
+                gap: "1.4vw",
+                padding: "2vh 2vw",
+                textDecoration: "none",
+                cursor: "pointer",
+                flex: 1,
+                position: "relative",
+                overflow: "hidden",
               }}
             >
-              Open Listening Demo →
-            </div>
-            <div
-              style={{
-                fontFamily: "var(--font-body-family)",
-                fontSize: "1vw",
-                color: "rgba(245,232,192,0.45)",
-                textAlign: "center",
-              }}
-            >
-              /listening-demo.html
-            </div>
-          </a>
+              <div
+                style={{
+                  position: "absolute",
+                  top: "0.8vh",
+                  right: "1vw",
+                  background: "#d4a020",
+                  color: "#180802",
+                  fontFamily: "var(--font-body-family)",
+                  fontSize: "0.75vw",
+                  fontWeight: 800,
+                  padding: "0.2vh 0.6vw",
+                  borderRadius: "0.3vw",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                }}
+              >
+                New
+              </div>
+              <div
+                style={{
+                  width: "4.5vw",
+                  height: "4.5vw",
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, #2563a8, #d4a020)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  fontSize: "2vw",
+                }}
+              >
+                🌐
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body-family)",
+                    fontSize: "1.2vw",
+                    fontWeight: 700,
+                    color: "#d4a020",
+                    marginBottom: "0.3vh",
+                  }}
+                >
+                  Demo 2: Style Congruency &amp; Persuasion →
+                </div>
+                <div
+                  style={{
+                    fontFamily: "var(--font-body-family)",
+                    fontSize: "0.95vw",
+                    color: "rgba(245,232,192,0.45)",
+                  }}
+                >
+                  Hendriks et al. (2012) · xAPI + AI tutor live
+                </div>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>

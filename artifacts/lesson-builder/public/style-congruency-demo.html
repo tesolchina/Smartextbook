@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Style Congruency &amp; Persuasion — Interactive Lesson</title>
+<style>
+  :root {
+    --primary: #1e3a5f;
+    --accent: #2563a8;
+    --gold: #b45309;
+    --success: #166534;
+    --danger: #991b1b;
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --tutor-bg: #0f172a;
+    --tutor-accent: #3b82f6;
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding-bottom:80px;}
+  .container{max-width:820px;margin:0 auto;padding:20px 20px 40px;}
+  header{background:linear-gradient(135deg,#1e3a5f,#2563a8);color:#fff;padding:36px 28px;border-radius:14px;margin-bottom:28px;position:relative;overflow:hidden;}
+  header::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;}
+  header h1{font-size:1.65em;font-weight:800;margin-bottom:6px;position:relative;}
+  header p{opacity:.85;font-size:.95em;position:relative;}
+  .source{font-size:.78em;opacity:.65;margin-top:10px;position:relative;}
+  .source a{color:#fff;}
+  .badge-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;position:relative;}
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:.75em;font-weight:700;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);}
+  .progress-bar{background:#e2e8f0;border-radius:999px;height:7px;margin-bottom:28px;overflow:hidden;}
+  .progress-fill{background:linear-gradient(90deg,var(--accent),#60a5fa);height:100%;border-radius:999px;transition:width .5s;}
+  .section{display:none;} .section.active{display:block;}
+  .card{background:var(--card);border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.08);border:1px solid var(--border);}
+  .card h2{color:var(--primary);margin-bottom:14px;font-size:1.25em;}
+  .card h3{color:var(--accent);margin:18px 0 10px;font-size:1.05em;}
+  .eyebrow{font-size:.72em;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;}
+  .speak-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border:1.5px solid var(--accent);border-radius:8px;background:#eff6ff;color:var(--accent);font-size:.85em;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:16px;}
+  .speak-btn:hover{background:var(--accent);color:#fff;}
+  .speak-btn.speaking{background:var(--accent);color:#fff;}
+  .speak-icon{font-size:1em;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;}
+  .two-col .col{padding:16px;border-radius:10px;}
+  .col-a{background:#eff6ff;border:1px solid #bfdbfe;}
+  .col-b{background:#f0fdf4;border:1px solid #bbf7d0;}
+  .col h4{margin-bottom:8px;font-size:.92em;color:var(--primary);}
+  .col p{font-size:.88em;color:var(--text);}
+  .highlight{background:#fef9c3;padding:2px 6px;border-radius:4px;}
+  .callout{background:#f0f7ff;border-left:4px solid var(--accent);padding:14px 18px;border-radius:0 10px 10px 0;margin:14px 0;font-size:.9em;}
+  .callout strong{color:var(--accent);}
+  .finding{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);}
+  .finding:last-child{border:none;}
+  .finding .dot{width:10px;height:10px;border-radius:50%;margin-top:7px;flex-shrink:0;}
+  .dot-gb{background:#1d4ed8;} .dot-nl{background:#f97316;}
+  .finding p{font-size:.9em;margin:0;}
+  .quiz-option{display:block;width:100%;text-align:left;padding:12px 16px;margin:8px 0;border:2px solid var(--border);border-radius:9px;background:#fff;cursor:pointer;font-size:.9em;transition:all .2s;line-height:1.5;}
+  .quiz-option:hover{border-color:var(--accent);background:#eff6ff;}
+  .quiz-option.correct{border-color:#16a34a;background:#f0fdf4;color:#166534;}
+  .quiz-option.wrong{border-color:#dc2626;background:#fef2f2;color:#991b1b;}
+  .quiz-option.disabled{pointer-events:none;}
+  .feedback{padding:12px 16px;border-radius:8px;margin-top:10px;display:none;font-size:.87em;line-height:1.5;}
+  .feedback.show{display:block;}
+  .feedback.correct{background:#f0fdf4;border-left:4px solid #16a34a;color:#166534;}
+  .feedback.wrong{background:#fef2f2;border-left:4px solid #dc2626;color:#9b2c2c;}
+  .score-display{text-align:center;font-size:2.2em;font-weight:800;color:var(--accent);margin:16px 0;}
+  .nav-buttons{display:flex;gap:12px;justify-content:center;margin:24px 0;}
+  .btn{padding:10px 26px;border:none;border-radius:9px;font-size:.95em;font-weight:600;cursor:pointer;transition:all .2s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--primary);}
+  .btn-outline{background:#fff;border:2px solid var(--accent);color:var(--accent);}
+  .btn-outline:hover{background:var(--accent);color:#fff;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .cert-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:16px;}
+  .cert-modal-backdrop.open{display:flex;}
+  .cert-modal{background:#fff;border-radius:18px;padding:32px 28px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+  .cert-modal h2{color:var(--primary);font-size:1.25em;margin-bottom:6px;}
+  .cert-modal .cert-sub{color:var(--muted);font-size:.85em;margin-bottom:18px;}
+  .cert-modal input[type="text"]{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:8px;font-size:1em;margin-bottom:12px;}
+  .cert-modal input:focus{outline:none;border-color:var(--accent);}
+  .btn-cert{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:1em;font-weight:600;cursor:pointer;}
+  .btn-cert:hover{background:var(--primary);}
+  .btn-cert:disabled{opacity:.5;cursor:not-allowed;}
+  .cert-card{display:none;border:2px solid var(--accent);border-radius:14px;padding:24px;text-align:center;margin-top:18px;background:linear-gradient(135deg,#eff6ff,#fff);}
+  .cert-card.show{display:block;}
+  .cert-award{font-size:2.2em;margin-bottom:6px;}
+  .cert-card h3{color:var(--primary);font-size:1em;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+  .cert-name{font-size:1.5em;font-weight:800;color:var(--primary);margin:10px 0;font-family:Georgia,serif;}
+  .cert-module{color:var(--muted);font-size:.82em;margin-bottom:6px;}
+  .cert-score{font-size:1em;font-weight:700;color:var(--success);margin-bottom:12px;}
+  .cert-hash{font-family:monospace;font-size:.6em;color:#aaa;word-break:break-all;margin-top:8px;}
+  .cert-print-btn{margin-top:10px;padding:8px 20px;background:var(--primary);color:#fff;border:none;border-radius:7px;font-size:.85em;cursor:pointer;}
+  @media print{body>*:not(.cert-modal-backdrop){display:none!important;}.cert-modal-backdrop{display:flex!important;position:static!important;background:none;}.cert-modal{box-shadow:none;}.cert-card{display:block!important;border:2px solid #000;}.cert-print-btn,.btn-cert,.cert-sub,h2{display:none!important;}}
+
+  /* ── AI Tutor ── */
+  .tutor-toggle{position:fixed;bottom:22px;right:22px;z-index:900;display:flex;align-items:center;gap:9px;padding:11px 20px;background:var(--tutor-bg);color:#fff;border:none;border-radius:999px;font-size:.88em;font-weight:700;cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,.35);transition:all .2s;}
+  .tutor-toggle:hover{background:#1e293b;transform:translateY(-1px);}
+  .tutor-toggle .unread{display:none;width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 1.5s infinite;}
+  .tutor-toggle .unread.show{display:block;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+  .tutor-panel{position:fixed;bottom:80px;right:22px;width:380px;max-height:520px;z-index:901;background:var(--tutor-bg);border-radius:18px;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.45);overflow:hidden;transform:scale(0.95) translateY(8px);opacity:0;pointer-events:none;transition:all .25s;}
+  .tutor-panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto;}
+  .tutor-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .tutor-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--tutor-accent),#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:1em;flex-shrink:0;}
+  .tutor-header-text h4{color:#f1f5f9;font-size:.9em;margin:0;}
+  .tutor-header-text p{color:#94a3b8;font-size:.72em;margin:0;}
+  .tutor-key-row{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;gap:8px;align-items:center;}
+  .tutor-key-row.hidden{display:none;}
+  .tutor-key-row input{flex:1;padding:7px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#f1f5f9;font-size:.8em;}
+  .tutor-key-row input::placeholder{color:#64748b;}
+  .tutor-provider{padding:4px 8px;border-radius:7px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#f1f5f9;font-size:.78em;cursor:pointer;}
+  .tutor-key-btn{padding:6px 12px;border-radius:7px;border:none;background:var(--tutor-accent);color:#fff;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .tutor-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+  .tutor-messages::-webkit-scrollbar{width:4px;} .tutor-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:999px;}
+  .msg{padding:10px 13px;border-radius:12px;font-size:.83em;line-height:1.55;max-width:88%;}
+  .msg-tutor{background:rgba(255,255,255,.09);color:#e2e8f0;border-radius:12px 12px 12px 4px;align-self:flex-start;}
+  .msg-user{background:var(--tutor-accent);color:#fff;border-radius:12px 12px 4px 12px;align-self:flex-end;}
+  .msg-thinking{opacity:.55;font-style:italic;}
+  .tutor-input-row{display:flex;gap:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);}
+  .tutor-input{flex:1;padding:9px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#f1f5f9;font-size:.83em;resize:none;outline:none;font-family:inherit;}
+  .tutor-input::placeholder{color:#64748b;}
+  .tutor-send{padding:9px 14px;background:var(--tutor-accent);border:none;border-radius:9px;color:#fff;font-size:.9em;cursor:pointer;transition:background .2s;}
+  .tutor-send:hover{background:#1d4ed8;}
+  .tutor-send:disabled{opacity:.4;cursor:not-allowed;}
+  .tutor-no-key{padding:18px 16px;text-align:center;color:#64748b;font-size:.82em;}
+
+  @media(max-width:640px){
+    .two-col{grid-template-columns:1fr;}
+    .tutor-panel{width:calc(100vw - 32px);right:16px;bottom:72px;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="eyebrow" style="color:rgba(255,255,255,.65);margin-bottom:10px;">IEEE ProComm Learning Module</div>
+  <h1>Should Organizations Adapt Their Writing Style for International Audiences?</h1>
+  <p>An interactive lesson based on Hendriks et al. (2012), <em>IEEE Transactions on Professional Communication</em></p>
+  <div class="source">
+    Article: <a href="https://procomm.ieee.org/should-organizations-adapt-their-writing-style-in-documents-for-international-audiences/" target="_blank">IEEE ProComm Resource Library</a> &nbsp;·&nbsp;
+    Paper: B. Hendriks, F. van Meurs et al., IEEE TPC vol. 55(2), 2012
+  </div>
+  <div class="badge-row">
+    <span class="badge">🎧 Audio narration</span>
+    <span class="badge">✅ 3 quiz questions</span>
+    <span class="badge">🤖 AI tutor (BYOK)</span>
+    <span class="badge">📊 xAPI tracked</span>
+    <span class="badge">🏅 Certificate</span>
+  </div>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<!-- ── Section 1: The Research Question ── -->
+<div class="section active" id="section1">
+
+<div class="card">
+  <div class="eyebrow">Section 1 of 3 — Research Question</div>
+  <h2>Why Writing Style Matters Internationally</h2>
+  <button class="speak-btn" id="speakBtn1" onclick="speak(1)">
+    <span class="speak-icon">🔊</span> <span id="speakLabel1">Listen to narration</span>
+  </button>
+
+  <p>As businesses expand globally, a pressing question emerges for professional communicators: <strong>should you adapt the writing style of your documents to suit different cultural audiences?</strong></p>
+  <br>
+  <p>There are two schools of thought:</p>
+  <div class="two-col">
+    <div class="col col-a">
+      <h4>🌐 Standardization</h4>
+      <p>Use the same style everywhere. Globalization erodes cultural differences — a uniform message is simpler and cheaper.</p>
+    </div>
+    <div class="col col-b">
+      <h4>📍 Localization</h4>
+      <p>Adapt style to match each culture's preferences. People respond better to messages that feel familiar and congruent with their values.</p>
+    </div>
+  </div>
+
+  <p>The concept at the heart of this debate is <strong>style congruency</strong> — the idea that a writing style aligned with the cultural preferences of the target audience will be <span class="highlight">more persuasive</span> than one that is not.</p>
+  <br>
+  <div class="callout">
+    <strong>Key terms:</strong> Style congruency means writing in a way that matches the stylistic preferences of a particular culture. If it works, organizations should localize. If it doesn't, one global style is fine — and cheaper.
+  </div>
+</div>
+
+<div class="card">
+  <h3>Quick Check 1</h3>
+  <p><strong>In this research context, what does "style congruency" mean?</strong></p>
+  <button class="quiz-option" onclick="checkAnswer(this,true,'q1')">Writing in a style that matches the cultural and stylistic preferences of the target audience</button>
+  <button class="quiz-option" onclick="checkAnswer(this,false,'q1')">Using a consistent writing style across all international markets, regardless of culture</button>
+  <button class="quiz-option" onclick="checkAnswer(this,false,'q1')">Matching the writing style to the genre or topic of the document (e.g., formal for legal texts)</button>
+  <div class="feedback correct" id="q1-correct">✓ Correct! Style congruency means adapting your writing style to fit the preferences of a specific cultural audience — for example, using a more elaborate style in cultures that prefer it. The research question is whether this adaptation actually makes your message more persuasive.</div>
+  <div class="feedback wrong" id="q1-wrong">Not quite. Style congruency is specifically about cultural alignment — adapting to the stylistic preferences of a particular national or cultural group. It is not about standardization (which is the opposite) or about matching content type.</div>
+</div>
+
+</div>
+
+<!-- ── Section 2: Methodology ── -->
+<div class="section" id="section2">
+
+<div class="card">
+  <div class="eyebrow">Section 2 of 3 — Study Design</div>
+  <h2>The Study: Two Dimensions, Two Countries</h2>
+  <button class="speak-btn" id="speakBtn2" onclick="speak(2)">
+    <span class="speak-icon">🔊</span> <span id="speakLabel2">Listen to narration</span>
+  </button>
+
+  <p>Hendriks and colleagues designed a <strong>quantitative experimental study</strong> with <strong>344 business-to-business customers</strong> in the Netherlands and Great Britain. Participants read different versions of a newsletter and rated it on three scales:</p>
+  <ul style="padding-left:20px;margin:12px 0;">
+    <li><strong>Comprehensibility</strong> — how easy was it to understand?</li>
+    <li><strong>Attractiveness</strong> — how appealing was the newsletter?</li>
+    <li><strong>Purchase intention</strong> — how likely were they to order goods?</li>
+  </ul>
+  <br>
+  <p>They manipulated two writing style dimensions:</p>
+
+  <div class="two-col">
+    <div class="col col-a">
+      <h4>📏 Dimension 1: Conciseness</h4>
+      <p><strong>Concise</strong> — short sentences, minimal elaboration, direct points</p>
+      <br>
+      <p><strong>Wordy</strong> — longer sentences, more elaboration, indirect phrasing</p>
+    </div>
+    <div class="col col-b">
+      <h4>🎯 Dimension 2: Orientation</h4>
+      <p><strong>Sender/goal-oriented</strong> — focuses on the writer's purpose and product features</p>
+      <br>
+      <p><strong>Receiver/process-oriented</strong> — focuses on the reader's needs and benefits</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>The prediction (from theory):</strong> Dutch readers — from a culture valuing directness — should prefer the concise, sender-oriented style. British readers — from a culture valuing politeness — should prefer the wordy, receiver-oriented style.
+  </div>
+</div>
+
+<div class="card">
+  <h3>Quick Check 2</h3>
+  <p><strong>Which of the following accurately describes the two style dimensions studied by Hendriks et al.?</strong></p>
+  <button class="quiz-option" onclick="checkAnswer(this,true,'q2')">Concise vs. wordy writing, and sender/goal-oriented vs. receiver/process-oriented writing</button>
+  <button class="quiz-option" onclick="checkAnswer(this,false,'q2')">Formal vs. informal register, and positive vs. negative framing</button>
+  <button class="quiz-option" onclick="checkAnswer(this,false,'q2')">Direct vs. indirect communication, and high-context vs. low-context cultural framing</button>
+  <div class="feedback correct" id="q2-correct">✓ Correct! The two dimensions were: (1) how concise or wordy the text was, and (2) whether the writing was oriented towards the sender's goals or the receiver's needs. These were chosen because theory predicts they interact with cultural value orientations like individualism-collectivism.</div>
+  <div class="feedback wrong" id="q2-wrong">Not quite. The specific dimensions Hendriks et al. used were conciseness (concise vs. wordy) and orientation (sender/goal-oriented vs. receiver/process-oriented). While related concepts like directness exist in the literature, these were not the dimensions directly manipulated in the study.</div>
+</div>
+
+</div>
+
+<!-- ── Section 3: Findings ── -->
+<div class="section" id="section3">
+
+<div class="card">
+  <div class="eyebrow">Section 3 of 3 — Findings &amp; Implications</div>
+  <h2>What Did They Find?</h2>
+  <button class="speak-btn" id="speakBtn3" onclick="speak(3)">
+    <span class="speak-icon">🔊</span> <span id="speakLabel3">Listen to narration</span>
+  </button>
+
+  <p>The results were more nuanced than theory predicted. While some cultural differences did emerge, on the whole the two groups evaluated the newsletter styles <strong>surprisingly similarly</strong>.</p>
+  <br>
+  <h3>Where differences <em>did</em> appear:</h3>
+  <div class="finding">
+    <div class="dot dot-gb"></div>
+    <p><strong>Great Britain:</strong> A <span class="highlight">sender/goal-oriented style</span> led to higher purchase intention than in the Netherlands — British readers found it more persuasive.</p>
+  </div>
+  <div class="finding">
+    <div class="dot dot-nl"></div>
+    <p><strong>Netherlands:</strong> A <span class="highlight">concise style</span> was rated more attractive than in Great Britain — Dutch readers preferred shorter, more direct text.</p>
+  </div>
+
+  <h3>Where <em>no</em> significant differences appeared:</h3>
+  <p style="font-size:.9em;color:var(--muted);">Both groups rated all four style versions as equally comprehensible. A receiver-oriented style generated similar purchase intention in both countries. A wordy style was equally attractive in both countries.</p>
+  <br>
+  <div class="callout">
+    <strong>Bottom line:</strong> The theoretical benefits of style congruency were not strongly supported. Adapting writing style to cultural preferences had limited effects on how persuasive documents were rated.
+  </div>
+</div>
+
+<div class="card">
+  <h3>Implications for Practice</h3>
+  <p>So what should international organizations actually do?</p>
+  <br>
+  <p>Hendriks et al. offer a nuanced recommendation. They acknowledge that <em>some</em> localization may be worthwhile (e.g., being slightly more concise for Dutch audiences), but ultimately favour a <strong>globalization strategy</strong>:</p>
+  <div class="callout" style="background:#fefce8;border-color:#eab308;">
+    ✳️ <strong>Use the same styled documents across different markets</strong> — because the effects of stylistic adaptation are limited and do not justify the costs of producing multiple localized versions. Where organizations do want to localize, the authors recommend forming <strong>multicultural writing teams</strong> to develop differently styled documents for different countries.
+  </div>
+  <br>
+  <p style="font-size:.85em;color:var(--muted);">This is an important finding for professional communicators: spending significant resources on stylistic localization may not deliver the persuasive gains that theory predicts.</p>
+</div>
+
+<div class="card">
+  <h3>Final Quiz</h3>
+  <p><strong>What was Hendriks et al.'s main practical recommendation for international organizations?</strong></p>
+  <button class="quiz-option" onclick="checkAnswer(this,true,'q3')">Adopt a globalization strategy — use the same styled documents across markets, because stylistic adaptation has limited effects and standardization is more cost-effective</button>
+  <button class="quiz-option" onclick="checkAnswer(this,false,'q3')">Always fully localize writing style to match the cultural preferences of every target country</button>
+  <button class="quiz-option" onclick="checkAnswer(this,false,'q3')">Avoid written newsletters in international communication and use visual media instead, since style differences are too complex to manage</button>
+  <div class="feedback correct" id="q3-correct">✓ Excellent! The key insight is that while cultural differences in style preference exist in theory, the empirical evidence for their impact on persuasion is limited. The cost-benefit analysis therefore favours standardization — with targeted, minor adaptations where clear differences exist (like conciseness for Dutch audiences).</div>
+  <div class="feedback wrong" id="q3-wrong">Not quite. While the authors acknowledge that some localization may be useful, they found the effects of stylistic adaptation were limited overall. Their ultimate recommendation leans towards a globalization strategy — using the same documents — because the returns on full localization don't justify its costs.</div>
+</div>
+
+</div>
+
+<!-- ── Section 4: Score ── -->
+<div class="section" id="section4">
+<div class="card" style="text-align:center;">
+  <h2>🎓 Lesson Complete</h2>
+  <div class="score-display" id="scoreDisplay">0 / 3</div>
+  <p id="scoreMessage" style="color:var(--muted);font-size:.95em;"></p>
+  <br>
+  <p style="font-size:.85em;color:var(--muted);">
+    <strong>Source:</strong> B. Hendriks, F. van Meurs, H. Korzilius, R. le Pair, S. le Blanc-Damen, "Style Congruency and Persuasion," <em>IEEE Transactions on Professional Communication</em>, vol. 55, no. 2, June 2012. DOI: 10.1109/TPC.2012.2194602
+  </p>
+  <br>
+  <p style="font-size:.82em;color:var(--muted);">
+    This lesson was created using the SmartTextbook AI lesson-builder — transforming a research article into an interactive learning experience with xAPI tracking, audio narration, and BYOK AI tutoring.
+  </p>
+</div>
+</div>
+
+<div class="nav-buttons">
+  <button class="btn btn-outline" id="prevBtn" onclick="navigate(-1)" disabled>← Previous</button>
+  <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)">Next →</button>
+</div>
+
+</div><!-- /container -->
+
+<!-- ── Certificate Modal ── -->
+<div class="cert-modal-backdrop" id="certBackdrop">
+  <div class="cert-modal">
+    <h2>🏅 Get Your Certificate</h2>
+    <p class="cert-sub">Enter your name to generate a verified completion record for this module.</p>
+    <input type="text" id="certName" placeholder="Your full name" maxlength="80"/>
+    <button class="btn-cert" id="certBtn" onclick="issueCertificate()">Generate Certificate</button>
+    <div class="cert-card" id="certCard">
+      <div class="cert-award">🏅</div>
+      <h3>Certificate of Completion</h3>
+      <p class="cert-module">
+        Style Congruency &amp; Persuasion<br>
+        <span style="font-size:.9em;color:var(--muted);">Hendriks et al. (2012), IEEE Trans. Prof. Commun.</span>
+      </p>
+      <p style="color:var(--muted);font-size:.8em;margin-bottom:4px;">Awarded to</p>
+      <div class="cert-name" id="certDisplayName"></div>
+      <div class="cert-score" id="certDisplayScore"></div>
+      <p style="color:var(--muted);font-size:.76em;" id="certDisplayDate"></p>
+      <p class="cert-hash" id="certDisplayHash"></p>
+      <button class="cert-print-btn" onclick="window.print()">🖨 Print Certificate</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── AI Tutor Panel ── -->
+<div class="tutor-panel" id="tutorPanel">
+  <div class="tutor-header">
+    <div class="tutor-avatar">🤖</div>
+    <div class="tutor-header-text">
+      <h4>AI Tutor — Style &amp; Culture</h4>
+      <p>Bring your own API key · Context-aware</p>
+    </div>
+    <button onclick="closeTutor()" style="margin-left:auto;background:none;border:none;color:#64748b;font-size:1.1em;cursor:pointer;">✕</button>
+  </div>
+  <div class="tutor-key-row" id="keyRow">
+    <select class="tutor-provider" id="providerSelect">
+      <option value="deepseek">DeepSeek</option>
+      <option value="openai">OpenAI</option>
+      <option value="gemini">Gemini</option>
+    </select>
+    <input type="password" id="apiKeyInput" placeholder="Paste API key…"/>
+    <button class="tutor-key-btn" onclick="saveKey()">Set Key</button>
+  </div>
+  <div class="tutor-messages" id="tutorMessages">
+    <div class="msg msg-tutor">
+      Hi! I'm your AI tutor for this lesson on Hendriks et al. (2012). Ask me anything about style congruency, the study methodology, or the practical implications for professional communicators. 👋
+    </div>
+    <div class="tutor-no-key" id="tutorNoKey">
+      Set an API key above to start chatting. Supports DeepSeek, OpenAI, and Gemini. Your key stays in your browser only.
+    </div>
+  </div>
+  <div class="tutor-input-row">
+    <textarea class="tutor-input" id="tutorInput" rows="1" placeholder="Ask about the lesson…" onkeydown="tutorKeyDown(event)"></textarea>
+    <button class="tutor-send" id="tutorSend" onclick="sendTutor()" disabled>▶</button>
+  </div>
+</div>
+
+<button class="tutor-toggle" id="tutorToggle" onclick="toggleTutor()">
+  <span>🤖</span> Ask AI Tutor
+  <span class="unread" id="tutorUnread"></span>
+</button>
+
+<script>
+/* ── xAPI ── */
+const MODULE_ID = 'https://smartextbook.replit.app/style-congruency-demo';
+const MODULE_TITLE = 'Style Congruency & Persuasion — Hendriks et al. 2012';
+const SESSION_ID = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+  (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+
+function xapiSend(verb, extra = {}) {
+  const stmt = {
+    actor: { objectType: 'Agent', name: 'Learner', mbox: 'mailto:anonymous@smartextbook' },
+    verb: { id: 'http://adlnet.gov/expapi/verbs/' + verb, display: { 'en-US': verb } },
+    object: {
+      objectType: 'Activity', id: MODULE_ID,
+      definition: { name: { 'en-US': MODULE_TITLE }, type: 'http://adlnet.gov/expapi/activities/module' }
+    },
+    context: { platform: 'SmartTextbook', extensions: { sessionId: SESSION_ID, section: currentSection + 1 } },
+    timestamp: new Date().toISOString(),
+    ...extra
+  };
+  fetch('/api/xapi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(stmt) }).catch(() => {});
+}
+
+/* ── State ── */
+let currentSection = 0;
+const totalSections = 4;
+let score = 0;
+let answered = {};
+
+/* ── Web Speech API narration ── */
+const NARRATIONS = {
+  1: `This lesson explores a question at the heart of international business communication: should organizations adapt their writing style for different cultural audiences? Researchers Berna Hendriks and colleagues investigated this in a 2012 study published in IEEE Transactions on Professional Communication. The key concept is style congruency — the idea that writing in a style that matches the cultural preferences of your audience will make your message more persuasive. The debate sits between two positions: standardization, which uses the same style everywhere, and localization, which tailors the style to each culture.`,
+  2: `The study used a quantitative experimental design with 344 business-to-business customers across the Netherlands and Great Britain. Participants evaluated differently styled versions of a newsletter on three dimensions: comprehensibility, attractiveness, and purchase intention. The researchers manipulated two style dimensions. First, how concise or wordy the writing was. Second, whether the writing was sender and goal-oriented — focused on the writer's purpose — or receiver and process-oriented — focused on the reader's needs. Theory predicted that Dutch readers would prefer a concise, direct style, while British readers would prefer an elaborate, receiver-oriented approach.`,
+  3: `The results were more nuanced than theory predicted. While some cultural differences did emerge, both groups evaluated the newsletter styles surprisingly similarly overall. British readers found a sender-oriented style more persuasive for purchase intention. Dutch readers rated a concise style as more attractive. But beyond these two specific effects, the groups responded similarly across all four style versions. The practical implication: the theoretical benefits of style localization are not strongly supported by the empirical evidence. The authors ultimately recommend a globalization strategy — using the same styled documents across markets — because the limited persuasive effects of style adaptation do not justify the additional production costs.`
+};
+
+let currentUtterance = null;
+
+function speak(section) {
+  const btn = document.getElementById('speakBtn' + section);
+  const label = document.getElementById('speakLabel' + section);
+
+  if (currentUtterance && speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+    currentUtterance = null;
+    btn.classList.remove('speaking');
+    label.textContent = 'Listen to narration';
+    xapiSend('paused');
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(NARRATIONS[section]);
+  utterance.rate = 0.92;
+  utterance.pitch = 1.0;
+
+  const voices = speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Daniel') || v.name.includes('Samantha'))) || voices.find(v => v.lang.startsWith('en'));
+  if (preferred) utterance.voice = preferred;
+
+  utterance.onstart = () => {
+    btn.classList.add('speaking');
+    label.textContent = 'Stop narration';
+    xapiSend('played', { result: { extensions: { narrationSection: section } } });
+  };
+  utterance.onend = utterance.onerror = () => {
+    btn.classList.remove('speaking');
+    label.textContent = 'Listen to narration';
+    currentUtterance = null;
+  };
+
+  currentUtterance = utterance;
+  speechSynthesis.speak(utterance);
+}
+
+/* ── Navigation ── */
+function navigate(dir) {
+  if (currentUtterance && speechSynthesis.speaking) { speechSynthesis.cancel(); currentUtterance = null; }
+  document.getElementById('section' + (currentSection + 1)).classList.remove('active');
+  currentSection += dir;
+  document.getElementById('section' + (currentSection + 1)).classList.add('active');
+  document.getElementById('prevBtn').disabled = currentSection === 0;
+  const isLast = currentSection === totalSections - 1;
+  document.getElementById('nextBtn').textContent = isLast ? 'Finish' : 'Next →';
+  if (isLast) {
+    document.getElementById('nextBtn').disabled = true;
+    updateScore();
+    xapiSend('completed', { result: { completion: true, score: { raw: score, max: 3, scaled: score / 3 }, success: score >= 2 } });
+  } else {
+    const pct = Math.round((currentSection + 1) / totalSections * 100);
+    xapiSend('progressed', { result: { extensions: { 'https://w3id.org/xapi/cmi5/result/extensions/progress': pct } } });
+  }
+  document.getElementById('progressFill').style.width = Math.round((currentSection + 1) / totalSections * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Quiz ── */
+function checkAnswer(el, isCorrect, qId) {
+  if (answered[qId]) return;
+  answered[qId] = true;
+  const parent = el.parentElement;
+  const options = parent.querySelectorAll('.quiz-option');
+  options.forEach(o => {
+    o.classList.add('disabled');
+    if (o === el) o.classList.add(isCorrect ? 'correct' : 'wrong');
+  });
+  if (isCorrect) {
+    score++;
+    document.getElementById(qId + '-correct')?.classList.add('show');
+  } else {
+    document.getElementById(qId + '-wrong')?.classList.add('show');
+    options.forEach(o => { if (o.onclick?.toString().includes('true')) o.classList.add('correct'); });
+  }
+  xapiSend('answered', {
+    result: { success: isCorrect, response: el.textContent.trim().slice(0, 120) },
+    object: { objectType: 'Activity', id: MODULE_ID + '#' + qId, definition: { name: { 'en-US': 'Quiz: ' + qId }, type: 'http://adlnet.gov/expapi/activities/cmi.interaction' } }
+  });
+}
+
+/* ── Score & certificate ── */
+function updateScore() {
+  document.getElementById('scoreDisplay').textContent = score + ' / 3';
+  const msgs = ['Review the lesson again — the key finding on localization is worth revisiting!', 'Good effort! Focus on the difference between the theoretical prediction and the empirical findings.', 'Well done! You have a solid grasp of the study\'s main conclusions.', '🌟 Excellent! You understand both the methodology and the nuanced practical implications.'];
+  document.getElementById('scoreMessage').textContent = msgs[score];
+  setTimeout(() => document.getElementById('certBackdrop').classList.add('open'), 900);
+}
+
+async function issueCertificate() {
+  const name = document.getElementById('certName').value.trim();
+  if (!name) { document.getElementById('certName').focus(); return; }
+  const btn = document.getElementById('certBtn');
+  btn.disabled = true; btn.textContent = 'Generating…';
+  try {
+    const res = await fetch('/api/demo-cert', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ moduleId: 'style-congruency-demo-v1', moduleTitle: MODULE_TITLE, learnerName: name, score: Math.round(score / 3 * 100), rawScore: score, maxScore: 3, sessionId: SESSION_ID }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    document.getElementById('certDisplayName').textContent = name;
+    document.getElementById('certDisplayScore').textContent = `Score: ${score} / 3 (${Math.round(score/3*100)}%)`;
+    document.getElementById('certDisplayDate').textContent = 'Issued ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('certDisplayHash').textContent = 'SHA-256: ' + data.contentHash;
+    document.getElementById('certCard').classList.add('show');
+    btn.textContent = '✓ Certificate Issued';
+    xapiSend('earned', { result: { success: true, score: { raw: score, max: 3, scaled: score / 3 }, extensions: { certId: data.id } } });
+  } catch (e) {
+    btn.disabled = false; btn.textContent = 'Try Again';
+    alert('Could not issue certificate: ' + e.message);
+  }
+}
+
+/* ── AI Tutor ── */
+const SYSTEM_PROMPT = `You are an expert AI tutor for an interactive lesson based on:
+
+"Style Congruency and Persuasion: A Cross-cultural Study into the Influence of Differences in Style Dimensions on the Persuasiveness of Business Newsletters in Great Britain and the Netherlands" by Berna Hendriks, Frank van Meurs, Hubert Korzilius, Rob le Pair, and Stephanie le Blanc-Damen. Published in IEEE Transactions on Professional Communication, vol. 55, no. 2, June 2012.
+
+KEY CONTENT:
+- Research question: Does writing style congruency (adapting style to cultural preferences) improve persuasion?
+- Two style dimensions: (1) concise vs. wordy, (2) sender/goal-oriented vs. receiver/process-oriented
+- 344 business-to-business participants in Netherlands and Great Britain
+- Main finding: Limited differences — British readers found sender-oriented style more persuasive for purchase intention; Dutch readers rated concise style as more attractive; overall, both groups responded similarly across styles
+- Theoretical prediction (not confirmed): Dutch = prefer concise+direct; British = prefer elaborate+receiver-oriented
+- Practical recommendation: Globalization strategy — same styled documents are fine; localization effects are limited and costs not justified; where desired, form multicultural writing teams
+- Venue: IEEE ProComm resource article based on full paper at IEEE Xplore DOI 10.1109/TPC.2012.2194602
+
+Answer questions clearly, in plain English. If asked about things not in the paper, say so. Keep answers concise — 2-4 sentences unless the learner asks for more detail. Be warm and encouraging.`;
+
+let tutorOpen = false;
+let apiKey = '';
+let provider = 'deepseek';
+let chatHistory = [];
+let hasKey = false;
+
+const ENDPOINTS = {
+  deepseek: { url: 'https://api.deepseek.com/v1/chat/completions', model: 'deepseek-chat' },
+  openai: { url: 'https://api.openai.com/v1/chat/completions', model: 'gpt-4o-mini' },
+  gemini: { url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', model: 'gemini-2.0-flash' }
+};
+
+function toggleTutor() {
+  tutorOpen = !tutorOpen;
+  document.getElementById('tutorPanel').classList.toggle('open', tutorOpen);
+  document.getElementById('tutorUnread').classList.remove('show');
+  if (tutorOpen) document.getElementById(hasKey ? 'tutorInput' : 'apiKeyInput').focus();
+}
+
+function closeTutor() {
+  tutorOpen = false;
+  document.getElementById('tutorPanel').classList.remove('open');
+}
+
+function saveKey() {
+  const keyVal = document.getElementById('apiKeyInput').value.trim();
+  provider = document.getElementById('providerSelect').value;
+  if (!keyVal) return;
+  apiKey = keyVal;
+  hasKey = true;
+  document.getElementById('keyRow').classList.add('hidden');
+  document.getElementById('tutorNoKey').style.display = 'none';
+  document.getElementById('tutorSend').disabled = false;
+  document.getElementById('tutorInput').focus();
+  xapiSend('interacted', { result: { extensions: { tutorActivated: true, provider } } });
+}
+
+function tutorKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendTutor(); }
+}
+
+function addMsg(role, text) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'msg-user' : 'msg-tutor');
+  div.textContent = text;
+  const box = document.getElementById('tutorMessages');
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
+async function sendTutor() {
+  const input = document.getElementById('tutorInput');
+  const text = input.value.trim();
+  if (!text || !hasKey) return;
+  input.value = '';
+  input.style.height = 'auto';
+
+  addMsg('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  const thinking = addMsg('assistant', '…');
+  thinking.classList.add('msg-thinking');
+  document.getElementById('tutorSend').disabled = true;
+
+  try {
+    const ep = ENDPOINTS[provider];
+    const messages = [{ role: 'system', content: SYSTEM_PROMPT }, ...chatHistory.slice(-12)];
+    const res = await fetch(ep.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({ model: ep.model, messages, max_tokens: 400, temperature: 0.5 })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || 'API error ' + res.status);
+    const reply = data.choices?.[0]?.message?.content?.trim() || 'Sorry, I could not generate a response.';
+    thinking.textContent = reply;
+    thinking.classList.remove('msg-thinking');
+    chatHistory.push({ role: 'assistant', content: reply });
+    xapiSend('interacted', { result: { extensions: { tutorQuery: text.slice(0, 100), provider } } });
+    if (!tutorOpen) {
+      document.getElementById('tutorUnread').classList.add('show');
+    }
+  } catch (e) {
+    thinking.textContent = '⚠️ ' + e.message;
+    thinking.classList.remove('msg-thinking');
+  }
+  document.getElementById('tutorSend').disabled = false;
+}
+
+/* ── Init ── */
+window.addEventListener('DOMContentLoaded', () => {
+  xapiSend('launched');
+  document.getElementById('progressFill').style.width = '25%';
+  speechSynthesis.onvoiceschanged = () => {};
+});
+</script>
+</body>
+</html>
