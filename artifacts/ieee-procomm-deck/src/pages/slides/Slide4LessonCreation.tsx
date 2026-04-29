@@ -170,7 +170,7 @@ export default function Slide4LessonCreation() {
             marginTop: "3vh",
             display: "flex",
             alignItems: "center",
-            gap: "3vw",
+            gap: "2vw",
           }}
         >
           <div
@@ -216,9 +216,49 @@ export default function Slide4LessonCreation() {
                 color: "rgba(42,31,24,0.7)",
               }}
             >
-              BYOK — author brings their own AI API key; no subscription required
+              BYOK — author brings their own AI key; no subscription required
             </span>
           </div>
+          <a
+            href="/app"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5vh",
+              background: "linear-gradient(135deg, #b85a2a, #d4a020)",
+              borderRadius: "0.8vw",
+              padding: "1.5vh 2.2vw",
+              textDecoration: "none",
+              flexShrink: 0,
+              boxShadow: "0 4px 16px rgba(184,90,42,0.25)",
+            }}
+          >
+            <span style={{ fontSize: "1.6vw" }}>✍️</span>
+            <span
+              style={{
+                fontFamily: "var(--font-body-family)",
+                fontSize: "1.2vw",
+                fontWeight: 700,
+                color: "#faf8f5",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Try it — convert an article →
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-body-family)",
+                fontSize: "0.95vw",
+                color: "rgba(250,248,245,0.65)",
+              }}
+            >
+              Volunteers welcome
+            </span>
+          </a>
         </div>
       </div>
     </div>

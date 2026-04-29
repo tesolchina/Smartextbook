@@ -128,6 +128,42 @@ export default function Slide3Demo() {
                 </span>
               </div>
             ))}
+
+            {/* xAPI explainer */}
+            <div
+              style={{
+                marginTop: "2.5vh",
+                background: "rgba(212,160,32,0.08)",
+                border: "1px solid rgba(212,160,32,0.22)",
+                borderLeft: "0.35vw solid #d4a020",
+                borderRadius: "0 0.6vw 0.6vw 0",
+                padding: "1.2vh 1.3vw",
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "var(--font-body-family)",
+                  fontSize: "1vw",
+                  fontWeight: 700,
+                  color: "#d4a020",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  marginBottom: "0.35vh",
+                }}
+              >
+                What is xAPI?
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body-family)",
+                  fontSize: "1.1vw",
+                  color: "rgba(245,232,192,0.7)",
+                  lineHeight: 1.5,
+                }}
+              >
+                xAPI (Experience API) is an open e-learning standard that records every learner action — play, pause, answer, complete — to a Learning Record Store (LRS). Every lesson generates a permanent, queryable audit trail.
+              </div>
+            </div>
           </div>
 
           <a

@@ -2,18 +2,18 @@ export default function Slide6Research() {
   const rqs = [
     {
       n: "RQ 1",
-      q: "Does the interactive format improve comprehension vs. static PDF?",
-      detail: "Quasi-experimental · pre/post reading comprehension · same ProComm article, two conditions",
+      q: "How do professionals engage with technical communication content when it is presented as an interactive, audio-first lesson rather than a static article?",
+      detail: "Open to multiple methods — surveys, think-aloud, xAPI trace data, or a mix",
     },
     {
       n: "RQ 2",
-      q: "How does AI-narrated audio affect engagement and self-paced study?",
-      detail: "xAPI listening duration, replay patterns, and self-reported confidence ratings",
+      q: "What role does learner agency play in self-directed continuing education when AI-generated audio and comprehension checks are available?",
+      detail: "Exploring choice, pacing, replay behaviour, and motivation — not just performance",
     },
     {
       n: "RQ 3",
-      q: "What xAPI trace patterns correlate with stronger learning outcomes?",
-      detail: "Learning analytics on completed module statements — time-on-task, quiz attempts, certificate rate",
+      q: "How might xAPI learning data from volunteer-converted ProComm lessons inform the design of future professional development content?",
+      detail: "Formative rather than summative — patterns that shape content decisions, not just measure outcomes",
     },
   ];
 

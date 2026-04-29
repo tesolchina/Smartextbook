@@ -249,14 +249,38 @@ export default function Slide9IEEEiln() {
             ))}
             <div
               style={{
-                marginTop: "1.5vh",
-                fontFamily: "var(--font-body-family)",
-                fontSize: "1.1vw",
-                color: "#b85a2a",
-                fontStyle: "italic",
+                marginTop: "1.8vh",
+                background: "linear-gradient(135deg, rgba(184,90,42,0.07), rgba(212,160,32,0.05))",
+                border: "1px solid rgba(184,90,42,0.18)",
+                borderLeft: "0.4vw solid #d4a020",
+                borderRadius: "0 0.6vw 0.6vw 0",
+                padding: "1.4vh 1.4vw",
               }}
             >
-              Our platform extends ILN — interactive lessons for every category
+              <div
+                style={{
+                  fontFamily: "var(--font-body-family)",
+                  fontSize: "0.95vw",
+                  fontWeight: 700,
+                  color: "#b85a2a",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  marginBottom: "0.5vh",
+                }}
+              >
+                Open question for Traci
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-body-family)",
+                  fontSize: "1.15vw",
+                  color: "#2a1f18",
+                  lineHeight: 1.45,
+                  fontStyle: "italic",
+                }}
+              >
+                If our goal is for these to become ILN lessons — what infrastructure does IEEE expose to content partners? Can we publish directly into ILN, or do we build alongside it?
+              </div>
             </div>
           </div>
         </div>
