@@ -147,6 +147,45 @@
     .cert-print-btn, .btn-cert, .cert-sub, h2 { display: none !important; }
     .cert-card { display: block !important; border: 2px solid #000; }
   }
+
+  .cert-close-btn {
+    position: absolute; top: 14px; right: 18px; background: none; border: none;
+    font-size: 1.4em; cursor: pointer; color: #a0aec0; line-height: 1;
+    padding: 4px 8px; border-radius: 6px; transition: color 0.2s, background 0.2s;
+  }
+  .cert-close-btn:hover { color: #4a5568; background: #f7fafc; }
+
+  /* ── AI Tutor ── */
+  .tutor-toggle { position: fixed; bottom: 22px; left: 22px; z-index: 900; display: flex; align-items: center; gap: 9px; padding: 11px 20px; background: #0f172a; color: #fff; border: none; border-radius: 999px; font-size: 0.88em; font-weight: 700; cursor: pointer; box-shadow: 0 4px 24px rgba(0,0,0,0.35); transition: all 0.2s; }
+  .tutor-toggle:hover { background: #1e293b; transform: translateY(-1px); }
+  .tutor-toggle .unread { display: none; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
+  .tutor-toggle .unread.show { display: block; }
+  .tutor-panel { position: fixed; bottom: 80px; left: 22px; width: 370px; max-height: 500px; z-index: 901; background: #0f172a; border-radius: 18px; display: flex; flex-direction: column; box-shadow: 0 8px 40px rgba(0,0,0,0.45); overflow: hidden; transform: scale(0.95) translateY(8px); opacity: 0; pointer-events: none; transition: all 0.25s; }
+  .tutor-panel.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
+  .tutor-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .tutor-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 1em; flex-shrink: 0; }
+  .tutor-header-text h4 { color: #f1f5f9; font-size: 0.9em; margin: 0; }
+  .tutor-header-text p { color: #94a3b8; font-size: 0.72em; margin: 0; }
+  .tutor-key-row { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; gap: 8px; align-items: center; }
+  .tutor-key-row.hidden { display: none; }
+  .tutor-key-row input { flex: 1; padding: 7px 10px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.07); color: #f1f5f9; font-size: 0.8em; }
+  .tutor-key-row input::placeholder { color: #64748b; }
+  .tutor-provider { padding: 4px 8px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.07); color: #f1f5f9; font-size: 0.78em; cursor: pointer; }
+  .tutor-key-btn { padding: 6px 12px; border-radius: 7px; border: none; background: #3b82f6; color: #fff; font-size: 0.78em; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .tutor-messages { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .tutor-messages::-webkit-scrollbar { width: 4px; } .tutor-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 999px; }
+  .msg { padding: 10px 13px; border-radius: 12px; font-size: 0.83em; line-height: 1.55; max-width: 88%; }
+  .msg-tutor { background: rgba(255,255,255,0.09); color: #e2e8f0; border-radius: 12px 12px 12px 4px; align-self: flex-start; }
+  .msg-user { background: #3b82f6; color: #fff; border-radius: 12px 12px 4px 12px; align-self: flex-end; }
+  .msg-thinking { opacity: 0.55; font-style: italic; }
+  .tutor-input-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .tutor-input { flex: 1; padding: 9px 12px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.07); color: #f1f5f9; font-size: 0.83em; resize: none; outline: none; font-family: inherit; }
+  .tutor-input::placeholder { color: #64748b; }
+  .tutor-send { padding: 9px 14px; background: #3b82f6; border: none; border-radius: 9px; color: #fff; font-size: 0.9em; cursor: pointer; transition: background 0.2s; }
+  .tutor-send:hover { background: #1d4ed8; }
+  .tutor-send:disabled { opacity: 0.4; cursor: not-allowed; }
+  .tutor-no-key { padding: 14px 16px; text-align: center; color: #64748b; font-size: 0.82em; }
+  @media(max-width:640px) { .tutor-panel { width: calc(100vw - 32px); right: 16px; } }
 </style>
 </head>
 <body>
@@ -368,8 +407,9 @@
 </div>
 
 <!-- Certificate Modal -->
-<div class="cert-modal-backdrop" id="certBackdrop">
-  <div class="cert-modal">
+<div class="cert-modal-backdrop" id="certBackdrop" onclick="closeCert()">
+  <div class="cert-modal" onclick="event.stopPropagation()">
+    <button class="cert-close-btn" onclick="closeCert()" aria-label="Close">✕</button>
     <h2>🎓 Get Your Certificate</h2>
     <p class="cert-sub">Enter your name to generate a verified completion certificate for this module.</p>
     <input type="text" id="certName" placeholder="Your full name" maxlength="80" />
@@ -390,6 +430,44 @@
     </div>
   </div>
 </div>
+
+<!-- AI Tutor Panel -->
+<div class="tutor-panel" id="tutorPanel">
+  <div class="tutor-header">
+    <div class="tutor-avatar">🤖</div>
+    <div class="tutor-header-text">
+      <h4>AI Tutor — Listening &amp; Communication</h4>
+      <p>Bring your own API key · Context-aware</p>
+    </div>
+    <button onclick="closeTutor()" style="margin-left:auto;background:none;border:none;color:#64748b;font-size:1.1em;cursor:pointer;">✕</button>
+  </div>
+  <div class="tutor-key-row" id="keyRow">
+    <select class="tutor-provider" id="providerSelect">
+      <option value="deepseek">DeepSeek</option>
+      <option value="openai">OpenAI</option>
+      <option value="gemini">Gemini</option>
+    </select>
+    <input type="password" id="apiKeyInput" placeholder="Paste API key…"/>
+    <button class="tutor-key-btn" onclick="saveKey()">Set Key</button>
+  </div>
+  <div class="tutor-messages" id="tutorMessages">
+    <div class="msg msg-tutor">
+      Hi! I'm your AI tutor for this lesson on Leydens &amp; Lucena (2009). Ask me anything about contextual listening, the engineering examples, or how this applies to your own communication practice. 👋
+    </div>
+    <div class="tutor-no-key" id="tutorNoKey" style="padding:14px 0;text-align:center;color:#64748b;font-size:0.82em;">
+      Set an API key above to start chatting. Supports DeepSeek, OpenAI, and Gemini. Your key stays in your browser only.
+    </div>
+  </div>
+  <div class="tutor-input-row">
+    <textarea class="tutor-input" id="tutorInput" rows="1" placeholder="Ask about the lesson…" onkeydown="tutorKeyDown(event)"></textarea>
+    <button class="tutor-send" id="tutorSend" onclick="sendTutor()" disabled>▶</button>
+  </div>
+</div>
+
+<button class="tutor-toggle" id="tutorToggle" onclick="toggleTutor()">
+  <span>🤖</span> Ask AI Tutor
+  <span class="unread" id="tutorUnread"></span>
+</button>
 
 <script>
 /* ── State ── */
@@ -595,6 +673,119 @@ async function issueCertificate() {
     btn.textContent = 'Try Again';
     alert('Could not issue certificate: ' + e.message);
   }
+}
+
+/* ── Certificate close ── */
+function closeCert() {
+  document.getElementById('certBackdrop').classList.remove('open');
+}
+
+/* ── AI Tutor ── */
+const TUTOR_SYSTEM_PROMPT = `You are an expert AI tutor for an interactive lesson based on:
+
+"Listening as an Engineering Skill" by Jon A. Leydens and Juan C. Lucena. Published in IEEE Transactions on Professional Communication, vol. 52, no. 4, December 2009.
+
+KEY CONTENT:
+- Central distinction: Basic listening (dyadic: speaking + hearing, capturing sound like a microphone) vs. Contextual listening (making meaning from socio-cultural and historical context, like an interpreter)
+- Basic listening is necessary but not sufficient for engineering practice
+- Contextual listening helps engineers: develop empathic relationships, transform actions (collaborative not individual), foster accountability (dialogic transparency), create awareness of roles/abilities/biases
+- NAE and ABET both identify listening as a key engineering attribute — yet it is rarely formally taught in engineering curricula
+- Listening → better engineering design, stronger stakeholder relationships, more equitable outcomes
+- The article argues for formally teaching listening in engineering education, not assuming students develop it naturally
+- Key quote: "The skill of listening is crucial to understanding engineering problems, which is the first step to doing engineering right."
+
+LESSON QUIZ QUESTIONS (for reference if asked):
+1. Why is listening often overlooked? → Not formally taught despite being a key attribute per NAE/ABET
+2. Basic vs contextual in water trust scenario → Contextual listener investigates history/culture/power, not just water quality
+3. Elderly app scenario → Spend time in patients' homes to understand daily routines, anxieties, and cultural attitudes before designing
+
+Answer questions clearly, in plain English. If asked about topics not in the article, say so. Keep answers 2-4 sentences unless the learner asks for more. Be warm and encouraging.`;
+
+const TUTOR_ENDPOINTS = {
+  deepseek: { url: 'https://api.deepseek.com/v1/chat/completions', model: 'deepseek-chat' },
+  openai: { url: 'https://api.openai.com/v1/chat/completions', model: 'gpt-4o-mini' },
+  gemini: { url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', model: 'gemini-2.0-flash' }
+};
+
+let tutorOpen = false;
+let tutorApiKey = '';
+let tutorProvider = 'deepseek';
+let tutorHistory = [];
+let tutorHasKey = false;
+
+function toggleTutor() {
+  tutorOpen = !tutorOpen;
+  document.getElementById('tutorPanel').classList.toggle('open', tutorOpen);
+  document.getElementById('tutorUnread').classList.remove('show');
+  if (tutorOpen) document.getElementById(tutorHasKey ? 'tutorInput' : 'apiKeyInput').focus();
+}
+
+function closeTutor() {
+  tutorOpen = false;
+  document.getElementById('tutorPanel').classList.remove('open');
+}
+
+function saveKey() {
+  const keyVal = document.getElementById('apiKeyInput').value.trim();
+  tutorProvider = document.getElementById('providerSelect').value;
+  if (!keyVal) return;
+  tutorApiKey = keyVal;
+  tutorHasKey = true;
+  document.getElementById('keyRow').classList.add('hidden');
+  document.getElementById('tutorNoKey').style.display = 'none';
+  document.getElementById('tutorSend').disabled = false;
+  document.getElementById('tutorInput').focus();
+  xapiSend('interacted', { result: { extensions: { tutorActivated: true, provider: tutorProvider } } });
+}
+
+function tutorKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendTutor(); }
+}
+
+function addTutorMsg(role, text) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'msg-user' : 'msg-tutor');
+  div.textContent = text;
+  const box = document.getElementById('tutorMessages');
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
+
+async function sendTutor() {
+  const input = document.getElementById('tutorInput');
+  const text = input.value.trim();
+  if (!text || !tutorHasKey) return;
+  input.value = '';
+
+  addTutorMsg('user', text);
+  tutorHistory.push({ role: 'user', content: text });
+
+  const thinking = addTutorMsg('assistant', '…');
+  thinking.classList.add('msg-thinking');
+  document.getElementById('tutorSend').disabled = true;
+
+  try {
+    const ep = TUTOR_ENDPOINTS[tutorProvider];
+    const messages = [{ role: 'system', content: TUTOR_SYSTEM_PROMPT }, ...tutorHistory.slice(-12)];
+    const res = await fetch(ep.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tutorApiKey },
+      body: JSON.stringify({ model: ep.model, messages, max_tokens: 400, temperature: 0.5 })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || 'API error ' + res.status);
+    const reply = data.choices?.[0]?.message?.content?.trim() || 'Sorry, no response generated.';
+    thinking.textContent = reply;
+    thinking.classList.remove('msg-thinking');
+    tutorHistory.push({ role: 'assistant', content: reply });
+    xapiSend('interacted', { result: { extensions: { tutorQuery: text.slice(0, 100), provider: tutorProvider } } });
+    if (!tutorOpen) document.getElementById('tutorUnread').classList.add('show');
+  } catch (e) {
+    thinking.textContent = '⚠️ ' + e.message;
+    thinking.classList.remove('msg-thinking');
+  }
+  document.getElementById('tutorSend').disabled = false;
 }
 
 /* ── Init: send launched statement ── */
