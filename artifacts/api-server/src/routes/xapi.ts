@@ -5,11 +5,11 @@ import { eq, desc } from "drizzle-orm";
 
 const router = Router();
 
-router.post("/xapi", async (req, res) => {
+router.post("/xapi", async (req, res): Promise<void> => {
   try {
     const stmt = req.body;
     if (!stmt?.verb || !stmt?.object?.id) {
-      return res.status(400).json({ error: "verb and object.id are required" });
+      return void res.status(400).json({ error: "verb and object.id are required" });
     }
 
     await db.insert(xapiStatementsTable).values({

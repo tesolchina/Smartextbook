@@ -2,9 +2,11 @@
 
 ## Overview
 
-Chapter-to-Lesson Builder — an interactive tool that converts book chapters (or any web URL) into structured lessons with an embedded AI tutor. Paste in a chapter or provide a URL, and the app uses AI to generate a summary, key concepts glossary, and a comprehension quiz. A persistent AI tutor chatbot lets students ask questions about the material in real time.
+**SmartTextbook v1.0.0** — AI-powered BYOK educational platform by Dr Simon Wang (Lecturer & Innovation Officer, Language Centre, Hong Kong Baptist University).
 
-Built as an open-source project for Replit and GitHub collaboration. Users bring their own LLM API keys (BYOK). Lessons are stored in the browser's localStorage. Teachers can optionally publish lessons via a public share link (stored server-side in PostgreSQL for 90 days).
+Dual focus:
+1. **Chapter-to-Lesson Builder** — converts articles/chapters/URLs/PDFs into structured interactive lessons with summary, key concepts, quiz, mind map, and an AI tutor chat. BYOK: users supply their own LLM API key (or use access code `IEEE2026` for server-side compute).
+2. **IEEE ProComm Workshop Demos** — open-source interactive lesson demos built from IEEE ProComm articles, with xAPI tracking, BYOK AI tutor, and certificate generation. Collaboration with Dr Traci Nathans-Kelly (Cornell / IEEE ProComm VP Content).
 
 ## Stack
 
@@ -15,24 +17,31 @@ Built as an open-source project for Replit and GitHub collaboration. Users bring
 - **API framework**: Express 5
 - **Validation**: Zod (`zod/v4`)
 - **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
-- **AI Provider**: BYOK — users supply their own API keys for any OpenAI-compatible provider
+- **Build**: esbuild (API server)
+- **AI Provider**: BYOK + server-side proxy via Replit AI integration (IEEE2026 code)
 - **Frontend**: React + Vite, Tailwind CSS, Shadcn UI
-- **Storage**: Browser `localStorage` (primary) + PostgreSQL via Drizzle ORM (shared lessons + comments)
+- **Storage**: Browser `localStorage` (primary) + PostgreSQL via Drizzle ORM
 
 ## Structure
 
 ```text
 artifacts-monorepo/
 ├── artifacts/
-│   ├── api-server/         # Express API server (AI processing, URL fetching — fully stateless)
-│   └── lesson-builder/     # React + Vite frontend
+│   ├── api-server/              # Express API — AI processing, xAPI, certificates, lesson gen
+│   ├── lesson-builder/          # React + Vite frontend (Lesson Builder + IEEE demos)
+│   │   └── public/
+│   │       ├── listening-demo.html          # Demo 1: Leydens & Lucena (2009)
+│   │       ├── style-congruency-demo.html   # Demo 2: Hendriks et al. (2012)
+│   │       └── procomm2026.html             # ProComm 2026 workshop page
+│   └── ieee-procomm-deck/       # 12-slide Vite React pitch deck for Dr Traci meeting
 ├── lib/
-│   ├── api-spec/           # OpenAPI spec + Orval codegen config
-│   ├── api-client-react/   # Generated React Query hooks
-│   ├── api-zod/            # Generated Zod schemas from OpenAPI
-│   └── db/                 # Drizzle ORM (kept for future use, not actively used)
-├── scripts/                # Utility scripts
+│   ├── api-spec/                # OpenAPI spec + Orval codegen config
+│   ├── api-client-react/        # Generated React Query hooks
+│   ├── api-zod/                 # Generated Zod schemas from OpenAPI
+│   ├── db/                      # Drizzle ORM schema
+│   ├── integrations-openai-ai-server/   # Server-side OpenAI batch/image/audio utilities
+│   └── integrations-openai-ai-react/   # React hooks for OpenAI audio
+├── scripts/                     # Utility scripts
 ├── pnpm-workspace.yaml
 ├── tsconfig.base.json
 ├── tsconfig.json
@@ -41,67 +50,80 @@ artifacts-monorepo/
 
 ## Architecture
 
-Primarily stateless — lesson data lives in the browser:
+### Lesson Builder
 
-1. **Lesson generation**: `POST /api/generate-lesson` — synchronous AI call, returns complete lesson JSON. Client generates a UUID and stores the lesson in `localStorage`.
-2. **Chat**: `POST /api/chat` — stateless SSE streaming. Client sends the full lesson context (title, summary, keyConcepts, chapterText) in every request.
+1. **Lesson generation**: `POST /api/generate-lesson` — synchronous AI call, returns complete lesson JSON. Supports `IEEE2026` as `apiKey` for server-side compute (no personal key needed). Client stores lesson in `localStorage`.
+2. **Chat**: `POST /api/chat` — stateless SSE streaming. Client sends full lesson context per request.
 3. **URL fetching**: `POST /api/fetch-url` — fetches and extracts readable text from a URL.
-4. **Frontend storage**: `useLessonsStore` hook reads/writes to `localStorage` under the key `lessonbuilder_lessons`.
-5. **Lesson Sharing** (opt-in): `POST /api/share` stores lesson JSON in PostgreSQL with a 16-char UUID and 90-day expiry. `GET /api/shared/:id` retrieves it. Public `/shared/:id` page renders the lesson for students.
-6. **Comments**: `GET/POST /api/shared/:id/comments` — students on the shared lesson page can read and leave comments stored in PostgreSQL.
+4. **Lesson Sharing**: `POST /api/share` stores lesson JSON in PostgreSQL (90-day expiry). `GET /api/shared/:id` retrieves it.
 
-## Features
+### IEEE ProComm Demos
 
-### Core User Flows
-1. **Create a Lesson** — Paste chapter text, provide a URL to fetch content, or upload a PDF (client-side text extraction via pdfjs-dist, no file sent to server) → pick a title → AI processes synchronously → saved to localStorage → redirected to lesson view
-2. **View a Lesson** — Four tabs: Summary (AI-generated) + Key Concepts glossary, Quiz (multiple-choice), Mind Map (Mermaid), Source text
-3. **AI Tutor Chat** — Sidebar chat in lesson view; tutor receives full lesson context per message; streams responses
-4. **Share a Lesson** — Teacher clicks "Share" → confirms public → lesson stored to DB → copyable link generated → students visit `/shared/:id` and can read + leave comments
-5. **Learning Report** — Students (or teachers) click "Report" → enter name + reflections → download as Markdown or email via their email client (mailto:). Quiz score auto-populated if quiz was completed.
+Interactive HTML demos with full lesson flow:
+- 3-4 sections with narration (Web Speech API)
+- 3 quiz questions with xAPI tracking
+- BYOK AI tutor panel (DeepSeek/Gemini/OpenAI — DeepSeek/Gemini recommended for HK/mainland users)
+- `IEEE2026` access code → server-side AI proxy via `/api/ai-tutor` (no personal key needed)
+- Certificate generation via `/api/demo-cert`
 
-### BYOK (Bring Your Own Key)
-Users set their own API key via the "Set API Key" button in the navbar. Supported providers:
-- **OpenAI** — GPT-4o, GPT-4o Mini, o3-mini, etc.
-- **Google Gemini** — Gemini 2.0 Flash, 1.5 Pro, etc.
-- **DeepSeek** — DeepSeek Chat (V3), Reasoner (R1)
-- **OpenRouter** — Access 300+ models (Claude, Llama, Mistral, etc.)
-- **Groq** — Fast Llama 3.3, Mixtral, Gemma 2
-- **Mistral AI** — Mistral Large, Small, Nemo
-- **Together AI** — Open source models at scale
-- **MiniMax** — MiniMax Text-01
-- **Custom** — Any OpenAI-compatible endpoint
+xAPI statements sent to `/api/xapi` (stored in PostgreSQL).
 
-API keys are stored in `localStorage` only — never sent to our servers.
+## IEEE2026 Server-Side AI Access
 
-### URL Content Fetching
-Users can provide a URL instead of pasting text. The backend fetches the page, extracts readable text using `cheerio`, and populates the form. Works best with articles, Wikipedia, documentation, and text-heavy pages.
+When `apiKey === "IEEE2026"` is sent to `/api/generate-lesson` or `/api/ai-tutor`:
+- Bypasses all external provider credentials
+- Uses Replit AI proxy (`AI_INTEGRATIONS_OPENAI_BASE_URL` + `AI_INTEGRATIONS_OPENAI_API_KEY`)
+- Falls back to DeepSeek if `DEEPSEEK_API_KEY` env var is set
+- Designed for workshop participants — no personal API key required
+- Demo AI tutor panels: DeepSeek → Gemini → OpenAI ordering (HK-accessible first)
 
-### API Endpoints
-- `POST /api/generate-lesson` — Synchronous AI lesson generation (requires `llmConfig`)
-- `POST /api/chat` — SSE streaming stateless chat (requires `llmConfig` + `lessonContext`)
-- `POST /api/fetch-url` — Fetch and extract text content from a URL
-- `POST /api/generate-slides` — Generate a self-contained Reveal.js HTML slide deck from lesson data (title, summary, key concepts, quiz)
-- `POST /api/share` — Store lesson in DB, returns `{ shareId, expiresAt }` (90-day public link)
-- `GET /api/shared/:id` — Retrieve shared lesson (404 if not found, 410 if expired)
-- `GET /api/shared/:id/comments` — Get all comments for a shared lesson
-- `POST /api/shared/:id/comments` — Post a new comment (`authorName`, `body`)
+## BYOK Providers
 
-### AI Processing
-- `LLM client factory` at `artifacts/api-server/src/lib/llm-client.ts` — creates an OpenAI-SDK client with the right base URL for each provider
-- Lesson generation is **synchronous** — the API call waits for AI to complete and returns full JSON
-- Chat is **stateless** — lesson context (title, summary, keyConcepts, chapterText) is sent with each request
+API keys stored in browser `localStorage` only — never sent to our servers (except when `IEEE2026` routes to our proxy).
 
-### Frontend Routes
-- `/` — Landing / teaser page: hero, 5-slide feature carousel ("How it works"), stats strip, Dr. Simon Wang credits card, GitHub + Replit remix links, CTA to open app
-- `/app` — Lesson library (localStorage) + "Create a Lesson" form
-- `/lessons/:id` — Individual lesson view: summary tab, interactive quiz, mind map, source text, chat sidebar; Share / Report / Export buttons
-- `/shared/:id` — Public shared lesson view (no auth needed): same tabs + AI chat + student comments section
-- `/credits` — Full credits page: Google "Learn Your Way" inspiration, LearnLM, 8+ related open-source projects
-- `/about` links to `/` in the navbar
+Supported: OpenAI, Google Gemini, DeepSeek ✓ HK, OpenRouter, Groq, Mistral, Together AI, MiniMax, Grok, Kimi (Moonshot), Poe, Custom endpoint.
 
-### Credits & Inspiration
-- `/credits` route — shows Google Research's "Learn Your Way" and LearnLM as primary inspiration, learning science foundations (Dual Coding Theory, Active Recall), and 8 related open-source GitHub projects
-- Landing page credits: **Dr. Simon Wang**, Lecturer in English & Innovation Officer, The Language Centre, Hong Kong Baptist University. GitHub: https://github.com/tesolchina/Smartextbook · Replit: https://replit.com/@SimonWang23/Smartextbook?v=1
+## API Endpoints
+
+- `POST /api/generate-lesson` — AI lesson generation (BYOK or `IEEE2026`)
+- `POST /api/ai-tutor` — Demo AI tutor (IEEE2026 or BYOK)
+- `POST /api/chat` — SSE streaming chat (BYOK)
+- `POST /api/fetch-url` — Fetch and extract text from a URL
+- `POST /api/generate-slides` — Generate Reveal.js HTML slide deck
+- `POST /api/generate-mindmap` — Generate Mermaid mind map
+- `POST /api/xapi` — Store xAPI statement (learning events from demos)
+- `GET /api/xapi/session/:sessionId` — Retrieve xAPI statements by session
+- `POST /api/demo-cert` — Issue demo completion certificate
+- `GET /api/demo-cert/:id` — Retrieve demo certificate
+- `POST /api/share` — Store lesson in DB
+- `GET /api/shared/:id` — Retrieve shared lesson
+- `GET/POST /api/shared/:id/comments` — Comments on shared lessons
+
+## Frontend Routes (Lesson Builder)
+
+- `/` — Landing page with Dr Simon Wang bio, project deck link
+- `/app` — Lesson library + Create Lesson form
+- `/lessons/:id` — Lesson view: summary, quiz, mind map, source, AI chat
+- `/shared/:id` — Public shared lesson (no auth)
+- `/credits` — Credits & inspiration page
+- `/listening-demo.html` — IEEE ProComm Demo 1 (Leydens & Lucena 2009)
+- `/style-congruency-demo.html` — IEEE ProComm Demo 2 (Hendriks et al. 2012)
+- `/procomm2026.html` — IEEE ProComm 2026 workshop page
+
+## IEEE ProComm Pitch Deck
+
+12-slide Vite React deck at `/ieee-procomm-deck/`:
+- Slide 1: Title (Dr Traci Nathans-Kelly + Dr Simon Wang)
+- Slide 2: Progress (xAPI, DB, content library, demos)
+- Slide 3: Live Demos (Listening + Style Congruency)
+- Slide 4: Content Library (Google Sheet, author count)
+- Slide 5: Author Outreach (14 emails, LinkedIn)
+- Slide 6: Research Study Design
+- Slide 7: Publications pipeline
+- Slide 8: Timeline
+- Slide 9: IEEE Learning Network context
+- Slide 10: Next Steps
+- Slides 11–12: Additional context
 
 ## Development Commands
 
@@ -112,30 +134,28 @@ pnpm install
 # Run codegen (after editing openapi.yaml)
 pnpm --filter @workspace/api-spec run codegen
 
-# Start API server
-pnpm --filter @workspace/api-server run dev
-
-# Start frontend
-pnpm --filter @workspace/lesson-builder run dev
-
-# Typecheck everything
+# Typecheck everything (must be zero errors before deploy)
 pnpm run typecheck
+
+# Build API server
+pnpm --filter @workspace/api-server run build
 ```
 
-## TypeScript & Composite Projects
+## TypeScript Rules
 
-Every package extends `tsconfig.base.json` which sets `composite: true`. The root `tsconfig.json` lists all lib packages as project references.
+- Always typecheck from the root: `pnpm run typecheck`
+- Lib packages: composite + emitDeclarationOnly
+- Artifacts: noEmit leaf packages
+- Root `tsconfig.json` references only lib packages (not artifacts)
+- `lib/api-zod/src/index.ts`: exports only from `./generated/api` (not `./generated/types` — would cause duplicate export errors)
 
-- **Always typecheck from the root** — run `pnpm run typecheck`
-- **`emitDeclarationOnly`** — only `.d.ts` files during typecheck; JS bundling by esbuild/vite
-- **Project references** — when package A depends on package B, A's `tsconfig.json` must list B in `references`
+## Key Collaborators
 
-## Collaborative Workflow Notes
+- **Dr Simon Wang** — simonwang@hkbu.edu.hk — Lecturer & Innovation Officer, Language Centre, HKBU
+- **Dr Traci Nathans-Kelly** — tracink.ieee@gmail.com — VP Content, IEEE ProComm / Cornell University
 
-This project is designed for open-source collaboration on Replit and GitHub. When contributing:
-- All API contracts are defined first in `lib/api-spec/openapi.yaml`
-- Run `pnpm --filter @workspace/api-spec run codegen` after any spec changes
-- Backend routes live in `artifacts/api-server/src/routes/`
-- Frontend pages live in `artifacts/lesson-builder/src/pages/`
-- LLM provider definitions live in `artifacts/lesson-builder/src/lib/providers.ts`
-- Lesson storage hook: `artifacts/lesson-builder/src/hooks/use-lessons-store.ts`
+## Privacy
+
+- BYOK: keys in localStorage only, sent directly to chosen AI provider
+- IEEE2026: access code only; AI requests proxied through Replit server — no personal credentials stored
+- xAPI data: pseudonymised, stored in project PostgreSQL

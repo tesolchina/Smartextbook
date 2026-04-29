@@ -6,11 +6,11 @@ import { randomUUID, createHash } from "crypto";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res): Promise<void> => {
   try {
     const { courseId, learnerName, learnerKey, scores } = req.body;
     if (!courseId || !learnerName || !learnerKey || !scores) {
-      return res.status(400).json({ error: "courseId, learnerName, learnerKey, and scores are required" });
+      return void res.status(400).json({ error: "courseId, learnerName, learnerKey, and scores are required" });
     }
 
     const [course] = await db
@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
       .where(eq(coursesTable.id, courseId))
       .limit(1);
 
-    if (!course) return res.status(404).json({ error: "Course not found" });
+    if (!course) return void res.status(404).json({ error: "Course not found" });
 
     const lessonIds = course.lessonIds as string[];
     const passScore = course.passScore;
@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
     for (const lid of lessonIds) {
       const score = scores[lid];
       if (score === undefined || score < passScore) {
-        return res.status(400).json({
+        return void res.status(400).json({
           error: `Lesson ${lid} not passed. Required: ${passScore}%, got: ${score ?? 0}%`,
         });
       }
@@ -74,7 +74,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res): Promise<void> => {
   try {
     const [cert] = await db
       .select()
@@ -82,7 +82,7 @@ router.get("/:id", async (req, res) => {
       .where(eq(certificatesTable.id, req.params.id))
       .limit(1);
 
-    if (!cert) return res.status(404).json({ error: "Certificate not found" });
+    if (!cert) return void res.status(404).json({ error: "Certificate not found" });
 
     const [course] = await db
       .select()

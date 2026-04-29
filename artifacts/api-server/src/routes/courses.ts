@@ -6,11 +6,11 @@ import { randomUUID } from "crypto";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res): Promise<void> => {
   try {
     const { title, description, teacherName, teacherCredential, lessonIds, passScore } = req.body;
     if (!title || !description || !teacherName || !Array.isArray(lessonIds) || lessonIds.length === 0) {
-      return res.status(400).json({ error: "title, description, teacherName, and lessonIds are required" });
+      return void res.status(400).json({ error: "title, description, teacherName, and lessonIds are required" });
     }
 
     const lessons = await db
@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
 
     const missing = lessonIds.filter((id: string) => !lessons.includes(id));
     if (missing.length > 0) {
-      return res.status(400).json({ error: `Lesson IDs not found: ${missing.join(", ")}` });
+      return void res.status(400).json({ error: `Lesson IDs not found: ${missing.join(", ")}` });
     }
 
     const id = randomUUID();
@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res): Promise<void> => {
   try {
     const [course] = await db
       .select()
@@ -49,7 +49,7 @@ router.get("/:id", async (req, res) => {
       .where(eq(coursesTable.id, req.params.id))
       .limit(1);
 
-    if (!course) return res.status(404).json({ error: "Course not found" });
+    if (!course) return void res.status(404).json({ error: "Course not found" });
 
     const lessons = await db
       .select()

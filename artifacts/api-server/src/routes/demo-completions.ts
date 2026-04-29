@@ -6,18 +6,18 @@ import { randomUUID, createHash } from "crypto";
 
 const router = Router();
 
-router.post("/demo-cert", async (req, res) => {
+router.post("/demo-cert", async (req, res): Promise<void> => {
   try {
     const { moduleId, moduleTitle, learnerName, score, rawScore, maxScore, sessionId } = req.body;
 
     if (!moduleId || !moduleTitle || !learnerName || score == null || rawScore == null || maxScore == null) {
-      return res.status(400).json({
+      return void res.status(400).json({
         error: "moduleId, moduleTitle, learnerName, score, rawScore, and maxScore are required",
       });
     }
 
     const name = String(learnerName).trim();
-    if (!name) return res.status(400).json({ error: "learnerName cannot be empty" });
+    if (!name) return void res.status(400).json({ error: "learnerName cannot be empty" });
 
     const issuedAt = new Date().toISOString().slice(0, 10);
     const contentHashInput = JSON.stringify({
@@ -45,7 +45,7 @@ router.post("/demo-cert", async (req, res) => {
   }
 });
 
-router.get("/demo-cert/:id", async (req, res) => {
+router.get("/demo-cert/:id", async (req, res): Promise<void> => {
   try {
     const [record] = await db
       .select()
@@ -53,7 +53,7 @@ router.get("/demo-cert/:id", async (req, res) => {
       .where(eq(demoCompletionsTable.id, req.params.id))
       .limit(1);
 
-    if (!record) return res.status(404).json({ error: "Certificate not found" });
+    if (!record) return void res.status(404).json({ error: "Certificate not found" });
     res.json(record);
   } catch (err) {
     console.error("[demo-cert] GET error:", err);

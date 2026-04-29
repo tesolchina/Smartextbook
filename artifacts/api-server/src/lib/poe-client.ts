@@ -48,7 +48,7 @@ export async function queryPoe(
   if (!res.ok) {
     let detail = `HTTP ${res.status}`;
     try {
-      const body = await res.json();
+      const body = await res.json() as { detail?: string; error?: string; message?: string } | null;
       detail = body?.detail ?? body?.error ?? body?.message ?? detail;
     } catch {
       try {
