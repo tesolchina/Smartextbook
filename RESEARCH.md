@@ -1,5 +1,12 @@
 # Research
 
+## GTD coordinator: tesolchina/simongtd
+
+  > Cross-repo task coordination is handled by [tesolchina/simongtd](https://github.com/tesolchina/simongtd).
+  > Capture new tasks → open an [Inbox issue](https://github.com/tesolchina/simongtd/issues/new?template=inbox.yml) in simongtd.
+  > Priority order: B → C → A → D → meta.
+
+  
   > This repo participates in a 5-repo coordinated research programme.
   > **Single source of truth lives at [`tesolchina/lbs-shared`](https://github.com/tesolchina/lbs-shared)** (private).
 
