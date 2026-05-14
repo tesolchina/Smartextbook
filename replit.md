@@ -171,10 +171,50 @@ pnpm --filter @workspace/api-server run build
 - Root `tsconfig.json` references only lib packages (not artifacts)
 - `lib/api-zod/src/index.ts`: exports only from `./generated/api` (not `./generated/types` — would cause duplicate export errors)
 
+## Project Links
+
+| Platform | URL |
+|----------|-----|
+| **Replit Production** | https://smartextbook.replit.app |
+| **Replit Project** | https://replit.com/@SimonWang23/Smartextbook?v=1 |
+| **GitHub Repository** | https://github.com/tesolchina/Smartextbook |
+| **Google Drive — Project Folder** | https://drive.google.com/drive/folders/10qWbdDC-jtFYJ-GuwUyjIe0x_f_FniIi |
+| **Google Drive — Skills & Architecture Docs** | https://drive.google.com/drive/folders/1abYfZer-gale8EeWcnV4qXqrOBhDvVds |
+| **IEEE Demo 1 (Listening)** | https://smartextbook.replit.app/listening-demo.html |
+| **IEEE Demo 2 (Style Congruency)** | https://smartextbook.replit.app/style-congruency-demo.html |
+| **ProComm 2026 Workshop Page** | https://smartextbook.replit.app/procomm2026.html |
+| **IEEE ProComm Pitch Deck** | https://smartextbook.replit.app/ieee-procomm-deck/ |
+
 ## Key Collaborators
 
 - **Dr Simon Wang** — simonwang@hkbu.edu.hk — Lecturer & Innovation Officer, Language Centre, HKBU
 - **Dr Traci Nathans-Kelly** — tracink.ieee@gmail.com — VP Content, IEEE ProComm / Cornell University
+
+## Reusable Skills (docs/skills/)
+
+All skill docs are prefixed `SmartTextbook-` for cross-project distinction. Also uploaded to Google Drive Skills folder above.
+
+| File | Pattern |
+|------|---------|
+| `SmartTextbook-SKILL-00-PROJECT-INDEX.md` | Master index with all links & env vars |
+| `SmartTextbook-SKILL-01-BYOK-LLM-Provider.md` | Multi-provider LLM factory (BYOK) |
+| `SmartTextbook-SKILL-02-Server-Side-AI-Proxy.md` | Access code → server-side AI proxy |
+| `SmartTextbook-SKILL-03-xAPI-Learning-Tracking.md` | xAPI statements with PostgreSQL |
+| `SmartTextbook-SKILL-04-Certificate-Generation.md` | SHA-256 tamper-proof certificates |
+| `SmartTextbook-SKILL-05-Content-Sharing-PostgreSQL.md` | Temporary share links with auto-expiry |
+| `SmartTextbook-SKILL-06-SSE-Streaming-Chat.md` | Server-Sent Events streaming AI chat |
+| `SmartTextbook-SKILL-07-Google-Drive-OAuth2.md` | Google Drive OAuth2 + DOCX→PDF pipeline |
+
+## Google Drive Credential Setup
+
+| Secret Name | Purpose |
+|-------------|---------|
+| `GOOGLE_CLIENT_ID` | OAuth2 Client ID |
+| `GOOGLE_CLIENT_SECRET` | OAuth2 Client Secret |
+| `Google_refresh_token_drive` | Drive API refresh token (mixed-case, project-specific) |
+| `GOOGLE_DRIVE_PROJECT_FOLDER_ID` | Project root folder ID (env var, not secret) |
+
+To get a new refresh token: [Google OAuth Playground](https://developers.google.com/oauthplayground) → scope `https://www.googleapis.com/auth/drive` → use own credentials → exchange for tokens.
 
 ## Privacy
 
