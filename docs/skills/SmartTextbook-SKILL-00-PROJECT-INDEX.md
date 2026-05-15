@@ -12,6 +12,7 @@
 | **GitHub 仓库** | https://github.com/tesolchina/Smartextbook |
 | **Google Drive 项目文件夹** | https://drive.google.com/drive/folders/10qWbdDC-jtFYJ-GuwUyjIe0x_f_FniIi |
 | **Google Drive Skills 文件夹** | https://drive.google.com/drive/folders/1abYfZer-gale8EeWcnV4qXqrOBhDvVds |
+| **Google Drive STILE 项目文件夹** | https://drive.google.com/drive/folders/1hyJXh3xkGyhX5B-nmwfi3OD7oV72N_uT |
 | **SmartTextbook 应用** | https://smartextbook.replit.app/ |
 | **IEEE 互动演示 Demo 1** | https://smartextbook.replit.app/listening-demo.html |
 | **IEEE 互动演示 Demo 2** | https://smartextbook.replit.app/style-congruency-demo.html |

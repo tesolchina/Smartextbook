@@ -180,6 +180,7 @@ pnpm --filter @workspace/api-server run build
 | **GitHub Repository** | https://github.com/tesolchina/Smartextbook |
 | **Google Drive — Project Folder** | https://drive.google.com/drive/folders/10qWbdDC-jtFYJ-GuwUyjIe0x_f_FniIi |
 | **Google Drive — Skills & Architecture Docs** | https://drive.google.com/drive/folders/1abYfZer-gale8EeWcnV4qXqrOBhDvVds |
+| **Google Drive — STILE Project** | https://drive.google.com/drive/folders/1hyJXh3xkGyhX5B-nmwfi3OD7oV72N_uT |
 | **IEEE Demo 1 (Listening)** | https://smartextbook.replit.app/listening-demo.html |
 | **IEEE Demo 2 (Style Congruency)** | https://smartextbook.replit.app/style-congruency-demo.html |
 | **ProComm 2026 Workshop Page** | https://smartextbook.replit.app/procomm2026.html |
