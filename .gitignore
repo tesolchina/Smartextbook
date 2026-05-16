@@ -48,3 +48,6 @@ Thumbs.db
 .cache/
 .local/
 artifacts/ieee-procomm-deck/src/data/.slide-thumbnails/
+
+# Private project research — not for public repo
+projects/STILE/

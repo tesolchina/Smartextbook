@@ -9,6 +9,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-background text-foreground selection:bg-primary/20">
+      <div className="w-full bg-amber-50 border-b border-amber-200 text-amber-800 text-center text-xs py-1.5 px-4 shrink-0">
+        🚧 SmartTextbook is under active development — some features may be incomplete or change without notice.
+      </div>
       <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="container max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/app" className="flex items-center gap-2.5 group outline-none">
