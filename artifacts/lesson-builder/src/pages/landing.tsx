@@ -114,10 +114,6 @@ export default function Landing() {
               className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
               <Key className="w-4 h-4" /> Get Started
             </a>
-            <a href="#workshops"
-              className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-              <CalendarDays className="w-4 h-4" /> Workshops
-            </a>
             <a href="https://github.com/tesolchina/Smartextbook" target="_blank" rel="noopener noreferrer"
               className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
               <Github className="w-4 h-4" /> GitHub
@@ -380,60 +376,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Workshops & Blog ── */}
-      <section className="py-20 bg-background border-b border-border" id="workshops">
-        <div className="container max-w-5xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase mb-4">
-              <CalendarDays className="w-3.5 h-3.5" /> Workshops &amp; Blog
-            </span>
-            <h2 className="text-3xl md:text-4xl font-serif font-black mb-3">Events &amp; Writing</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">
-              Talks, seminars, and reflections on AI in education — by Simon Wang and collaborators.
-            </p>
-          </div>
-          {/* IEEE ProComm deck — featured */}
-          <a href="/ieee-procomm-deck/" target="_blank" rel="noopener noreferrer"
-            className="group block bg-card border border-primary/20 rounded-3xl p-7 mb-4 relative overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-accent" />
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                <Presentation className="w-7 h-7" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-bold uppercase tracking-widest text-primary">Project Deck · May 2026</span>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold">New</span>
-                </div>
-                <h3 className="font-serif font-black text-xl leading-tight mb-1.5">
-                  IEEE ProComm Interactive Lesson Platform — Update for Dr Traci Nathans-Kelly
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  11-slide project status deck: live demo, content library, author outreach plan, research study design, IEEE Learning Network context, and publication pipeline. With Dr Traci Nathans-Kelly (Cornell / IEEE ProComm VP Content).
-                </p>
-              </div>
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold group-hover:bg-primary/90 transition-all group-hover:-translate-y-0.5 shadow-md shadow-primary/20 shrink-0">
-                View Deck <ArrowRight className="w-4 h-4" />
-              </div>
-            </div>
-          </a>
-
-          {/* Previous talk — compact */}
-          <div className="flex items-center gap-3 mb-8 px-1">
-            <Presentation className="w-4 h-4 text-muted-foreground shrink-0" />
-            <span className="text-sm text-muted-foreground">Earlier talk:</span>
-            <Link href="/talk15Apr"
-              className="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1">
-              Democratising AI-Augmented Textbook Creation (Apr 15) <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-
-          <div className="grid gap-6">
-            {POSTS.map((post) => <PostCard key={post.slug} post={post} />)}
-          </div>
-        </div>
-      </section>
-
       {/* ── CTA footer ── */}
       <section className="py-20 bg-card text-center">
         <div className="container max-w-2xl mx-auto px-4">
@@ -452,7 +394,6 @@ export default function Landing() {
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <Link href="/app" className="hover:text-foreground transition-colors">App</Link>
           <a href="#how-to-start" className="hover:text-foreground transition-colors">Get Started</a>
-          <a href="#workshops" className="hover:text-foreground transition-colors">Workshops</a>
           <Link href="/talk15Apr" className="hover:text-foreground transition-colors">Talk Slides</Link>
           <Link href="/credits" className="hover:text-foreground transition-colors">Credits</Link>
           <a href="https://github.com/tesolchina/Smartextbook" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1">
