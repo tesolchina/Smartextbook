@@ -278,6 +278,10 @@ export default function Landing() {
                     <ReplitIcon /> Remix on Replit (free)
                   </a>
                 </div>
+                <a href="https://replit.com/refer/SimonWang23" target="_blank" rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 dark:bg-amber-950/40 dark:border-amber-700/40 dark:text-amber-300 text-xs font-semibold hover:brightness-95 transition-all">
+                  🎁 New to Replit? Sign up with my referral link — we both get $10 credit
+                </a>
               </div>
             </div>
           </div>
@@ -456,6 +460,9 @@ export default function Landing() {
           </a>
           <a href="https://replit.com/@SimonWang23/Smartextbook?v=1" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
             Remix on Replit
+          </a>
+          <a href="https://replit.com/refer/SimonWang23" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1">
+            🎁 $10 Replit credit
           </a>
         </div>
         <p className="mt-2">Built with Replit · Open source · Free to use</p>
