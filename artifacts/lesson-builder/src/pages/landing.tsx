@@ -294,6 +294,13 @@ export default function Landing() {
             </a>{" "}
             on AI-augmented textbooks.
           </p>
+          <a href="https://www.timeshighereducation.com/campus/vibe-coding-belongs-your-universitys-genai-literacy-strategy"
+            target="_blank" rel="noopener noreferrer"
+            className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary border border-border text-xs font-semibold text-foreground hover:border-primary/40 hover:bg-secondary/80 transition-all">
+            <span className="text-base leading-none">📰</span>
+            <span><span className="text-muted-foreground">Times Higher Education:</span> "Vibe coding belongs in your university's GenAI literacy strategy"</span>
+            <ExternalLink className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          </a>
         </div>
       </section>
 
@@ -333,7 +340,7 @@ export default function Landing() {
                 icon: <Zap className="w-6 h-6" />,
                 title: "Generate your first lesson",
                 desc: "Paste any textbook chapter or a URL. Add one teaching instruction (optional). Hit Generate — in seconds you'll have a summary, glossary, quiz, mind map, and AI tutor.",
-                link: { label: "Watch the demo talk →", url: "/talk15Apr", internal: true },
+                link: { label: "Why vibe coding + education? →", url: "https://www.timeshighereducation.com/campus/vibe-coding-belongs-your-universitys-genai-literacy-strategy", internal: false },
               },
             ].map((item) => (
               <div key={item.step} className="bg-background border border-border rounded-3xl p-6 relative overflow-hidden">
@@ -394,7 +401,6 @@ export default function Landing() {
         <div className="flex items-center justify-center gap-4 flex-wrap">
           <Link href="/app" className="hover:text-foreground transition-colors">App</Link>
           <a href="#how-to-start" className="hover:text-foreground transition-colors">Get Started</a>
-          <Link href="/talk15Apr" className="hover:text-foreground transition-colors">Talk Slides</Link>
           <Link href="/credits" className="hover:text-foreground transition-colors">Credits</Link>
           <a href="https://github.com/tesolchina/Smartextbook" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1">
             <Github className="w-3 h-3" /> GitHub
