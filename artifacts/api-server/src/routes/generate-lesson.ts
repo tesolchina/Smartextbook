@@ -3,7 +3,6 @@ import { GenerateLessonBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
 import { jsonrepair } from "jsonrepair";
 import { logger } from "../lib/logger";
-import OpenAI from "openai";
 
 const router: IRouter = Router();
 

@@ -5,7 +5,7 @@
 **SmartTextbook v1.1.0** — AI-powered BYOK educational platform by Dr Simon Wang (Lecturer & Innovation Officer, Language Centre, Hong Kong Baptist University).
 
 Dual focus:
-1. **Chapter-to-Lesson Builder** — converts articles/chapters/URLs/PDFs into structured interactive lessons with summary, key concepts, quiz, mind map, and an AI tutor chat. BYOK: users supply their own LLM API key (or use access code `IEEE2026` for server-side compute).
+1. **Chapter-to-Lesson Builder** — converts articles/chapters/URLs/PDFs into structured interactive lessons with summary, key concepts, quiz, mind map, and an AI tutor chat. Fully BYOK: users supply their own LLM API key.
 2. **IEEE ProComm Workshop Demos** — open-source interactive lesson demos built from IEEE ProComm articles, with xAPI tracking, BYOK AI tutor, and certificate generation. Collaboration with Dr Traci Nathans-Kelly (Cornell / IEEE ProComm VP Content).
 
 ## Stack

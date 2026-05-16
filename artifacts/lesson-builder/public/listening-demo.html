@@ -450,7 +450,7 @@
       <option value="gemini">Gemini ✓ HK</option>
       <option value="openai">OpenAI (VPN req. in HK)</option>
     </select>
-    <input type="password" id="apiKeyInput" placeholder="API key · or enter IEEE2026"/>
+    <input type="password" id="apiKeyInput" placeholder="Your API key"/>
     <button class="tutor-key-btn" onclick="saveKey()">Set Key</button>
   </div>
   <div class="tutor-messages" id="tutorMessages">
@@ -458,8 +458,8 @@
       Hi! I'm your AI tutor for this lesson on Leydens &amp; Lucena (2009). Ask me anything about contextual listening, the engineering examples, or how this applies to your own communication practice. 👋
     </div>
     <div class="tutor-no-key" id="tutorNoKey" style="padding:14px 0;text-align:center;color:#64748b;font-size:0.82em;">
-      Enter your API key above, or type <strong style="color:#e2e8f0;">IEEE2026</strong> for instant access (no key needed).<br>
-      <span style="font-size:0.88em;opacity:0.7;">DeepSeek & Gemini work from HK/mainland · OpenAI requires VPN</span>
+      Enter your API key above to activate the AI tutor.<br>
+      <span style="font-size:0.88em;opacity:0.7;">DeepSeek &amp; Gemini work from HK/mainland · OpenAI requires VPN</span>
     </div>
   </div>
   <div class="tutor-input-row">
@@ -735,16 +735,15 @@ function saveKey() {
   if (!keyVal) return;
   tutorApiKey = keyVal;
   tutorHasKey = true;
-  const isCode = keyVal === 'IEEE2026';
   document.getElementById('keyRow').classList.add('hidden');
   document.getElementById('tutorNoKey').style.display = 'none';
   document.getElementById('tutorSend').disabled = false;
   const activeLabel = document.createElement('div');
   activeLabel.style.cssText = 'padding:6px 16px;font-size:0.74em;color:#64748b;border-bottom:1px solid rgba(255,255,255,0.08);';
-  activeLabel.textContent = isCode ? '🔑 Access granted via IEEE2026 · Replit AI' : `🔑 ${tutorProvider.charAt(0).toUpperCase()+tutorProvider.slice(1)} API key set`;
+  activeLabel.textContent = `🔑 ${tutorProvider.charAt(0).toUpperCase()+tutorProvider.slice(1)} API key set`;
   document.getElementById('tutorPanel').insertBefore(activeLabel, document.getElementById('tutorMessages'));
   document.getElementById('tutorInput').focus();
-  xapiSend('interacted', { result: { extensions: { tutorActivated: true, provider: isCode ? 'replit' : tutorProvider } } });
+  xapiSend('interacted', { result: { extensions: { tutorActivated: true, provider: tutorProvider } } });
 }
 
 function tutorKeyDown(e) {
@@ -776,27 +775,15 @@ async function sendTutor() {
 
   try {
     const messages = [{ role: 'system', content: TUTOR_SYSTEM_PROMPT }, ...tutorHistory.slice(-12)];
-    let reply;
-    if (tutorApiKey === 'IEEE2026') {
-      const res = await fetch('/api/ai-tutor', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages, code: 'IEEE2026' })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'API error ' + res.status);
-      reply = data.reply || 'Sorry, no response generated.';
-    } else {
-      const ep = TUTOR_ENDPOINTS[tutorProvider];
-      const res = await fetch(ep.url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tutorApiKey },
-        body: JSON.stringify({ model: ep.model, messages, max_tokens: 400, temperature: 0.5 })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error?.message || 'API error ' + res.status);
-      reply = data.choices?.[0]?.message?.content?.trim() || 'Sorry, no response generated.';
-    }
+    const ep = TUTOR_ENDPOINTS[tutorProvider];
+    const res = await fetch(ep.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tutorApiKey },
+      body: JSON.stringify({ model: ep.model, messages, max_tokens: 400, temperature: 0.5 })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || 'API error ' + res.status);
+    const reply = data.choices?.[0]?.message?.content?.trim() || 'Sorry, no response generated.';
     thinking.textContent = reply;
     thinking.classList.remove('msg-thinking');
     tutorHistory.push({ role: 'assistant', content: reply });

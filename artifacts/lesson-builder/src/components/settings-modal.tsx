@@ -331,12 +331,8 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
                 </div>
 
                 <div className="p-3 rounded-xl bg-secondary/60 border border-border/50 text-xs text-muted-foreground leading-relaxed">
-                  {false ? (
-                    <></>
-                  ) : (
-                    <><strong className="text-foreground">Privacy:</strong> Your API key is stored only in your browser&apos;s local storage. It is sent directly to{" "}
+                  <><strong className="text-foreground">Privacy:</strong> Your API key is stored only in your browser&apos;s local storage. It is sent directly to{" "}
                     {currentProvider ? <strong className="text-foreground">{currentProvider.name}</strong> : "your chosen provider"} and never to our servers.</>
-                  )}
                 </div>
               </div>
             </div>
