@@ -2,7 +2,7 @@
 
 ## Overview
 
-**SmartTextbook v1.0.0** — AI-powered BYOK educational platform by Dr Simon Wang (Lecturer & Innovation Officer, Language Centre, Hong Kong Baptist University).
+**SmartTextbook v1.1.0** — AI-powered BYOK educational platform by Dr Simon Wang (Lecturer & Innovation Officer, Language Centre, Hong Kong Baptist University).
 
 Dual focus:
 1. **Chapter-to-Lesson Builder** — converts articles/chapters/URLs/PDFs into structured interactive lessons with summary, key concepts, quiz, mind map, and an AI tutor chat. BYOK: users supply their own LLM API key (or use access code `IEEE2026` for server-side compute).
