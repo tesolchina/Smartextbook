@@ -1,9 +1,16 @@
 import { Router, type IRouter } from "express";
 import { GenerateLessonBody } from "@workspace/api-zod";
 import { createLLMClient } from "../lib/llm-client";
+import { checkRateLimit, getClientIp } from "../lib/rate-limiter";
 import { jsonrepair } from "jsonrepair";
 import { logger } from "../lib/logger";
 import OpenAI from "openai";
+
+// Per-IP limit for IEEE2026 server-side lesson generation (expensive call)
+const IEEE_LESSON_LIMIT = 5;
+const IEEE_LESSON_WINDOW_MS = 60 * 60 * 1000;
+// Max chapter text length when using server-side proxy
+const IEEE_MAX_CHAPTER_CHARS = 12000;
 
 /** Build an OpenAI-compatible client pointed at the server-side AI proxy for IEEE2026 access. */
 function createIEEEClient(): { client: OpenAI; model: string } {
@@ -258,6 +265,18 @@ router.post("/generate-lesson", async (req, res): Promise<void> => {
     : buildGeneralPrompt(title, chapterText, prefs, teachingPrompt);
 
   const isIEEECode = llmConfig.apiKey.trim() === "IEEE2026";
+
+  if (isIEEECode) {
+    const ip = getClientIp(req);
+    if (!checkRateLimit("ieee-lesson", ip, IEEE_LESSON_LIMIT, IEEE_LESSON_WINDOW_MS)) {
+      res.status(429).json({ error: "Too many requests. Please try again in an hour." });
+      return;
+    }
+    if (chapterText.length > IEEE_MAX_CHAPTER_CHARS) {
+      res.status(400).json({ error: `Chapter text too long for shared access (max ${IEEE_MAX_CHAPTER_CHARS} characters). Please use your own API key for longer texts.` });
+      return;
+    }
+  }
 
   logger.info(
     { provider: isIEEECode ? "ieee2026-proxy" : llmConfig.provider, model: llmConfig.model, hasKey: Boolean(llmConfig.apiKey), prefs },
