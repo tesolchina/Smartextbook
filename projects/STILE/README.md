@@ -1,12 +1,33 @@
 # STILE — Plug and Play Editor
 
+**Dr Simon Wang** — Plug and Play Section Editor (incoming)
 **Platform**: STiLE — Scholarship of Teaching in Language Education
-**URL**: https://www.stile.hk
-**Section**: Plug and Play — https://www.stile.hk/osp/catalog/category/PLUG-AND-PLAY
-**Dr Simon Wang's role**: Plug and Play Section Editor
+**Journal URL**: https://www.stile.hk/osp
+**Plug and Play section**: https://www.stile.hk/osp/catalog/category/PLUG-AND-PLAY
+
+---
+
+## Journal Identity (confirmed May 2026)
+
+| Field | Value |
+|-------|-------|
+| Full title | STiLE — Scholarship of Teaching in Language Education |
+| Abbreviation | STiLE |
+| ISSN | **3005-5253** (online) |
+| DOI prefix | **10.59936** (CrossRef-registered) |
+| Platform | OJS 3.3 — self-hosted at stile.hk |
+| First issue | Vol. 1, No. 1 — March 2023 |
+| Latest | Vol. 4, No. 1 (2025–2026, in progress) |
+| Total articles (sitemap) | **29** |
+| Access | Fully open — all PDFs and MP4s publicly downloadable, no login |
+| Languages | English + Chinese (Traditional + Simplified) |
+| Sections | Research Articles · Reviews · Reflections · **Plug and Play** |
+
+---
 
 ## Google Drive
-https://drive.google.com/drive/folders/1hyJXh3xkGyhX5B-nmwfi3OD7oV72N_uT
+
+[STILE — Plug and Play Editor (Dr Simon Wang)](https://drive.google.com/drive/folders/1hyJXh3xkGyhX5B-nmwfi3OD7oV72N_uT)
 
 ```
 📁 STILE — Plug and Play Editor (Dr Simon Wang)
@@ -16,57 +37,97 @@ https://drive.google.com/drive/folders/1hyJXh3xkGyhX5B-nmwfi3OD7oV72N_uT
    └── 📁 04 — Collaboration Docs
 ```
 
-## About STiLE
+---
 
-STiLE (Scholarship of Teaching in Language Education) is an Open Journal Systems
-(OJS 3.3) platform for language education practitioners in Hong Kong and beyond.
+## Machine Readability (assessed May 2026)
 
-The **Plug and Play** section publishes ready-to-use teaching resources — not
-traditional research papers, but practical materials: videos, interactive modules,
-micropodcasts, annotated lesson plans. They are peer-reviewed for pedagogical
-quality and immediately deployable in classrooms.
+| Interface | Status | Notes |
+|-----------|--------|-------|
+| **OAI-PMH** | ✅ Active | `https://www.stile.hk/osp/oai` — set `osp:PAP` for Plug and Play |
+| **Sitemap** | ✅ Complete | 64 URLs, 43 article pages — all discoverable |
+| **HTML meta tags** | ✅ Rich | 53 `DC.*` + `citation_*` tags per article |
+| **CrossRef DOIs** | ✅ Registered | All articles have DOIs; CrossRef member ID 38443 |
+| **Google Scholar** | ✅ Indexed | Confirmed — articles appearing with citation counts |
+| **PDF download** | ✅ Open | `/uploads/journals/1/pdf/…` and `/pdf/…` — HTTP 200, no auth |
+| **MP4 download** | ✅ Open | `/uploads/journals/1/video/…` — HTTP 200, no auth |
+| **REST API** | ❌ Auth-gated | `GET /api/v1/submissions` → 403 for anonymous requests |
+| **OAI metadata quality** | ⚠️ Patchy | Titles/abstracts blank in OAI feed; rich in HTML — OJS settings issue |
+| **robots.txt** | ✅ Permissive | Only `/cache/` blocked |
 
-## Current Plug and Play Articles (fetched May 2026)
+**Practical access path**: OAI-PMH (osp:PAP set) → article URLs → HTML scrape or direct PDF download.
 
-| Title | Author(s) | Format |
-|-------|-----------|--------|
-| "Sorry to interrupt you there…" — EAP authentic discussions | Richard Nickalls et al. | Video + activities |
-| Multimodal Modules for Language Proficiency Enhancement | Michelle Tam, Eva Li, Agnes Tsang, Evangeline Hung | Modules |
-| Creative Problem Solving and Communication in Entrepreneurship | YAN XIA | Course materials |
-| Accurate Use of Schwa in British English | Ryan Windsor | Pronunciation practice |
-| 邏輯重音──有聲語言表達手機微課 | Tao Ren | Micropodcast (Chinese) |
-| Generative AI and its Potential Implications for EAP | Aditi Jhaveri | Reflective article |
-| Bridging the Gap between Pedagogy and Workplace Needs | Mable Chan | Teaching design |
-| "Let's Move on to the Recommendations." — Phrasal Verbs | Siyang Zhou, Hongzhu Wang | Corpus analysis |
-| Professional Accreditation — Challenging but worth it | Mike Groves | Case study |
+---
 
-## Folder Structure (this codebase)
+## Content Downloaded (May 2026)
+
+- **25 PDFs downloaded** → `plug-and-play-content/pdfs/` (15 MB total)
+- **4 articles video-only** (no PDF): ids 79, 80, 167, 172
+- Full metadata in `plug-and-play-content/catalog-full.json`
+- Human-readable catalog in `plug-and-play-content/catalog.md`
+
+---
+
+## Current Indexing Status
+
+| Index | Status |
+|-------|--------|
+| CrossRef | ✅ Registered |
+| Google Scholar | ✅ Indexed (confirmed) |
+| DOAJ | ❌ Not listed — **apply now, likely qualifies** |
+| ERIC | ❌ Not listed — apply 2026–2027 |
+| ESCI / Web of Science | ❌ Not listed — target 2027–2028 |
+| Scopus | ❌ Not listed — target 2028–2029 |
+| SSCI | ❌ Not listed — long-term aspiration |
+
+Full strategy: `research/indexing-strategy.md`
+
+---
+
+## Folder Structure
 
 ```
 projects/STILE/
-├── README.md                     ← this file
-├── plug-and-play-content/        ← raw article text, metadata, URLs
-├── lesson-adaptations/           ← SmartTextbook-generated interactive versions
-├── editorial-notes/              ← review notes, submission guidelines, decisions
-├── meeting-prep/                 ← notes for editorial meetings
-└── research/                     ← any research directions emerging from editorial work
+├── README.md                            ← this file — project overview
+├── plug-and-play-content/
+│   ├── catalog.md                       ← all 29 articles, by volume/issue
+│   ├── catalog-full.json                ← machine-readable metadata + PDF links
+│   └── pdfs/                            ← 25 PDFs downloaded (15 MB)
+├── editorial-notes/
+│   └── editor-role-notes.md             ← role scope, action items, DOAJ checklist
+├── research/
+│   └── indexing-strategy.md             ← full DOAJ/ERIC/ESCI/Scopus/SSCI roadmap
+├── lesson-adaptations/                  ← SmartTextbook-generated interactive versions
+└── meeting-prep/                        ← editorial meeting notes
 ```
+
+---
 
 ## Connection to SmartTextbook
 
-See `docs/skills/SmartTextbook-SKILL-08-STILE-Connection-Analysis.md` for the full
-analysis. Key integration points:
+See `docs/skills/SmartTextbook-SKILL-08-STILE-Connection-Analysis.md` for full analysis.
 
-1. **PITA pipeline** — any Plug and Play article URL → SmartTextbook interactive lesson
-   via existing `/api/fetch-url` + `/api/generate-lesson` endpoints
-2. **AI Tutor embed** — SSE chat (`/api/chat`) embeddable in STILE article pages
-3. **Access code** — `STILE2026` variant of the IEEE2026 server-side AI proxy
-4. **xAPI tracking** — learning analytics for Plug and Play reader engagement
-5. **Certificate** — completion certificates for multi-part Plug and Play modules
+**Zero new code needed — direct reuse:**
 
-## Related Files
+| SmartTextbook feature | STiLE application |
+|-----------------------|-------------------|
+| `/api/fetch-url` + `/api/generate-lesson` | PITA pipeline: any STiLE article URL → interactive lesson |
+| `/api/chat` SSE streaming | AI tutor embeddable in STiLE article pages |
+| `IEEE2026` access code pattern | `STILE2026` — free AI access for workshop participants |
+| xAPI tracking (`/api/xapi`) | Learning analytics for Plug and Play reader engagement |
+| Certificate system | Completion certificates for multi-part Plug and Play modules |
 
-- `docs/skills/SmartTextbook-SKILL-08-STILE-Connection-Analysis.md`
-- `artifacts/api-server/src/routes/ieee.ts` — Teaching Case pipeline to adapt for STILE
-- `artifacts/api-server/src/routes/ai-tutor.ts` — access code pattern to reuse
-- `artifacts/lesson-builder/public/listening-demo.html` — demo format for Plug and Play
+**New endpoint to build** (medium effort — wraps existing code):
+`POST /api/stile/transform-article` — takes STiLE article URL, runs PITA, returns embeddable interactive lesson
+
+**Leverage as editor**: offer every accepted Plug and Play author an AI-generated interactive companion lesson — SmartTextbook already does this for IEEE ProComm. STiLE Plug and Play is a natural second community.
+
+---
+
+## Related Files in Codebase
+
+| File | Purpose |
+|------|---------|
+| `docs/skills/SmartTextbook-SKILL-08-STILE-Connection-Analysis.md` | Full integration analysis |
+| `artifacts/api-server/src/routes/ieee.ts` | Teaching Case pipeline to adapt for STiLE |
+| `artifacts/api-server/src/routes/ai-tutor.ts` | Access code pattern (`IEEE2026` → `STILE2026`) |
+| `artifacts/lesson-builder/public/listening-demo.html` | Demo HTML format for Plug and Play |
