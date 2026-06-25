@@ -1,0 +1,65 @@
+
+Create your own pedagogical framework and genAI prompt
+Click here to view/download slides for today's workshop.
+simonwanghkteacher@gmail.com Switch account
+ 
+Draft saved
+* Indicates required question
+Email
+*
+simonwang@hkbu.edu.hk
+Your first name and last name
+*
+Simon Wang
+Name a concept, subject, topic, skill, method, tool, etc. that you are already comfortable with teaching and with giving feedback to students about.
+
+*
+Collocation and data driven learning 
+Describe in short the learner population you're interested in.
+
+*
+Include their subject/discipline, educational level, and their prior knowledge relevant to learning the new concept.
+first year undergraduates learning academic English 
+Describe the motivation and rationale for developing your own pedagogical framework.
+
+*
+Why is a new pedagogical framework needed to teach this concept? What's missing from existing frameworks, if any exist?
+cause we'd like leverage agentic AI 
+Define the pedagogical construct.
+
+*
+The construct should have a indicative title, outline the key terms and elements in the concept you'd like to teach, their interrelationships, and any other information/rules you see fit. An example of a construct is SAFO
+
+
+
+
+
+
+
+Create a short description for an assignment through which your students will learn the construct. The assignment description must include at least one learning objective.
+
+*
+Create 1-3 small items/questions. The entire assignment should take your typical student ~20mins to complete. 
+
+
+
+
+
+
+
+Based on your construct, formulate assessment guidelines for adherence of student responses to your assignment.
+
+*
+An example can be found here, in Table 7:  https://www.mdpi.com/2227-7102/14/7/720
+Create your expert GPT, make it accessible by link, and paste the link here.
+*
+Make sure to give the GPT appropriate instructions and scope, and upload both the construct and assessment guidelines as PDFs to the GPT. 
+A copy of your responses will be emailed to the address you provided.
+Never submit passwords through Google Forms.
+reCAPTCHA
+Privacy
+Terms
+This content is neither created nor endorsed by Google. - Contact form owner - Terms of Service - Privacy Policy
+Does this form look suspicious? Report
+
+Google Forms
